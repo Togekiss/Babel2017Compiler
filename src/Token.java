@@ -4,6 +4,14 @@ public class Token {
 	private String tipus;
 	private String lexema;
 	
+	
+	public Token(String tipus, String lexema) {
+		super();
+		this.tipus = tipus;
+		this.lexema = lexema;
+	}
+	
+	
 	public String getTipus() {
 		return tipus;
 	}
