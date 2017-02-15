@@ -13,6 +13,15 @@ public class Alex {
 		
 	}
 	
+	public Token getToken() {
+		
+		String lexema = "";
+		String tipus = "";
+		
+		
+		return new Token(tipus, lexema);
+	}
+	
 	
 
 }
