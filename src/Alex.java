@@ -65,8 +65,55 @@ public class Alex {
 		String lexema = "";
 		String tipus = "";
 		
+		while (charActual == '\n' || charActual == '\t' || charActual == ' ' ) {
+			if (charActual == '\n') liniaActual++;
+			try {
+				charActual = (char) br.read();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		
+		switch (charActual) {
+		
+		case ('"'): break;
+		case ('/'): break;
+		case ('='): break;
+		case ('>'): break;
+		case ('<'): break;
+		case (';'): break;
+		case (','): break;
+		case (':'): break;
+		case ('('): break;
+		case (')'): break;
+		case ('['): break;
+		case (']'): break;
+		case ('+'): break;
+		case ('*'): break;
+		case ('-'): break;
+		case ('?'): break;
+		case ('\u001a'): break;
+		default:
+			if (esLletra(charActual)) {
+				//es lletra
+			} else if (esDigit(charActual)) {
+				//es digit
+			} else {
+				//error
+			}
+		}
+		
 		
 		return new Token(tipus, lexema);
+	}
+	
+	private boolean esLletra (char c) {
+		return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'));
+	}
+	
+	private boolean esDigit (char c) {
+		return (c >= '0' && c <= '9');
 	}
 	
 	public int getLiniaActual () { return liniaActual; }
