@@ -1,16 +1,30 @@
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Hashtable;
 
 public class Alex {
 	
-	private File fitxer;
-	private int lineaActual;
+	private BufferedReader br;
+	private int liniaActual;
 	private char charActual;
 	private Hashtable<String, String> diccionari;
 	
 	
-	public Alex() {
+	public Alex(String nomFitxer) {
 		
+	   try {
+		   
+		br = new BufferedReader(new FileReader(nomFitxer));
+		charActual = (char) br.read();
+		liniaActual = 0;
+		
+	   } catch (IOException e) {
+		e.printStackTrace();
+	   }
+	     
 	   diccionari = new Hashtable<String, String>();
 	   diccionari.put("prog", "prog");
 	   diccionari.put("fiprog", "fiprog");
@@ -55,6 +69,6 @@ public class Alex {
 		return new Token(tipus, lexema);
 	}
 	
+	public int getLiniaActual () { return liniaActual; }
 	
-
 }
