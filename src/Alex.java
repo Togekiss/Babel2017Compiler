@@ -64,14 +64,15 @@ public class Alex {
 	
 	public Token getToken() {
 
-		String lexema = "null";
+		String lexema = "";
 		String tipus = "null";
-		boolean error = true;
+		boolean seguent = true;
 
-		while (error) {
+		while (seguent) {
 
 			lexema = "";
-			error = false;
+			tipus = "null";
+			seguent = false;
 			
 			try {
 				
@@ -99,6 +100,7 @@ public class Alex {
 				
 					if (charActual == '/') {
 						while (charActual != '\n') charActual = (char) br.read();
+						seguent = true;
 					} else {
 						tipus = "divisio";
 						lexema = "/";
@@ -222,7 +224,7 @@ public class Alex {
 						lexema = "..";
 						charActual = (char) br.read();
 					} else {
-						error = true;
+						seguent = true;
 						Error.escriuError(1, ".", liniaActual);
 					}
 					
@@ -275,9 +277,10 @@ public class Alex {
 						tipus = "ct_enter";
 						
 					} else {
-						System.out.println("caracter erroni" + charActual);
-						error = true;
+						System.out.println("caracter erroni: " + charActual);
+						seguent = true;
 						Error.escriuError(1, charActual + "", liniaActual);
+						charActual = (char) br.read();
 					}
 				}
 				
