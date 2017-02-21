@@ -25,6 +25,8 @@ public class Token {
 		this.lexema = lexema;
 	}
 	
-	
+	public boolean esEOF() {
+		return tipus.equals("eof");
+	}
 
 }

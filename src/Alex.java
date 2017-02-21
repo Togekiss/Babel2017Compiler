@@ -73,6 +73,7 @@ public class Alex {
 			lexema = "";
 			tipus = "null";
 			seguent = false;
+		
 			
 			try {
 				
@@ -242,9 +243,9 @@ public class Alex {
 					
 					break;
 					
-				case ('\u001a'):
-					tipus = "EOF";
-					lexema = "EOF";
+				case ((char) -1):
+					tipus = "eof";
+					lexema = "eof";
 					
 					break;
 					
@@ -277,7 +278,6 @@ public class Alex {
 						tipus = "ct_enter";
 						
 					} else {
-						System.out.println("caracter erroni: " + charActual);
 						seguent = true;
 						Error.escriuError(1, charActual + "", liniaActual);
 						charActual = (char) br.read();

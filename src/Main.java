@@ -9,7 +9,7 @@ public class Main {
 		
 		Token token = new Token("null", "null");
 		
-		while (!token.getTipus().equals("EOF")) {
+		while (!token.esEOF()) {
 			token = alex.getToken();
 			System.out.println("<" + token.getTipus() + ", " + token.getLexema() + ">");
 		}

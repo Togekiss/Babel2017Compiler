@@ -17,12 +17,12 @@ public class Error {
 	public static boolean escriuError (int codiError, String variableError, int numLinia) {
 		
 		switch (codiError) {
-		case 1: System.out.println("numLinia " + numLinia);
-				System.out.println("variable" + variableError);
-				//writer.println("[ERR_LEX_1] " + numLinia + ", Caràcter[" + variableError + "] desconegut ");
+		case 1: System.out.println("[ERR_LEX_1] " + numLinia + ", Caràcter[" + variableError + "] desconegut ");
+				//writer.println("[ERR_LEX_1] " + numLinia + ", Caràcter[" + variableError + "] desconegut");
 				
 				return true;
-		case 2: writer.println("[WAR_LEX_1] " + numLinia + ", Identificador[" + variableError + "] excedeix el nombre màxim de caràcters (32) ");
+		case 2: System.out.println("[WAR_LEX_1] " + numLinia + ", Identificador[" + variableError + "] excedeix el nombre màxim de caràcters (32) ");
+				//writer.println("[WAR_LEX_1] " + numLinia + ", Identificador[" + variableError + "] excedeix el nombre màxim de caràcters (32)");
 				return true;
 		default: return false;
 		}
