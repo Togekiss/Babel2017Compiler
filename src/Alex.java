@@ -77,8 +77,10 @@ public class Alex {
 			
 			try {
 				
-				while (charActual == '\n' || charActual == '\t' || charActual == ' ' ) {
-					if (charActual == '\n') liniaActual++;
+				while (charActual == '\n' || charActual == '\r' || charActual == '\t' || charActual == ' ' ) {
+					if (charActual == '\n') {
+						liniaActual++;
+					}
 					charActual = (char) br.read();
 				}
 
@@ -191,7 +193,7 @@ public class Alex {
 					
 				case ('['):
 					tipus = "claudator_obert";
-					lexema = "(";
+					lexema = "[";
 					charActual = (char) br.read();
 					
 					break;
