@@ -15,7 +15,6 @@ public class Main {
 		
 		while (!token.esEOF()) {
 			token = alex.getToken();
-			System.out.println("<" + token.getTipus() + ", " + token.getLexema() + ">");
 		}
 		error.tancaFitxer();
 	}

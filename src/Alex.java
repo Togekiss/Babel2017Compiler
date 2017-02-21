@@ -305,7 +305,7 @@ public class Alex {
 	public int getLiniaActual () { return liniaActual; }
 	
 	private void printToken(Token token) {
-		
+		System.out.println("<" + token.getTipus() + ", " + token.getLexema() + ">");
 	}
 
 }
