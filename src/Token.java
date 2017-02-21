@@ -28,5 +28,16 @@ public class Token {
 	public boolean esEOF() {
 		return tipus.equals("eof");
 	}
+	
+	public void pushLexema(char charActual) {
+		lexema = lexema + charActual;
+	}
 
+	public void lexToLowerCase() {
+		lexema = lexema.toLowerCase();
+	}
+	
+	public void trunkLexema() {
+		lexema = lexema.substring(0, 31);
+	}
 }

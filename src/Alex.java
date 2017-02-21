@@ -64,14 +64,13 @@ public class Alex {
 	
 	public Token getToken() {
 
-		String lexema = "";
-		String tipus = "null";
+		Token token = new Token("null", "");
 		boolean seguent = true;
 
 		while (seguent) {
 
-			lexema = "";
-			tipus = "null";
+			token.setLexema("");
+			token.setTipus("null");
 			seguent = false;
 		
 			
@@ -88,12 +87,12 @@ public class Alex {
 
 				case ('"'):
 					do {
-						lexema = lexema + charActual;
+						token.pushLexema(charActual);
 						charActual = (char) br.read();
 					} while (charActual != '"');
 				
-					lexema = lexema + charActual;
-					tipus = "ct_cadena";
+					token.pushLexema(charActual);
+					token.setTipus("ct_cadena");
 					charActual = (char) br.read();
 					
 					break;
@@ -105,8 +104,8 @@ public class Alex {
 						while (charActual != '\n') charActual = (char) br.read();
 						seguent = true;
 					} else {
-						tipus = "divisio";
-						lexema = "/";
+						token.setTipus("divisio");
+						token.setLexema("/");
 					}
 					
 					break;
@@ -115,12 +114,12 @@ public class Alex {
 					charActual = (char) br.read();
 				
 					if (charActual == '=') {
-						tipus = "igual_que";
-						lexema = "==";
+						token.setTipus("igual_que");
+						token.setLexema("==");
 						charActual = (char) br.read();
 					} else {
-						tipus = "igual";
-						lexema = "=";
+						token.setTipus("igual");
+						token.setLexema("=");
 					}
 					
 					break;
@@ -128,12 +127,12 @@ public class Alex {
 				case ('>'):
 					charActual = (char) br.read();
 					if (charActual == '=') {
-						tipus = "major_igual_que";
-						lexema = ">=";
+						token.setTipus("major_igual_que");
+						token.setLexema(">=");
 						charActual = (char) br.read();
 					} else {
-						tipus = "major_que";
-						lexema = ">";
+						token.setTipus("major_que");
+						token.setLexema(">");
 					}
 					
 					break;
@@ -142,79 +141,79 @@ public class Alex {
 					charActual = (char) br.read();
 				
 					if (charActual == '>') {
-						tipus = "diferent_que";
-						lexema = "<>";
+						token.setTipus("diferent_que");
+						token.setLexema("<>");
 						charActual = (char) br.read();
 					} else if (charActual == '=') {
-						tipus = "menor_igual_que";
-						lexema = "<=";
+						token.setTipus("menor_igual_que");
+						token.setLexema("<=");
 						charActual = (char) br.read();
 					} else {
-						tipus = "menor_que";
-						lexema = "<";
+						token.setTipus("menor_que");
+						token.setLexema("<");
 					}
 					
 					break;
 					
 				case (';'): 
-					tipus = "punt_i_coma";
-					lexema = ";";
+					token.setTipus("punt_i_coma");
+					token.setLexema(";");
 					charActual = (char) br.read();
 					
 					break;
 					
 				case (','): 
-					tipus = "coma";
-					lexema = ",";
+					token.setTipus("coma");
+					token.setLexema(",");
 					charActual = (char) br.read();
 					
 					break;
 					
 				case (':'): 
-					tipus = "dos_punts";
-					lexema = ":";
+					token.setTipus("dos_punts");
+					token.setLexema(":");
 					charActual = (char) br.read();
 					
 					break;
 					
 				case ('('):
-					tipus = "parentesi_obert";
-					lexema = "(";
+					token.setTipus("parentesi_obert");
+					token.setLexema("(");
 					charActual = (char) br.read();
 					
 					break;
 					
 				case (')'):
-					tipus = "parentesi_tancat";
-					lexema = ")";
+					token.setTipus("parentesi_tancat");
+					token.setLexema(")");
 					charActual = (char) br.read();
 					
 					break;
 					
 				case ('['):
-					tipus = "claudator_obert";
-					lexema = "[";
+					token.setTipus("claudator_obert");
+					token.setLexema("[");
 					charActual = (char) br.read();
 					
 					break;
 					
 				case (']'):
-					tipus = "claudator_tancat";
-					lexema = "]";
+					token.setTipus("claudator_tancat");
+					token.setLexema("]");
 					charActual = (char) br.read();
 					
 					break;
 					
 				case ('+'):
-					tipus = "suma";
-					lexema = "+";
+					token.setTipus("suma");
+					token.setLexema("+");
 					charActual = (char) br.read();
 					
 					break;
 					
 				case ('*'):
-					tipus = "multiplicacio";
-					lexema = "*";
+					token.setTipus("multiplicacio");
+					token.setLexema("*");
 					charActual = (char) br.read();
 					
 					break;
@@ -223,8 +222,8 @@ public class Alex {
 					charActual = (char) br.read();
 					
 					if (charActual == '.') {
-						tipus = "rang";
-						lexema = "..";
+						token.setTipus("rang");
+						token.setLexema("..");
 						charActual = (char) br.read();
 					} else {
 						seguent = true;
@@ -232,52 +231,52 @@ public class Alex {
 					}
 					
 				case ('-'):
-					tipus = "resta";
-					lexema = "-";
+					token.setTipus("resta");
+					token.setLexema("-");
 					charActual = (char) br.read();
 					
 					break;
 					
 				case ('?'):
-					tipus = "interrogant";
-					lexema = "?";
+					token.setTipus("interrogant");
+					token.setLexema("?");
 					charActual = (char) br.read();
 					
 					break;
 					
 				case ((char) -1):
-					tipus = "eof";
-					lexema = "eof";
+					token.setTipus("eof");
+					token.setLexema("eof");
 					
 					break;
 					
 				default:
 					if (esLletra(charActual)) {
 						do {
-							lexema = lexema + charActual;
+							token.pushLexema(charActual);
 							charActual = (char) br.read();
 						} while (esLletra(charActual) || esDigit(charActual) || charActual == '_');
 						
-						lexema = lexema.toLowerCase();
+						token.lexToLowerCase();
 						
-						if (diccionari.containsKey(lexema)) {
-							tipus = diccionari.get(lexema);
+						if (diccionari.containsKey(token.getLexema())) {
+							token.setTipus(diccionari.get(token.getLexema()));
 						} else {
-							tipus = "identificador";
+							token.setTipus("identificador");
 							
-							if (lexema.length() > 31) {
-								Error.escriuError(2, lexema, liniaActual);
-								lexema = lexema.substring(0, 31);
+							if (token.getLexema().length() > 31) {
+								Error.escriuError(2, token.getLexema(), liniaActual);
+								token.trunkLexema();
 							}
 						}
 						
 					} else if (esDigit(charActual)) {
 						do {
-							lexema = lexema + charActual;
+							token.pushLexema(charActual);
 							charActual = (char) br.read();
 						} while (esDigit(charActual));
 						
-						tipus = "ct_enter";
+						token.setTipus("ct_enter");
 						
 					} else {
 						seguent = true;
@@ -291,8 +290,8 @@ public class Alex {
 			}
 		}
 
-
-		return new Token(tipus, lexema);
+		printToken(token);
+		return token;
 	}
 
 	private boolean esLletra (char c) {
@@ -304,5 +303,9 @@ public class Alex {
 	}
 
 	public int getLiniaActual () { return liniaActual; }
+	
+	private void printToken(Token token) {
+		
+	}
 
 }
