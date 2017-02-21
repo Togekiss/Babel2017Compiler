@@ -8,7 +8,8 @@ public class Error {
 	
 	public Error (String nomFitxer) {
 		try {
-			writer = new PrintWriter(nomFitxer + ".err", "UTF-8");
+			nomFitxer += ".err";
+			writer = new PrintWriter(nomFitxer, "UTF-8");
 		} catch (FileNotFoundException | UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}	

@@ -3,14 +3,8 @@ public class Main {
 	
 	public static void main(String[] args) {
 		String name = new String();
-		char c;
-		int i = 0;
 		
-		c = args[0].charAt(i);
-		while (c != '.') { 
-			name += c;
-			c = args[0].charAt(++i);
-		}
+		name = args[0].substring(0, args[0].length() - 4);
 		
 		System.out.println("Imprimint tokens del fitxer " + args[0]);
 		
