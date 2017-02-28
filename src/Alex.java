@@ -3,11 +3,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Hashtable;
 
 public class Alex {
 
 	private BufferedReader br;
+	private PrintWriter writer;
 	private int liniaActual;
 	private char charActual;
 	private Hashtable<String, String> diccionari;
@@ -18,6 +20,9 @@ public class Alex {
 		try {
 			
 			br = new BufferedReader(new FileReader(nomFitxer));
+			nomFitxer = nomFitxer.substring(0, nomFitxer.length() - 4);
+			nomFitxer += ".lex";
+			writer = new PrintWriter(nomFitxer, "UTF-8");
 			charActual = (char) br.read();
 			liniaActual = 0;
 
@@ -307,5 +312,11 @@ public class Alex {
 	private void printToken(Token token) {
 		System.out.println("<" + token.getTipus() + ", " + token.getLexema() + ">");
 	}
+	
+	public void writeToken (Token token) {
+		writer.println("<" + token.getTipus() + ", " + token.getLexema() + ">");
+	}
+	
+	public void tancaFitxer () { writer.close(); }
 
 }

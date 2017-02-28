@@ -15,7 +15,9 @@ public class Main {
 		
 		while (!token.esEOF()) {
 			token = alex.getToken();
+			alex.writeToken(token);
 		}
 		error.tancaFitxer();
+		alex.tancaFitxer();
 	}
 }
