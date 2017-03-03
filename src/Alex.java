@@ -119,7 +119,7 @@ public class Alex {
 					charActual = (char) br.read();
 				
 					if (charActual == '=') {
-						token.setTipus("igual_que");
+						token.setTipus("oper_rel");
 						token.setLexema("==");
 						charActual = (char) br.read();
 					} else {
@@ -132,11 +132,11 @@ public class Alex {
 				case ('>'):
 					charActual = (char) br.read();
 					if (charActual == '=') {
-						token.setTipus("major_igual_que");
+						token.setTipus("oper_rel");
 						token.setLexema(">=");
 						charActual = (char) br.read();
 					} else {
-						token.setTipus("major_que");
+						token.setTipus("oper_rel");
 						token.setLexema(">");
 					}
 					
@@ -146,15 +146,15 @@ public class Alex {
 					charActual = (char) br.read();
 				
 					if (charActual == '>') {
-						token.setTipus("diferent_que");
+						token.setTipus("oper_rel");
 						token.setLexema("<>");
 						charActual = (char) br.read();
 					} else if (charActual == '=') {
-						token.setTipus("menor_igual_que");
+						token.setTipus("oper_rel");
 						token.setLexema("<=");
 						charActual = (char) br.read();
 					} else {
-						token.setTipus("menor_que");
+						token.setTipus("oper_rel");
 						token.setLexema("<");
 					}
 					
