@@ -27,7 +27,8 @@ public class Alex {
 			liniaActual = 0;
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("El fitxer " + nomFitxer + " no existeix.");
+			System.exit(2);
 		}
 
 		diccionari = new Hashtable<String, String>();
@@ -123,7 +124,7 @@ public class Alex {
 						token.setLexema("==");
 						charActual = (char) br.read();
 					} else {
-						token.setTipus("igual");
+						token.setTipus("igual"); 
 						token.setLexema("=");
 					}
 					
@@ -295,7 +296,7 @@ public class Alex {
 			}
 		}
 
-		printToken(token);
+		//printToken(token);
 		return token;
 	}
 

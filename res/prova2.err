@@ -1,0 +1,5 @@
+[ERR_LEX_1] 4, Caracter[_] desconegut
+[WAR_LEX_1] 5, Identificador[iflifegivesyoulemonsdontmakelemonademakelifetakethelemonsback] excedeix el nombre maxim de caracters (32)
+[ERR_LEX_1] 6, Caracter[!] desconegut
+[ERR_LEX_1] 7, Caracter[.] desconegut
+[ERR_LEX_1] 8, Caracter[ç] desconegut
