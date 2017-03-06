@@ -1,6 +1,4 @@
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -107,7 +105,7 @@ public class Alex {
 					charActual = (char) br.read();
 				
 					if (charActual == '/') {
-						while (charActual != '\n') charActual = (char) br.read();
+						while (charActual != '\n' && charActual != (char)-1) charActual = (char) br.read();
 						seguent = true;
 					} else {
 						token.setTipus("divisio");
