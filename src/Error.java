@@ -24,6 +24,7 @@ public class Error {
 		case 2: writer.println("[WAR_LEX_1] " + numLinia + ", Identificador[" + variableError + "] excedeix el nombre maxim de caracters (32)");
 				return true;
 				
+		case 3: writer.println("[ERR_LEX_2] " + numLinia + ", Cadena oberta a final de linia o de fitxer");
 		default: return false;
 		}
 	}

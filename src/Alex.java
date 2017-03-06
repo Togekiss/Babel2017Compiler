@@ -93,7 +93,13 @@ public class Alex {
 					do {
 						token.pushLexema(charActual);
 						charActual = (char) br.read();
-					} while (charActual != '"');
+					} while (charActual != '"' && charActual != (char)-1 && charActual != '\n');
+				
+					if (charActual == (char)-1 || charActual == '\n') {
+						seguent = true;
+						Error.escriuError(3, token.getLexema(), liniaActual);
+					}
+				
 				
 					token.pushLexema(charActual);
 					token.setTipus("ct_cadena");

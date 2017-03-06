@@ -16,7 +16,7 @@ public class Main {
 		}
 		
 		
-		//System.out.println("Imprimint tokens del fitxer " + args[0]);
+		//System.out.println("Analitzant el fitxer " + name + ".bab ...");
 		
 		Alex alex = new Alex(args[0]);
 		Error error = new Error(name);
