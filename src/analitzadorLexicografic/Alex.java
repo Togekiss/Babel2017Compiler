@@ -1,8 +1,12 @@
+package analitzadorLexicografic;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Hashtable;
+
+import main.Error;
+import main.Token;
 
 public class Alex {
 

@@ -1,3 +1,6 @@
+package main;
+import analitzadorSintactic.Asin;
+
 
 public class Main {
 	
@@ -15,21 +18,7 @@ public class Main {
 			System.exit(2);
 		}
 		
-		
-		//System.out.println("Analitzant el fitxer " + name + ".bab ...");
-		
-		Alex alex = new Alex(args[0]);
-		Error error = new Error(name);
-		
-		Token token = new Token("null", "null");
-		
-		while (!token.esEOF()) {
-			token = alex.getToken();
-			alex.writeToken(token);
-		}
-		error.tancaFitxer();
-		alex.tancaFitxer();
-		
-		System.out.println("Anàlisi lexicogràfic finalitzat.");
+		Asin asin = new Asin(args[0], name);
+		asin.start();
 	}
 }
