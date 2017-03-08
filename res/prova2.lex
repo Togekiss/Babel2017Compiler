@@ -28,6 +28,13 @@
 <parentesi_tancat, )>
 <claudator_obert, [>
 <claudator_tancat, ]>
+<identificador, aa>
+<identificador, aixo>
+<identificador, es>
+<identificador, una>
+<identificador, cadena>
+<identificador, molt>
+<identificador, llarga>
 <prog, prog>
 <fiprog, fiprog>
 <const, const>
