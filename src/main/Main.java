@@ -19,6 +19,7 @@ public class Main {
 		}
 		
 		Asin asin = new Asin(args[0], name);
-		asin.start();
+		//asin.start();
+		//asin.P();
 	}
 }

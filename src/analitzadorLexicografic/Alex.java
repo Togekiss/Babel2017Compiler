@@ -55,6 +55,7 @@ public class Alex {
 		diccionari.put("escriure", "escriure");
 		diccionari.put("llegir", "llegir");
 		diccionari.put("cicle", "cicle");
+		diccionari.put("fins", "fins");
 		diccionari.put("mentre", "mentre");
 		diccionari.put("fer", "fer");
 		diccionari.put("fimentre", "fimentre");
