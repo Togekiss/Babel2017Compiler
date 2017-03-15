@@ -102,7 +102,7 @@ public class Alex {
 				
 					if (charActual == (char)-1 || charActual == '\n') {
 						seguent = true;
-						Error.escriuError(3, token.getLexema(), liniaActual);
+						Error.escriuError(3, token.getLexema(), liniaActual, "");
 					}
 				
 				
@@ -242,7 +242,7 @@ public class Alex {
 						charActual = (char) br.read();
 					} else {
 						seguent = true;
-						Error.escriuError(1, ".", liniaActual);
+						Error.escriuError(1, ".", liniaActual, "");
 					}
 					
 				case ('-'):
@@ -280,7 +280,7 @@ public class Alex {
 							token.setTipus("identificador");
 							
 							if (token.getLexema().length() > 31) {
-								Error.escriuError(2, token.getLexema(), liniaActual);
+								Error.escriuError(2, token.getLexema(), liniaActual, "");
 								token.trunkLexema();
 							}
 						}
@@ -295,7 +295,7 @@ public class Alex {
 						
 					} else {
 						seguent = true;
-						Error.escriuError(1, charActual + "", liniaActual);
+						Error.escriuError(1, charActual + "", liniaActual, "");
 						charActual = (char) br.read();
 					}
 				}
@@ -319,7 +319,7 @@ public class Alex {
 
 	public int getLiniaActual () { return liniaActual; }
 	
-	private void printToken(Token token) {
+	private void printToken (Token token) {
 		System.out.println("<" + token.getTipus() + ", " + token.getLexema() + ">");
 	}
 	
