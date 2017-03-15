@@ -21,7 +21,7 @@ public class Asin {
 	
 
 	
-	private void Acceptar (String token) {
+	private void Acceptar (String token) throws SyntacticError {
 		
 		if (lookAhead.getTipus().equals(token)) {
 			
@@ -29,7 +29,8 @@ public class Asin {
 			
 			alex.writeToken(lookAhead);
 		} else {
-			//TIRAR ERROR
+			
+			throw new SyntacticError("ACCEPT ERROR: EXPECTED " + token + " BUT RECEIVED " + lookAhead.getTipus());
 		}
 		if (lookAhead.esEOF()) {
 			
@@ -42,9 +43,13 @@ public class Asin {
 	public void P() {
 
 		DECL();
-		Acceptar("prog");
+		try {
+			Acceptar("prog");
+		} catch (SyntacticError e) { }
 		LL_INST();
-		Acceptar("fiprog");
+		try {
+			Acceptar("fiprog");
+		} catch (SyntacticError e) { }
 		return;
 
 	}
@@ -80,23 +85,32 @@ public class Asin {
 
 	private void DECL_CONST() {
 
-		Acceptar("const");
-		Acceptar("identificador");
-		Acceptar("igual");
-		EXPRESIO();
-		Acceptar("punt_i_coma");
+		try {
+			Acceptar("const");
+			Acceptar("identificador");
+			Acceptar("igual");
+			EXPRESIO();
+			Acceptar("punt_i_coma");
+			
+		} catch (SyntacticError e) { }
 		return;
-
+		
 	}
 
 
 	private void DECL_VAR() {
 
-		Acceptar("var");
-		Acceptar("identificador");
-		Acceptar("dos_punts");
-		TIPUS();
-		Acceptar("punt_i_coma");
+		try {
+			Acceptar("var");
+			Acceptar("identificador");
+			Acceptar("dos_punts");
+			TIPUS();
+			Acceptar("punt_i_coma");
+			
+		} catch (SyntacticError e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return;
 
 	}
@@ -106,20 +120,26 @@ public class Asin {
 
 		switch (lookAhead.getTipus()) {
 	
-			case "funcio": 
-				Acceptar("funcio");
-				Acceptar("identificador");
-				Acceptar("parentesi_obert");
-				LL_PARAM();
-				Acceptar("parentesi_tancat");
-				Acceptar("dos_punts");
-				Acceptar("tipus_simple");
-				Acceptar("punt_i_coma");
+			case "funcio":
+				try {
+					Acceptar("funcio");
+					Acceptar("identificador");
+					Acceptar("parentesi_obert");
+					LL_PARAM();
+					Acceptar("parentesi_tancat");
+					Acceptar("dos_punts");
+					Acceptar("tipus_simple");
+					Acceptar("punt_i_coma");
+				} catch (SyntacticError e) { }
 				DECL_CONST_VAR();
-				Acceptar("func");
+				try {
+					Acceptar("func");
+				} catch (SyntacticError e) { }
 				LL_INST();
-				Acceptar("fifunc");
-				Acceptar("punt_i_coma");
+				try {
+					Acceptar("fifunc");
+					Acceptar("punt_i_coma");
+				} catch (SyntacticError e) { }
 				DECL_FUNC();
 				return;
 			
@@ -151,17 +171,23 @@ public class Asin {
 		switch (lookAhead.getTipus()) {
 		
 			case "perref":
-				Acceptar("perref");
-				Acceptar("identificador");
-				Acceptar("dos_punts");
+				try {
+					Acceptar("perref");
+					Acceptar("identificador");
+					Acceptar("dos_punts");
+				} catch (SyntacticError e) { }
+				
 				TIPUS();
 				LL_PARAM11();
 				return;
 				
 			case "perval":
-				Acceptar("perval");
-				Acceptar("identificador");
-				Acceptar("dos_punts");
+				try {
+					Acceptar("perval");
+					Acceptar("identificador");
+					Acceptar("dos_punts");
+				} catch (SyntacticError e) { }
+				
 				TIPUS();
 				LL_PARAM11();
 				return;
@@ -177,7 +203,9 @@ public class Asin {
 		switch (lookAhead.getTipus()) {
 		
 			case ",":
-				Acceptar("coma");
+				try {
+					Acceptar("coma");
+				} catch (SyntacticError e) { }
 				LL_PARAM1();
 				return;
 					
@@ -193,18 +221,23 @@ public class Asin {
 		switch (lookAhead.getTipus()) {
 			
 			case "tipus_simple": 
-				Acceptar("tipus_simple");
+				try {
+					Acceptar("tipus_simple");
+				} catch (SyntacticError e) { }
 				return;
 				
 			case "vector":
-				Acceptar("vector");//
-				Acceptar("claudator_obert");
-				EXPRESIO();
-				Acceptar("rang");
-				EXPRESIO();
-				Acceptar("claudator_tancat");
-				Acceptar("de");
-				Acceptar("tipus_simple");
+				try {
+					Acceptar("vector");
+					Acceptar("claudator_obert");
+					EXPRESIO();
+					Acceptar("rang");
+					EXPRESIO();
+					Acceptar("claudator_tancat");
+					Acceptar("de");
+					Acceptar("tipus_simple");
+				} catch (SyntacticError e) { }//
+				
 				return;
 				
 			default: Error.escriuError(0, "", 0, "");
