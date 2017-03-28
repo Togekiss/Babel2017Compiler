@@ -26,12 +26,11 @@ public class Asin {
 		if (lookAhead.getTipus().equals(token)) {
 			
 			lookAhead = alex.getToken();
-			
 			alex.writeToken(lookAhead);
-		} else {
 			
+		} else 
 			throw new SyntacticError("ACCEPT ERROR: EXPECTED " + token + " BUT RECEIVED " + lookAhead.getTipus());
-		}
+			
 		if (lookAhead.esEOF()) {
 			
 			error.tancaFitxer();
@@ -84,7 +83,8 @@ public class Asin {
 
 
 	private void DECL_CONST() {
-
+		
+		
 		try {
 			Acceptar("const");
 			Acceptar("identificador");
@@ -107,10 +107,7 @@ public class Asin {
 			TIPUS();
 			Acceptar("punt_i_coma");
 			
-		} catch (SyntacticError e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} catch (SyntacticError e) { }
 		return;
 
 	}
@@ -156,7 +153,9 @@ public class Asin {
 		
 			case "perref":
 			case "perval":
+			try {
 				LL_PARAM1();
+			} catch (SyntacticError e) { }
 				return;
 			
 			default: return;
@@ -166,7 +165,7 @@ public class Asin {
 	}
 	
 	
-	private void LL_PARAM1() {
+	private void LL_PARAM1() throws SyntacticError {
 		
 		switch (lookAhead.getTipus()) {
 		
@@ -192,7 +191,7 @@ public class Asin {
 				LL_PARAM11();
 				return;
 				
-			default: Error.escriuError(0, "", 0, "");
+			default: throw new SyntacticError("SYNTAX ERROR: EXPECTED perref OR perval BUT RECEIVED " + lookAhead.getTipus());
 		
 		}
 		
@@ -206,7 +205,9 @@ public class Asin {
 				try {
 					Acceptar("coma");
 				} catch (SyntacticError e) { }
-				LL_PARAM1();
+				try {
+					LL_PARAM1();
+				} catch (SyntacticError e) { }
 				return;
 					
 			
@@ -216,7 +217,7 @@ public class Asin {
 		
 	}
 	
-	private void TIPUS() {
+	private void TIPUS() throws SyntacticError {
 		
 		switch (lookAhead.getTipus()) {
 			
@@ -240,7 +241,7 @@ public class Asin {
 				
 				return;
 				
-			default: Error.escriuError(0, "", 0, "");
+			default: throw new SyntacticError("SYNTAX ERROR: EXPECTED tipus_simple OR vector BUT RECEIVED " + lookAhead.getTipus());
 				
 		}
 	}
@@ -348,7 +349,7 @@ public class Asin {
 		
 	}
 		
-	private void OP_EXP () {
+	private void OP_EXP () throws SyntacticError {
 		switch (lookAhead.getTipus()) {
 		
 			case "suma":
@@ -363,12 +364,12 @@ public class Asin {
 				Acceptar("or");
 				return;
 				
-			default: System.out.println("Error");
+			default: throw new SyntacticError("SYNTAX ERROR: EXPECTED suma OR resta OR or BUT RECEIVED " + lookAhead.getTipus());
 				
 		}
 	}
 	
-	private void OP_TERME () {
+	private void OP_TERME () throws SyntacticError {
 		
 		switch (lookAhead.getTipus()) {
 		
@@ -384,13 +385,13 @@ public class Asin {
 				Acceptar("and");
 				return;	
 				
-			default: System.out.println("Error");
+			default: throw new SyntacticError("SYNTAX ERROR: EXPECTED multiplicacio OR divisio OR and BUT RECEIVED " + lookAhead.getTipus());
 								
 		}
 		
 	}
 	
-	private void FACTOR () {
+	private void FACTOR () throws SyntacticError {
 		
 		switch (lookAhead.getTipus()) {
 		
@@ -408,9 +409,7 @@ public class Asin {
 				
 			case "identificador":
 				Acceptar("identificador");
-				try {
-					FACTOR1();
-				} catch (SyntacticError e) { }
+				FACTOR1();
 				return;	
 				
 			case "parentesi_obert":
@@ -421,7 +420,7 @@ public class Asin {
 				} catch (SyntacticError e) { }
 				return;
 				
-			default: System.out.println("Error");
+			default: throw new SyntacticError("SYNTAX ERROR: EXPECTED ct OR identificador OR parentesi_obert BUT RECEIVED " + lookAhead.getTipus());
 								
 		}
 	}
@@ -555,7 +554,7 @@ public class Asin {
 		}
 	}
 	
-	private void INSTRUCCIO () {
+	private void INSTRUCCIO () throws SyntacticError {
 		
 		switch (lookAhead.getTipus()) {
 		
@@ -634,13 +633,13 @@ public class Asin {
 				} catch (SyntacticError e) { }	
 				return;
 									
-			default: System.out.println("Error");
+			default: throw new SyntacticError("SYNTAX ERROR: UNEXPECTED " + lookAhead.getTipus());
 								
 		}
 	}
 
 	
-	private void INSTRUCCIO1 () {
+	private void INSTRUCCIO1 () throws SyntacticError {
 		
 		switch (lookAhead.getTipus()) {
 		
@@ -667,12 +666,12 @@ public class Asin {
 				} catch (SyntacticError e) { }	
 				return;
 							
-			default: System.out.println("Error");
+			default: throw new SyntacticError("SYNTAX ERROR: UNEXPECTED " + lookAhead.getTipus());
 									
 		}
 	}
 	
-	private void LL_EXP_ESCRIURE () {
+	private void LL_EXP_ESCRIURE () throws SyntacticError {
 		
 		switch (lookAhead.getTipus()) {
 		
@@ -690,7 +689,7 @@ public class Asin {
 				} catch (SyntacticError e) { }
 				return;
 				
-			default: System.out.println("Error");
+			default: throw new SyntacticError("SYNTAX ERROR: UNEXPECTED " + lookAhead.getTipus());
 									
 		}
 	}
