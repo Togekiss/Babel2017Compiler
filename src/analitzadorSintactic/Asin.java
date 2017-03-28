@@ -273,6 +273,8 @@ public class Asin {
 	private void EXPRESIO_SIMPLE() {
 		
 		OP_INICI_EXP();
+		TERME();
+		EXPRESIO_SIMPLE1();
 		return;
 		
 	}
@@ -714,10 +716,13 @@ public class Asin {
 		switch (lookAhead.getTipus()) {
 		
 			case "sino":
-				Acceptar("sino");
 				try {
-					LL_INST();
-				} catch (SyntacticError e) { }
+					Acceptar("sino");
+				} catch (SyntacticError e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				LL_INST();
 				return;
 				
 			default: return;
