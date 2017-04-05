@@ -2,6 +2,9 @@ package analitzadorSintactic;
 
 import main.Error;
 import main.Token;
+
+import java.util.ArrayList;
+
 import analitzadorLexicografic.Alex;
 // Recuperació fins a \n
 public class Asin {
@@ -36,6 +39,13 @@ public class Asin {
 		} else 
 			throw new SyntacticError(lookAhead.getLexema());
 			
+	}
+	
+	private void consumir (ArrayList<String> l) {
+		
+		while (!l.contains(lookAhead.getTipus())) {
+			lookAhead = alex.getToken();
+		}
 	}
 	
 	public boolean P() {
