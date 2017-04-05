@@ -25,11 +25,12 @@ public class Asin {
 		
 		if (lookAhead.getTipus().equals(token)) {
 			
+			System.out.println(lookAhead.getLexema() + " ACCEPTAT");
 			lookAhead = alex.getToken();
 			alex.writeToken(lookAhead);
 			
 		} else 
-			throw new SyntacticError("ACCEPT ERROR: EXPECTED " + token + " BUT RECEIVED " + lookAhead.getTipus());
+			throw new SyntacticError("LINE " + alex.getLiniaActual() + ": ACCEPT ERROR: EXPECTED " + token + " BUT RECEIVED " + lookAhead.getTipus());
 			
 		if (lookAhead.esEOF()) {
 			
@@ -40,7 +41,9 @@ public class Asin {
 	}
 	
 	public void P() {
+		
 
+		System.out.println("\tDins P");
 		DECL();
 		try {
 			Acceptar("prog");
@@ -56,6 +59,7 @@ public class Asin {
 
 	private void DECL() {
 
+		System.out.println("\tDins DECL");
 		DECL_CONST_VAR();
 		DECL_FUNC();
 		return;
@@ -65,6 +69,7 @@ public class Asin {
 
 	private void DECL_CONST_VAR() {
 
+		System.out.println("\tDins CONST_VAR");
 		switch (lookAhead.getTipus()) {
 
 			case "const":
@@ -84,7 +89,7 @@ public class Asin {
 
 	private void DECL_CONST() {
 		
-		
+		System.out.println("\tDins DECL_CONST");
 		try {
 			Acceptar("const");
 			Acceptar("identificador");
@@ -100,6 +105,7 @@ public class Asin {
 
 	private void DECL_VAR() {
 
+		System.out.println("\tDins DECL_VAR");
 		try {
 			Acceptar("var");
 			Acceptar("identificador");
@@ -115,6 +121,7 @@ public class Asin {
 
 	private void DECL_FUNC() {
 
+		System.out.println("\tDins DECL_FUNC");
 		switch (lookAhead.getTipus()) {
 	
 			case "funcio":
@@ -149,6 +156,7 @@ public class Asin {
 	
 	private void LL_PARAM() {
 		
+		System.out.println("\tDins LL_PARAM");
 		switch (lookAhead.getTipus()) {
 		
 			case "perref":
@@ -167,6 +175,7 @@ public class Asin {
 	
 	private void LL_PARAM1() throws SyntacticError {
 		
+		System.out.println("\tDins LL_PARAM1");
 		switch (lookAhead.getTipus()) {
 		
 			case "perref":
@@ -199,6 +208,7 @@ public class Asin {
 	
 	private void LL_PARAM11() {
 		
+		System.out.println("\tDins LL_PARAM11");
 		switch (lookAhead.getTipus()) {
 		
 			case ",":
@@ -219,6 +229,7 @@ public class Asin {
 	
 	private void TIPUS() throws SyntacticError {
 		
+		System.out.println("\tDins TIPUS");
 		switch (lookAhead.getTipus()) {
 			
 			case "tipus_simple": 
@@ -249,6 +260,7 @@ public class Asin {
 	
 	private void EXPRESIO() {
 		
+		System.out.println("\tDins EXPRESIO");
 		EXPRESIO_SIMPLE();
 		EXPRESIO1();
 		return;
@@ -258,10 +270,16 @@ public class Asin {
 	
 	private void EXPRESIO1() {
 		
+		System.out.println("\tDins EXPRESIO1 amb token " + lookAhead.getTipus());
 		switch (lookAhead.getTipus()) {
 		
-			case "op_rel": 
-				Acceptar("op_rel");
+			case "oper_rel": 
+			try {
+				Acceptar("oper_rel");
+			} catch (SyntacticError e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 				EXPRESIO_SIMPLE();
 				return;
 				
@@ -273,7 +291,13 @@ public class Asin {
 	
 	private void EXPRESIO_SIMPLE() {
 		
-		OP_INICI_EXP();
+		System.out.println("\tDins EXPRESIO_SIMPLE");
+		try {
+			OP_INICI_EXP();
+		} catch (SyntacticError e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		TERME();
 		EXPRESIO_SIMPLE1();
 		return;
@@ -283,12 +307,18 @@ public class Asin {
 	
 	private void EXPRESIO_SIMPLE1() {
 		
+		System.out.println("\tDins EXPRESIO_SIMPLE1");
 		switch (lookAhead.getTipus()) {
 		
 			case "suma":
 			case "resta":
 			case "or":
+			try {
 				OP_EXP();
+			} catch (SyntacticError e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 				TERME();
 				EXPRESIO_SIMPLE1();
 				return;
@@ -301,7 +331,13 @@ public class Asin {
 	
 	private void TERME() {
 		
-		FACTOR();
+		System.out.println("\tDins TERME");
+		try {
+			FACTOR();
+		} catch (SyntacticError e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		TERME1();
 		return;
 		
@@ -309,13 +345,20 @@ public class Asin {
 	
 	private void TERME1() {
 		
+		System.out.println("\tDins TERME1");
 		switch (lookAhead.getTipus()) {
 		
 			case "multiplicacio":
 			case "divisio":
 			case "and":
+			try {
 				OP_TERME();
 				FACTOR();
+			} catch (SyntacticError e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+				
 				TERME1();
 				return;
 				
@@ -326,8 +369,9 @@ public class Asin {
 	}
 	
 	
-	private void OP_INICI_EXP() {
+	private void OP_INICI_EXP() throws SyntacticError {
 		
+		System.out.println("\tDins INICI_EXP");
 		switch(lookAhead.getTipus()) {
 		
 			case "suma":
@@ -350,6 +394,8 @@ public class Asin {
 	}
 		
 	private void OP_EXP () throws SyntacticError {
+		
+		System.out.println("\tDins OP_EXP");
 		switch (lookAhead.getTipus()) {
 		
 			case "suma":
@@ -371,6 +417,7 @@ public class Asin {
 	
 	private void OP_TERME () throws SyntacticError {
 		
+		System.out.println("\tDins OP_TERME");
 		switch (lookAhead.getTipus()) {
 		
 			case "multiplicacio":
@@ -393,6 +440,7 @@ public class Asin {
 	
 	private void FACTOR () throws SyntacticError {
 		
+		System.out.println("\tDins FACTOR");
 		switch (lookAhead.getTipus()) {
 		
 			case "ct_enter":
@@ -427,19 +475,20 @@ public class Asin {
 	
 	private void FACTOR1 () {
 		
+		System.out.println("\tDins FACTOR1");
 		switch (lookAhead.getTipus()) {
 		
 			case "parentesi_obert":
-				Acceptar("parentesi_obert");
-				try { 
+				try {
+					Acceptar("parentesi_obert");
 					LL_EXPRESIO();
 					Acceptar("parentesi_tancat"); // parentesi tancat
 				} catch (SyntacticError e) { }
 				return;
 				
 			case "claudator_obert":
-				Acceptar("claudator_obert");
 				try {
+					Acceptar("claudator_obert");
 					EXPRESIO();
 					Acceptar("claudator_tancat"); // claudator tancat
 				} catch (SyntacticError e) { }
@@ -453,6 +502,7 @@ public class Asin {
 	
 	private void LL_EXPRESIO () {
 		
+		System.out.println("\tDins LL_EXPRESIO");
 		EXPRESIO();
 		LL_EXPRESIO1();
 		
@@ -460,11 +510,12 @@ public class Asin {
 	
 	private void LL_EXPRESIO1 () {
 		
+		System.out.println("\tDins LL_EXPRESIO1");
 		switch (lookAhead.getTipus()) {
 		
 			case "coma":
-				Acceptar("coma");
 				try {
+					Acceptar("coma");
 					LL_EXPRESIO();
 				} catch (SyntacticError e) { }
 				return;
@@ -476,6 +527,7 @@ public class Asin {
 	
 	private void LL_VAR () {
 		
+		System.out.println("\tDins LL_VAR");
 		VAR();
 		LL_VAR1();
 		
@@ -483,11 +535,12 @@ public class Asin {
 	
 	private void LL_VAR1 () {
 		
+		System.out.println("\tDins LL_VAR1");
 		switch (lookAhead.getTipus()) {
 		
 			case "coma":
-				Acceptar("coma");
 				try {
+					Acceptar("coma");
 					LL_VAR();
 				} catch (SyntacticError e) { }
 				return;
@@ -499,18 +552,26 @@ public class Asin {
 	
 	private void VAR () {
 		
-		Acceptar("identificador");
+		System.out.println("\tDins VAR");
+		try {
+			Acceptar("identificador");
+		} catch (SyntacticError e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		VAR1();
 		
 	}
 	
 	private void VAR1 () {
 		
+		System.out.println("\tDins VAR1");
 		switch (lookAhead.getTipus()) {
 		
 			case "claudator_obert":
-				Acceptar("claudator_obert");
+				
 				try {
+					Acceptar("claudator_obert");
 					EXPRESIO();
 					Acceptar("claudator_tancat");
 				} catch (SyntacticError e) { }	
@@ -523,8 +584,14 @@ public class Asin {
 	
 	private void LL_INST () {
 		
-		INSTRUCCIO();
-		Acceptar("punt_i_coma");
+		System.out.println("\tDins LL_INST");
+		try {
+			INSTRUCCIO();
+			Acceptar("punt_i_coma");
+		} catch (SyntacticError e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		LL_INST1();
 		return;
 		
@@ -532,6 +599,7 @@ public class Asin {
 	
 	private void LL_INST1 () {
 		
+		System.out.println("\tDins LL_INST1");
 		switch (lookAhead.getTipus()) {
 		
 			case "identificador":	
@@ -542,8 +610,8 @@ public class Asin {
 			case "si":				
 			case "retornar":		
 			case "percada":
-				INSTRUCCIO();
 				try {
+					INSTRUCCIO();
 					Acceptar("punt_i_coma"); // ;
 					LL_INST1();
 				} catch (SyntacticError e) { }	
@@ -556,6 +624,7 @@ public class Asin {
 	
 	private void INSTRUCCIO () throws SyntacticError {
 		
+		System.out.println("\tDins INSTRUCCIO");
 		switch (lookAhead.getTipus()) {
 		
 			case "identificador":
@@ -611,14 +680,14 @@ public class Asin {
 					LL_INST();
 					SINO();
 					Acceptar("fisi"); // fisi	 
-				} catch (SyntacticError e) { }	
+				} catch (SyntacticError e) { 
+					System.out.println("\tERROR EN EL SI");
+				}	
 				return;
 				
 			case "retornar":
 				Acceptar("retornar"); // retornar
-				try {
 					EXPRESIO();
-				} catch (SyntacticError e) { }
 				return;
 				
 			case "percada":
@@ -641,6 +710,7 @@ public class Asin {
 	
 	private void INSTRUCCIO1 () throws SyntacticError {
 		
+		System.out.println("\tDins INSTRUCCIO1");
 		switch (lookAhead.getTipus()) {
 		
 			case "suma":			
@@ -673,6 +743,7 @@ public class Asin {
 	
 	private void LL_EXP_ESCRIURE () throws SyntacticError {
 		
+		System.out.println("\tDins LL_EXP_ESCRIURE");
 		switch (lookAhead.getTipus()) {
 		
 			case "suma":			
@@ -684,9 +755,7 @@ public class Asin {
 			case "identificador":		
 			case "parentesi_obert":
 				EXPRESIO();
-				try {
 					LL_EXP_ESCRIURE1();
-				} catch (SyntacticError e) { }
 				return;
 				
 			default: throw new SyntacticError("SYNTAX ERROR: UNEXPECTED " + lookAhead.getTipus());
@@ -696,13 +765,17 @@ public class Asin {
 	
 	private void LL_EXP_ESCRIURE1 () {
 		
+		System.out.println("\tDins LL_EXP_ESCRIURE1");
 		switch (lookAhead.getTipus()) {
 		
 			case "coma":
+			try {
 				Acceptar("coma");
-				try {
+			} catch (SyntacticError e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 					EXPRESIO();
-				} catch (SyntacticError e) { }
 				return;
 							
 			default: return;
@@ -712,6 +785,7 @@ public class Asin {
 	
 	private void SINO () {
 		
+		System.out.println("\tDins SINO");
 		switch (lookAhead.getTipus()) {
 		
 			case "sino":
