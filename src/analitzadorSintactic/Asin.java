@@ -203,14 +203,10 @@ public class Asin {
 	private void LL_PARAM1() throws SyntacticError {
 		
 		System.out.println("\tDins LL_PARAM1");
-		try {
-			PER(); //no hauria de treure error
-			Acceptar("identificador");
-			Acceptar("dos_punts");
-		} catch (SyntacticError e) {
-			Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
-		}
 		
+		PER(); //no hauria de treure error
+		Acceptar("identificador");
+		Acceptar("dos_punts");
 		TIPUS();
 		LL_PARAM11();
 		return;
@@ -223,15 +219,11 @@ public class Asin {
 		switch (lookAhead.getTipus()) {
 		
 			case "perref":
-				try {
-					Acceptar("perref");
-				} catch (SyntacticError e) { }
+				Acceptar("perref");
 				return;
 				
 			case "perval":
-				try {
-					Acceptar("perval");
-				} catch (SyntacticError e) { }
+				Acceptar("perval");
 				return;
 				
 			default: throw new SyntacticError("perref, perval");
@@ -241,21 +233,16 @@ public class Asin {
 		
 	}
 	
-	private void LL_PARAM11() {
+	private void LL_PARAM11() throws SyntacticError{
 		
 		System.out.println("\tDins LL_PARAM11");
 		switch (lookAhead.getTipus()) {
 		
 			case ",":
-				try {
-					Acceptar("coma");
-				} catch (SyntacticError e) { }
-				try {
-					LL_PARAM1();
-				} catch (SyntacticError e) { }
+				Acceptar("coma");
+				LL_PARAM1();
 				return;
 					
-			
 			default: return;
 		
 		}
@@ -268,26 +255,21 @@ public class Asin {
 		switch (lookAhead.getTipus()) {
 			
 			case "tipus_simple": 
-				try {
-					Acceptar("tipus_simple");
-				} catch (SyntacticError e) { }
+				Acceptar("tipus_simple");
 				return;
 				
 			case "vector":
-				try {
-					Acceptar("vector");
-					Acceptar("claudator_obert");
-					EXPRESIO();
-					Acceptar("rang");
-					EXPRESIO();
-					Acceptar("claudator_tancat");
-					Acceptar("de");
-					Acceptar("tipus_simple");
-				} catch (SyntacticError e) { }//
-				
+				Acceptar("vector");
+				Acceptar("claudator_obert");
+				EXPRESIO();
+				Acceptar("rang");
+				EXPRESIO();
+				Acceptar("claudator_tancat");
+				Acceptar("de");
+				Acceptar("tipus_simple");
 				return;
 				
-			default: throw new SyntacticError("SYNTAX ERROR: EXPECTED tipus_simple OR vector BUT RECEIVED " + lookAhead.getTipus());
+			default: throw new SyntacticError("tipus_simple, vector");
 				
 		}
 	}
