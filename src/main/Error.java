@@ -50,7 +50,7 @@ public class Error {
 		case 27: writer.println("[ERR_SIN_7] " + numLinia + ", Construcció de " + variableError + " incorrecta");
 		return true;
 		
-		case 28: writer.println("[ERR_SIN_8] " + numLinia + ", Expressió incompleta: s’esperava " + variableEsperada + " i ha aparegut " + variableError);
+		case 28: writer.println("[ERR_SIN_8] " + numLinia + ", el factor conté errors");
 		return true;
 		
 		case 29: writer.println("[ERR_SIN_9] El procediment principal conté errors");

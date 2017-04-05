@@ -4,6 +4,7 @@ import main.Error;
 import main.Token;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import analitzadorLexicografic.Alex;
 // Recuperació fins a \n
@@ -57,6 +58,7 @@ public class Asin {
 			Acceptar("prog");
 		} catch (SyntacticError e) {
 			Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
+			consumir(new ArrayList<String>(Arrays.asList("identificador", "escriure", "llegir", "cicle", "mentre", "si", "percada", "retornar", "fiprog", "eof")));
 		}
 		LL_INST();
 		try {
@@ -170,7 +172,7 @@ public class Asin {
 				try {
 					Acceptar("func");
 				} catch (SyntacticError e) {
-					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[func]");
+					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
 				}
 				LL_INST();
 				try {
@@ -353,7 +355,7 @@ public class Asin {
 		try {
 			FACTOR();
 		} catch (SyntacticError e) {
-			// TODO Auto-generated catch block
+			Error.escriuError(28, "", alex.getLiniaActual(), "");
 		}
 		TERME1();
 		return;
@@ -372,7 +374,7 @@ public class Asin {
 					OP_TERME(); //mai donara error
 					FACTOR();
 				} catch (SyntacticError e) {
-					// TODO Auto-generated catch block
+					Error.escriuError(28, "", alex.getLiniaActual(), "");
 				}
 				
 				TERME1();
@@ -495,10 +497,10 @@ public class Asin {
 			case "parentesi_obert":
 				try {
 					Acceptar("parentesi_obert"); //no tirara error
-					LL_EXPRESIO(); //tira error
+					LL_EXPRESIO(); //tira error (falta ,)
 					Acceptar("parentesi_tancat"); // pot tirar error
 				} catch (SyntacticError e) {
-					//TODO
+					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
 				}
 				return;
 				
@@ -508,7 +510,7 @@ public class Asin {
 					EXPRESIO();
 					Acceptar("claudator_tancat"); // pot tirar error
 				} catch (SyntacticError e) {
-					//TODO
+					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
 				}
 				return;
 			
@@ -595,7 +597,7 @@ public class Asin {
 			INSTRUCCIO(); //pot tirar error (switch)
 			Acceptar("punt_i_coma");
 		} catch (SyntacticError e) {
-			// TODO Auto-generated catch block
+			Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
 		}
 		LL_INST1();
 		return;
@@ -620,7 +622,7 @@ public class Asin {
 					Acceptar("punt_i_coma"); //
 					LL_INST1();
 				} catch (SyntacticError e) {
-					//TODO depen d'instruccio o ;
+					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
 				}	
 				return;
 				
@@ -640,7 +642,7 @@ public class Asin {
 					Acceptar("igual");
 					INSTRUCCIO1();
 				} catch (SyntacticError e) {
-					//TODO part esquerre mal feta
+					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
 				}	
 				return;
 				
