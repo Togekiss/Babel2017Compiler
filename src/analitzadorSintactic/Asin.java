@@ -287,17 +287,14 @@ public class Asin {
 	
 	private void EXPRESIO1() {
 		
-		System.out.println("\tDins EXPRESIO1 amb token " + lookAhead.getTipus());
+		System.out.println("\tDins EXPRESIO1");
 		switch (lookAhead.getTipus()) {
 		
 			case "oper_rel": 
-			try {
-				Acceptar("oper_rel");
-			} catch (SyntacticError e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-				EXPRESIO_SIMPLE();
+				try {
+					Acceptar("oper_rel"); //mai donara error
+					EXPRESIO_SIMPLE();
+				} catch (SyntacticError e) {}
 				return;
 				
 			default: return;
@@ -310,11 +307,8 @@ public class Asin {
 		
 		System.out.println("\tDins EXPRESIO_SIMPLE");
 		try {
-			OP_INICI_EXP();
-		} catch (SyntacticError e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			OP_INICI_EXP(); //mai donara error
+		} catch (SyntacticError e) { }
 		TERME();
 		EXPRESIO_SIMPLE1();
 		return;
@@ -330,12 +324,9 @@ public class Asin {
 			case "suma":
 			case "resta":
 			case "or":
-			try {
-				OP_EXP();
-			} catch (SyntacticError e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+				try {
+					OP_EXP(); //mai donara error
+				} catch (SyntacticError e) { }
 				TERME();
 				EXPRESIO_SIMPLE1();
 				return;
@@ -353,7 +344,6 @@ public class Asin {
 			FACTOR();
 		} catch (SyntacticError e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		TERME1();
 		return;
@@ -368,13 +358,12 @@ public class Asin {
 			case "multiplicacio":
 			case "divisio":
 			case "and":
-			try {
-				OP_TERME();
-				FACTOR();
-			} catch (SyntacticError e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+				try {
+					OP_TERME(); //mai donara error
+					FACTOR();
+				} catch (SyntacticError e) {
+					// TODO Auto-generated catch block
+				}
 				
 				TERME1();
 				return;
@@ -427,7 +416,7 @@ public class Asin {
 				Acceptar("or");
 				return;
 				
-			default: throw new SyntacticError("SYNTAX ERROR: EXPECTED suma OR resta OR or BUT RECEIVED " + lookAhead.getTipus());
+			default: throw new SyntacticError("+, -, or");
 				
 		}
 	}
@@ -449,7 +438,7 @@ public class Asin {
 				Acceptar("and");
 				return;	
 				
-			default: throw new SyntacticError("SYNTAX ERROR: EXPECTED multiplicacio OR divisio OR and BUT RECEIVED " + lookAhead.getTipus());
+			default: throw new SyntacticError("*, /, and");
 								
 		}
 		
@@ -461,31 +450,29 @@ public class Asin {
 		switch (lookAhead.getTipus()) {
 		
 			case "ct_enter":
-				Acceptar("ct_enter");
+				Acceptar("ct_enter"); //no tirara error
 				return;
 				
 			case "ct_logica":
-				Acceptar("ct_logica");
+				Acceptar("ct_logica"); //no tirara error
 				return;
 				
 			case "ct_cadena":
-				Acceptar("ct_cadena");
+				Acceptar("ct_cadena"); //no tirara error
 				return;
 				
 			case "identificador":
-				Acceptar("identificador");
+				Acceptar("identificador"); //no tirara errror
 				FACTOR1();
 				return;	
 				
 			case "parentesi_obert":
-				Acceptar("parentesi_obert");
-				try {
-					EXPRESIO();
-					Acceptar("parentesi_tancat"); // parentesi tancat
-				} catch (SyntacticError e) { }
+				Acceptar("parentesi_obert"); //no tirara errror
+				EXPRESIO();
+				Acceptar("parentesi_tancat"); //pot tirar error
 				return;
 				
-			default: throw new SyntacticError("SYNTAX ERROR: EXPECTED ct OR identificador OR parentesi_obert BUT RECEIVED " + lookAhead.getTipus());
+			default: throw new SyntacticError("ct_enter, ct_logica, ct_cadena, identificador, (");
 								
 		}
 	}
