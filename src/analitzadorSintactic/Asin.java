@@ -7,13 +7,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import analitzadorLexicografic.Alex;
-// Recuperació fins a \n
+
 public class Asin {
 	
 	private Alex alex;
 	private Error error;
 	private Token lookAhead;
 	
+	//CONSTRUCTOR
 	public Asin (String args, String name) {
 		
 		alex = new Alex(args);
@@ -23,25 +24,23 @@ public class Asin {
 		
 	}
 	
-	public boolean fiOk() {
-		if (lookAhead.esEOF()) return true;
-		else return false;
-	}
 	
-	
+	//ACCEPTAR UN TOKEN
 	private void Acceptar (String token) throws SyntacticError {
 		
 		if (lookAhead.getTipus().equals(token)) {
 			
-			System.out.println(lookAhead.getLexema() + " ACCEPTAT");
+System.out.println("\t" + lookAhead.getLexema() + " ACCEPTAT");
 			lookAhead = alex.getToken();
 			alex.writeToken(lookAhead);
 			
 		} else 
 			throw new SyntacticError(lookAhead.getLexema());
-			
 	}
 	
+	
+	
+	//CONSUMIR TOKENS FINS TROBAR UN DEL CONJUNT DE SINCRONITZACIO 
 	private void consumir (ArrayList<String> l) {
 		
 		while (!l.contains(lookAhead.getTipus())) {
@@ -49,22 +48,30 @@ public class Asin {
 		}
 	}
 	
+	
+	
+	//SIMBOL AXIOMA
 	public boolean P() {
 		
-
-		System.out.println("\tDins P");
+System.out.println("Dins P");
 		DECL();
+		
 		try {
 			Acceptar("prog");
 		} catch (SyntacticError e) {
 			Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
-			consumir(new ArrayList<String>(Arrays.asList("identificador", "escriure", "llegir", "cicle", "mentre", "si", "percada", "retornar", "fiprog", "eof")));
+			//TODO SI DESPRES DE CONSUMIR ARRIBA AL TOKEN AL QUE TOCAVA, ES QUE HI HAVIA TOKEN DE MES!!!
+			//TODO COMPTANT LES VEGADES QUE CONSUMEIX PODEM SABER QUANTS TOKENS SOBREN
+			consumir(new ArrayList<String>(Arrays.asList("prog","identificador", "escriure", "llegir", "cicle", "mentre", "si", "percada", "retornar", "fiprog", "eof")));
 		}
+		
 		LL_INST();
+		
 		try {
 			Acceptar("fiprog");
 		} catch (SyntacticError e) {
 			Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
+			consumir(new ArrayList<String>(Arrays.asList("fiprog", "eof")));
 		}
 		
 		if (lookAhead.esEOF()) {
@@ -86,7 +93,7 @@ public class Asin {
 
 	private void DECL() {
 
-		System.out.println("\tDins DECL");
+System.out.println("Dins DECL");
 		DECL_CONST_VAR();
 		DECL_FUNC();
 		return;
@@ -96,7 +103,7 @@ public class Asin {
 
 	private void DECL_CONST_VAR() {
 
-		System.out.println("\tDins CONST_VAR");
+System.out.println("Dins CONST_VAR");
 		switch (lookAhead.getTipus()) {
 
 			case "const":
@@ -104,6 +111,7 @@ public class Asin {
 					DECL_CONST();
 				} catch (SyntacticError e) {
 					Error.escriuError(23, "", alex.getLiniaActual(), "");
+					consumir(new ArrayList<String>(Arrays.asList("const", "var", "funcio", "prog", "eof")));
 				}
 				DECL_CONST_VAR();
 				return;
@@ -113,6 +121,7 @@ public class Asin {
 					DECL_VAR();
 				} catch (SyntacticError e) {
 					Error.escriuError(24, "", alex.getLiniaActual(), "");
+					consumir(new ArrayList<String>(Arrays.asList("const", "var", "funcio", "prog", "eof")));
 				}
 				DECL_CONST_VAR();
 				return;
@@ -124,7 +133,7 @@ public class Asin {
 
 	private void DECL_CONST() throws SyntacticError{
 		
-		System.out.println("\tDins DECL_CONST");
+System.out.println("Dins DECL_CONST");
 		
 		Acceptar("const");
 		Acceptar("identificador");
@@ -138,7 +147,7 @@ public class Asin {
 
 	private void DECL_VAR() throws SyntacticError{
 
-		System.out.println("\tDins DECL_VAR");
+System.out.println("Dins DECL_VAR");
 	
 		Acceptar("var");
 		Acceptar("identificador");
@@ -152,7 +161,7 @@ public class Asin {
 
 	private void DECL_FUNC() {
 
-		System.out.println("\tDins DECL_FUNC");
+System.out.println("Dins DECL_FUNC");
 		switch (lookAhead.getTipus()) {
 	
 			case "funcio":
@@ -167,12 +176,17 @@ public class Asin {
 					Acceptar("punt_i_coma");
 				} catch (SyntacticError e) {
 					Error.escriuError(25, "", alex.getLiniaActual(), "");
+					//si la caguen a la declaracio i a func, es menja tota la funció :I
+					consumir(new ArrayList<String>(Arrays.asList("const", "var", "func", "fifunc", "eof")));
 				}
+				
 				DECL_CONST_VAR();
+				
 				try {
 					Acceptar("func");
 				} catch (SyntacticError e) {
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
+					consumir(new ArrayList<String>(Arrays.asList("prog","identificador", "escriure", "llegir", "cicle", "mentre", "si", "percada", "retornar", "fifunc", "eof")));
 				}
 				LL_INST();
 				try {
@@ -180,6 +194,11 @@ public class Asin {
 					Acceptar("punt_i_coma");
 				} catch (SyntacticError e) {
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
+					
+					//same, millor que no la caguin dos cops seguits :I
+					consumir(new ArrayList<String>(Arrays.asList("funcio", "prog", "punt_i_coma", "eof")));
+					if (lookAhead.getTipus().equals("punt_i_coma"))
+						try { Acceptar("punt_i_coma");} catch (SyntacticError e1){} //no generara error 
 				}
 				DECL_FUNC();
 				return;
