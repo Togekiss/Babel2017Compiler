@@ -484,18 +484,22 @@ public class Asin {
 		
 			case "parentesi_obert":
 				try {
-					Acceptar("parentesi_obert");
-					LL_EXPRESIO();
-					Acceptar("parentesi_tancat"); // parentesi tancat
-				} catch (SyntacticError e) { }
+					Acceptar("parentesi_obert"); //no tirara error
+					LL_EXPRESIO(); //tira error
+					Acceptar("parentesi_tancat"); // pot tirar error
+				} catch (SyntacticError e) {
+					//TODO
+				}
 				return;
 				
 			case "claudator_obert":
 				try {
-					Acceptar("claudator_obert");
+					Acceptar("claudator_obert"); //no tirara error
 					EXPRESIO();
-					Acceptar("claudator_tancat"); // claudator tancat
-				} catch (SyntacticError e) { }
+					Acceptar("claudator_tancat"); // pot tirar error
+				} catch (SyntacticError e) {
+					//TODO
+				}
 				return;
 			
 			default: return;
@@ -504,7 +508,7 @@ public class Asin {
 	}
 	
 	
-	private void LL_EXPRESIO () {
+	private void LL_EXPRESIO() throws SyntacticError {
 		
 		System.out.println("\tDins LL_EXPRESIO");
 		EXPRESIO();
@@ -512,16 +516,14 @@ public class Asin {
 		
 	}
 	
-	private void LL_EXPRESIO1 () {
+	private void LL_EXPRESIO1 () throws SyntacticError{
 		
 		System.out.println("\tDins LL_EXPRESIO1");
 		switch (lookAhead.getTipus()) {
 		
 			case "coma":
-				try {
-					Acceptar("coma");
-					LL_EXPRESIO();
-				} catch (SyntacticError e) { }
+				Acceptar("coma");
+				LL_EXPRESIO();
 				return;
 			
 			default: return;
@@ -529,7 +531,7 @@ public class Asin {
 		}
 	}
 	
-	private void LL_VAR () {
+	private void LL_VAR () throws SyntacticError {
 		
 		System.out.println("\tDins LL_VAR");
 		VAR();
@@ -537,16 +539,14 @@ public class Asin {
 		
 	}
 	
-	private void LL_VAR1 () {
+	private void LL_VAR1 () throws SyntacticError {
 		
 		System.out.println("\tDins LL_VAR1");
 		switch (lookAhead.getTipus()) {
 		
 			case "coma":
-				try {
-					Acceptar("coma");
-					LL_VAR();
-				} catch (SyntacticError e) { }
+				Acceptar("coma");
+				LL_VAR();
 				return;
 			
 			default: return;
@@ -554,31 +554,23 @@ public class Asin {
 		}
 	}
 	
-	private void VAR () {
+	private void VAR () throws SyntacticError {
 		
 		System.out.println("\tDins VAR");
-		try {
-			Acceptar("identificador");
-		} catch (SyntacticError e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Acceptar("identificador");
 		VAR1();
 		
 	}
 	
-	private void VAR1 () {
+	private void VAR1 () throws SyntacticError {
 		
 		System.out.println("\tDins VAR1");
 		switch (lookAhead.getTipus()) {
 		
 			case "claudator_obert":
-				
-				try {
-					Acceptar("claudator_obert");
-					EXPRESIO();
-					Acceptar("claudator_tancat");
-				} catch (SyntacticError e) { }	
+				Acceptar("claudator_obert");
+				EXPRESIO();
+				Acceptar("claudator_tancat");
 				return;						
 									
 			default: return;
@@ -590,11 +582,10 @@ public class Asin {
 		
 		System.out.println("\tDins LL_INST");
 		try {
-			INSTRUCCIO();
+			INSTRUCCIO(); //pot tirar error (switch)
 			Acceptar("punt_i_coma");
 		} catch (SyntacticError e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		LL_INST1();
 		return;
@@ -615,10 +606,12 @@ public class Asin {
 			case "retornar":		
 			case "percada":
 				try {
-					INSTRUCCIO();
-					Acceptar("punt_i_coma"); // ;
+					INSTRUCCIO(); //pot tirar error
+					Acceptar("punt_i_coma"); //
 					LL_INST1();
-				} catch (SyntacticError e) { }	
+				} catch (SyntacticError e) {
+					//TODO depen d'instruccio o ;
+				}	
 				return;
 				
 			default: return;
@@ -632,83 +625,107 @@ public class Asin {
 		switch (lookAhead.getTipus()) {
 		
 			case "identificador":
-				VAR();
 				try {
-					Acceptar("igual"); // =
+					VAR();//pot tirar error
+					Acceptar("igual");
 					INSTRUCCIO1();
-				} catch (SyntacticError e) { }	
+				} catch (SyntacticError e) {
+					//TODO part esquerre mal feta
+				}	
 				return;
 				
 			case "escriure":
-				Acceptar("escriure"); // escriure
+				Acceptar("escriure"); // mai donara error
 				try {
 					Acceptar("parentesi_obert"); // (
 					LL_EXP_ESCRIURE(); 	 
 					Acceptar("parentesi_tancat"); // )
-				} catch (SyntacticError e) { }
+				} catch (SyntacticError e) {
+					//TODO depen de si LL o () malament
+				}
 				return;		
 				
 			case "llegir":
-				Acceptar("llegir"); // llegir
+				Acceptar("llegir"); // mai donara error
 				try {
 					Acceptar("parentesi_obert"); // (
 					LL_VAR(); 	 
 					Acceptar("parentesi_tancat"); // )
-				} catch (SyntacticError e) { }	
+				} catch (SyntacticError e) {
+					//TODO depen de si LL o () malament
+				}	
 				return;
 				
 			case "cicle":
-				Acceptar("cicle"); // cicle
+				Acceptar("cicle"); // mai donara error
+				LL_INST();
 				try {
-					LL_INST();
 					Acceptar("fins"); // fins 	 
-					EXPRESIO();
 				} catch (SyntacticError e) {
-					
+					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
 				}
+				EXPRESIO();
 				return;
 				
 			case "mentre":
-				Acceptar("mentre"); // mentre
+				Acceptar("mentre"); // mai donara error
+				EXPRESIO();
+				try {
+					Acceptar("fer");
+				} catch (SyntacticError e) {
+					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
+				}
+				LL_INST();
 				try {	
-					EXPRESIO();
-					Acceptar("fer"); // fer	 
-					LL_INST();
-					Acceptar("fimentre"); // fimentre	
-				} catch (SyntacticError e) { }	
+					Acceptar("fimentre");	
+				} catch (SyntacticError e) {
+					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
+				}	
 				return;
 				
 			case "si":
-				Acceptar("si"); // si
-				try {	
-					EXPRESIO();
-					Acceptar("llavors"); // llavors	 
-					LL_INST();
-					SINO();
+				Acceptar("si"); // mai donara error
+				EXPRESIO();
+				try {
+					Acceptar("llavors");
+				} catch (SyntacticError e) {
+					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
+				}
+				LL_INST();
+				SINO();
+				try {
 					Acceptar("fisi"); // fisi	 
 				} catch (SyntacticError e) { 
-					System.out.println("\tERROR EN EL SI");
+					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
 				}	
 				return;
 				
 			case "retornar":
-				Acceptar("retornar"); // retornar
-					EXPRESIO();
+				Acceptar("retornar"); // mai donara error
+				EXPRESIO();
 				return;
 				
 			case "percada":
-				Acceptar("percada"); // percada
+				Acceptar("percada"); // mai donara error
 				try {
 					Acceptar("identificador"); // id
 					Acceptar("en"); // en
 					Acceptar("identificador"); // id
-					Acceptar("fer"); // fer	
-					LL_INST();
-					Acceptar("fiper"); // fiper	 
-				} catch (SyntacticError e) { }	
+					Acceptar("fer");
+				} catch (SyntacticError e) {
+					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
+				}	// fer	
+				LL_INST();
+				
+				try {
+					Acceptar("fiper"); // fiper	
+				} catch (SyntacticError e) {
+					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
+				}
+
 				return;
 									
-			default: throw new SyntacticError("SYNTAX ERROR: UNEXPECTED " + lookAhead.getTipus());
+			default: throw new SyntacticError("identificador, escriure, llegir, cicle, mentre, si, percada, retornar");
 								
 		}
 	}
@@ -731,18 +748,20 @@ public class Asin {
 			
 			case "si":
 				Acceptar("si");
-				Acceptar("parentesi_obert"); // (
 				try {
+					Acceptar("parentesi_obert"); // (
 					EXPRESIO();
 					Acceptar("parentesi_tancat"); // )
 					Acceptar("interrogant"); // ?
 					EXPRESIO();
 					Acceptar("dos_punts"); // :
 					EXPRESIO();
-				} catch (SyntacticError e) { }	
+				} catch (SyntacticError e) {
+					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
+				}	
 				return;
 							
-			default: throw new SyntacticError("SYNTAX ERROR: UNEXPECTED " + lookAhead.getTipus());
+			default: throw new SyntacticError("si, +, -, not, ct_enter, ct_logica, ct_cadena, identificador, (");
 									
 		}
 	}
@@ -761,27 +780,22 @@ public class Asin {
 			case "identificador":		
 			case "parentesi_obert":
 				EXPRESIO();
-					LL_EXP_ESCRIURE1();
+				LL_EXP_ESCRIURE1();
 				return;
 				
-			default: throw new SyntacticError("SYNTAX ERROR: UNEXPECTED " + lookAhead.getTipus());
+			default: throw new SyntacticError("+, -, not, ct_enter, ct_logica, ct_cadena, identificador, (");
 									
 		}
 	}
 	
-	private void LL_EXP_ESCRIURE1 () {
+	private void LL_EXP_ESCRIURE1 () throws SyntacticError {
 		
 		System.out.println("\tDins LL_EXP_ESCRIURE1");
 		switch (lookAhead.getTipus()) {
 		
 			case "coma":
-			try {
-				Acceptar("coma");
-			} catch (SyntacticError e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-					EXPRESIO();
+				Acceptar("coma"); //mai tirara error
+				EXPRESIO();
 				return;
 							
 			default: return;
@@ -796,11 +810,8 @@ public class Asin {
 		
 			case "sino":
 				try {
-					Acceptar("sino");
-				} catch (SyntacticError e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+					Acceptar("sino"); //mai tirara error
+				} catch (SyntacticError e) { }
 				LL_INST();
 				return;
 				
