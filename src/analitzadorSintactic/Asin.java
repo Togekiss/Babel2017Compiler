@@ -88,7 +88,11 @@ public class Asin {
 		switch (lookAhead.getTipus()) {
 
 			case "const":
-				DECL_CONST();
+				try {
+					DECL_CONST();
+				} catch (SyntacticError e) {
+					Error.escriuError(23, "", alex.getLiniaActual(), "");
+				}
 				DECL_CONST_VAR();
 				return;
 	
@@ -102,19 +106,14 @@ public class Asin {
 	}
 
 
-	private void DECL_CONST() {
+	private void DECL_CONST() throws SyntacticError{
 		
 		System.out.println("\tDins DECL_CONST");
-		try {
-			Acceptar("const");
-			Acceptar("identificador");
-			Acceptar("igual");
-			EXPRESIO();
-			Acceptar("punt_i_coma");
-			
-		} catch (SyntacticError e) {
-			Error.escriuError(23, "", alex.getLiniaActual(), "");
-		}
+		Acceptar("const");
+		Acceptar("identificador");
+		Acceptar("igual");
+		EXPRESIO();
+		Acceptar("punt_i_coma");
 		return;
 		
 	}
@@ -145,7 +144,7 @@ public class Asin {
 	
 			case "funcio":
 				try {
-					Acceptar("funcio");
+					Acceptar("funcio"); //no hauria de treure error
 					Acceptar("identificador");
 					Acceptar("parentesi_obert");
 					LL_PARAM();
@@ -202,7 +201,7 @@ public class Asin {
 		
 		System.out.println("\tDins LL_PARAM1");
 		try {
-			PER();
+			PER(); //no hauria de treure error
 			Acceptar("identificador");
 			Acceptar("dos_punts");
 		} catch (SyntacticError e) {
