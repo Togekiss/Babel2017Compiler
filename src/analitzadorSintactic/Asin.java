@@ -177,7 +177,7 @@ System.out.println("Dins DECL_FUNC");
 				} catch (SyntacticError e) {
 					Error.escriuError(25, "", alex.getLiniaActual(), "");
 					//si la caguen a la declaracio i a func, es menja tota la funció :I
-					consumir(new ArrayList<String>(Arrays.asList("const", "var", "func", "fifunc", "eof")));
+					consumir(new ArrayList<String>(Arrays.asList("const", "var", "func", "fifunc", "prog", "eof")));
 				}
 				
 				DECL_CONST_VAR();
