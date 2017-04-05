@@ -210,18 +210,14 @@ System.out.println("Dins DECL_FUNC");
 	}
 	
 	
-	private void LL_PARAM() {
+	private void LL_PARAM() throws SyntacticError {
 		
-		System.out.println("\tDins LL_PARAM");
+System.out.println("Dins LL_PARAM");
 		switch (lookAhead.getTipus()) {
 		
 			case "perref":
 			case "perval":
-				try {
-					LL_PARAM1();
-				} catch (SyntacticError e) {
-					Error.escriuError(210, "", alex.getLiniaActual(), "");
-				}
+				LL_PARAM1();
 				return;
 			
 			default: return;
@@ -233,7 +229,7 @@ System.out.println("Dins DECL_FUNC");
 	
 	private void LL_PARAM1() throws SyntacticError {
 		
-		System.out.println("\tDins LL_PARAM1");
+System.out.println("Dins LL_PARAM1");
 		
 		PER(); //no hauria de treure error
 		Acceptar("identificador");
@@ -246,7 +242,7 @@ System.out.println("Dins DECL_FUNC");
 	
 	private void PER() throws SyntacticError {
 		
-		System.out.println("\tDins PER");
+System.out.println("Dins PER");
 		switch (lookAhead.getTipus()) {
 		
 			case "perref":
@@ -266,7 +262,7 @@ System.out.println("Dins DECL_FUNC");
 	
 	private void LL_PARAM11() throws SyntacticError{
 		
-		System.out.println("\tDins LL_PARAM11");
+System.out.println("Dins LL_PARAM11");
 		switch (lookAhead.getTipus()) {
 		
 			case ",":
@@ -282,7 +278,7 @@ System.out.println("Dins DECL_FUNC");
 	
 	private void TIPUS() throws SyntacticError {
 		
-		System.out.println("\tDins TIPUS");
+System.out.println("Dins TIPUS");
 		switch (lookAhead.getTipus()) {
 			
 			case "tipus_simple": 
@@ -308,7 +304,7 @@ System.out.println("Dins DECL_FUNC");
 	
 	private void EXPRESIO() {
 		
-		System.out.println("\tDins EXPRESIO");
+System.out.println("Dins EXPRESIO");
 		EXPRESIO_SIMPLE();
 		EXPRESIO1();
 		return;
@@ -318,14 +314,14 @@ System.out.println("Dins DECL_FUNC");
 	
 	private void EXPRESIO1() {
 		
-		System.out.println("\tDins EXPRESIO1");
+System.out.println("Dins EXPRESIO1");
 		switch (lookAhead.getTipus()) {
 		
 			case "oper_rel": 
 				try {
-					Acceptar("oper_rel"); //mai donara error
-					EXPRESIO_SIMPLE();
+					Acceptar("oper_rel"); //mai donara error	
 				} catch (SyntacticError e) {}
+				EXPRESIO_SIMPLE();
 				return;
 				
 			default: return;
@@ -336,7 +332,7 @@ System.out.println("Dins DECL_FUNC");
 	
 	private void EXPRESIO_SIMPLE() {
 		
-		System.out.println("\tDins EXPRESIO_SIMPLE");
+System.out.println("Dins EXPRESIO_SIMPLE");
 		try {
 			OP_INICI_EXP(); //mai donara error
 		} catch (SyntacticError e) { }
@@ -349,7 +345,7 @@ System.out.println("Dins DECL_FUNC");
 	
 	private void EXPRESIO_SIMPLE1() {
 		
-		System.out.println("\tDins EXPRESIO_SIMPLE1");
+System.out.println("Dins EXPRESIO_SIMPLE1");
 		switch (lookAhead.getTipus()) {
 		
 			case "suma":
@@ -370,11 +366,13 @@ System.out.println("Dins DECL_FUNC");
 	
 	private void TERME() {
 		
-		System.out.println("\tDins TERME");
+System.out.println("Dins TERME");
 		try {
 			FACTOR();
 		} catch (SyntacticError e) {
 			Error.escriuError(28, "", alex.getLiniaActual(), "");
+			//TODO catch de factor
+			consumir(new ArrayList<String>(Arrays.asList("")));
 		}
 		TERME1();
 		return;
@@ -383,7 +381,7 @@ System.out.println("Dins DECL_FUNC");
 	
 	private void TERME1() {
 		
-		System.out.println("\tDins TERME1");
+System.out.println("\tDins TERME1");
 		switch (lookAhead.getTipus()) {
 		
 			case "multiplicacio":
@@ -394,6 +392,7 @@ System.out.println("Dins DECL_FUNC");
 					FACTOR();
 				} catch (SyntacticError e) {
 					Error.escriuError(28, "", alex.getLiniaActual(), "");
+					//TODO catch de factor
 				}
 				
 				TERME1();
