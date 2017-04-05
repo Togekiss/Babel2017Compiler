@@ -97,7 +97,11 @@ public class Asin {
 				return;
 	
 			case "var":
-				DECL_VAR();
+				try {
+					DECL_VAR();
+				} catch (SyntacticError e) {
+					Error.escriuError(24, "", alex.getLiniaActual(), "");
+				}
 				DECL_CONST_VAR();
 				return;
 	
@@ -109,6 +113,7 @@ public class Asin {
 	private void DECL_CONST() throws SyntacticError{
 		
 		System.out.println("\tDins DECL_CONST");
+		
 		Acceptar("const");
 		Acceptar("identificador");
 		Acceptar("igual");
@@ -119,19 +124,15 @@ public class Asin {
 	}
 
 
-	private void DECL_VAR() {
+	private void DECL_VAR() throws SyntacticError{
 
 		System.out.println("\tDins DECL_VAR");
-		try {
-			Acceptar("var");
-			Acceptar("identificador");
-			Acceptar("dos_punts");
-			TIPUS();
-			Acceptar("punt_i_coma");
-			
-		} catch (SyntacticError e) {
-			Error.escriuError(24, "", alex.getLiniaActual(), "");
-		}
+	
+		Acceptar("var");
+		Acceptar("identificador");
+		Acceptar("dos_punts");
+		TIPUS();
+		Acceptar("punt_i_coma");
 		return;
 
 	}
@@ -185,9 +186,11 @@ public class Asin {
 		
 			case "perref":
 			case "perval":
-			try {
-				LL_PARAM1();
-			} catch (SyntacticError e) { }
+				try {
+					LL_PARAM1();
+				} catch (SyntacticError e) {
+					Error.escriuError(210, "", alex.getLiniaActual(), "");
+				}
 				return;
 			
 			default: return;

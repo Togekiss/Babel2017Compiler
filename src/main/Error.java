@@ -26,25 +26,38 @@ public class Error {
 				return true;
 				
 		case 3: writer.println("[ERR_LEX_2] " + numLinia + ", Cadena oberta a final de linia o de fitxer");
+		return true;
 		
 		case 21: writer.println("[ERR_SIN_1] " + numLinia + ", S’esperaven els tokens " + variableEsperada + 
 				" però ha aparegut en l’entrada el token " + variableError);
+		return true;
 		
 		case 22: writer.println("[ERR_SIN_2] " + numLinia + ", Oblit del token " + variableEsperada);
+		return true;
 		
 		case 23: writer.println("[ERR_SIN_3] " + numLinia + ", La construcció de la declaració de la constant no és correcta");
+		return true;
 		
 		case 24: writer.println("[ERR_SIN_4] " + numLinia + ", La construcció de la declaració de la variable no és correcta");
+		return true;
 		
 		case 25: writer.println("[ERR_SIN_5] " + numLinia + ", La capçalera de la funció conté errors");
+		return true;
 		
 		case 26: writer.println("[ERR_SIN_6] " + numLinia + ", Hi ha codi després del fi del programa");
+		return true;
 		
 		case 27: writer.println("[ERR_SIN_7] " + numLinia + ", Construcció de " + variableError + " incorrecta");
+		return true;
 		
 		case 28: writer.println("[ERR_SIN_8] " + numLinia + ", Expressió incompleta: s’esperava " + variableEsperada + " i ha aparegut " + variableError);
+		return true;
 		
 		case 29: writer.println("[ERR_SIN_9] El procediment principal conté errors");
+		return true;
+		
+		case 210: writer.println("[ERR_SIN_10] " + numLinia + ", Error en la llista de paràmetres.");
+				return true;
 		
 		default: return false;
 		}
