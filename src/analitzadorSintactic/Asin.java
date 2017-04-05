@@ -651,7 +651,7 @@ public class Asin {
 					LL_EXP_ESCRIURE(); 	 
 					Acceptar("parentesi_tancat"); // )
 				} catch (SyntacticError e) {
-					//TODO depen de si LL o () malament
+					Error.escriuError(27, "escriure", alex.getLiniaActual(), "");
 				}
 				return;		
 				
@@ -662,7 +662,7 @@ public class Asin {
 					LL_VAR(); 	 
 					Acceptar("parentesi_tancat"); // )
 				} catch (SyntacticError e) {
-					//TODO depen de si LL o () malament
+					Error.escriuError(27, "llegir", alex.getLiniaActual(), "");
 				}	
 				return;
 				
@@ -672,6 +672,7 @@ public class Asin {
 				try {
 					Acceptar("fins"); // fins 	 
 				} catch (SyntacticError e) {
+					Error.escriuError(27, "cicle", alex.getLiniaActual(), "");
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
 				}
 				EXPRESIO();
@@ -683,12 +684,14 @@ public class Asin {
 				try {
 					Acceptar("fer");
 				} catch (SyntacticError e) {
+					Error.escriuError(27, "mentre", alex.getLiniaActual(), "");
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
 				}
 				LL_INST();
 				try {	
 					Acceptar("fimentre");	
 				} catch (SyntacticError e) {
+					Error.escriuError(27, "mentre", alex.getLiniaActual(), "");
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
 				}	
 				return;
@@ -699,6 +702,7 @@ public class Asin {
 				try {
 					Acceptar("llavors");
 				} catch (SyntacticError e) {
+					Error.escriuError(27, "si", alex.getLiniaActual(), "");
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
 				}
 				LL_INST();
@@ -706,6 +710,7 @@ public class Asin {
 				try {
 					Acceptar("fisi"); // fisi	 
 				} catch (SyntacticError e) { 
+					Error.escriuError(27, "si", alex.getLiniaActual(), "");
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
 				}	
 				return;
@@ -723,6 +728,7 @@ public class Asin {
 					Acceptar("identificador"); // id
 					Acceptar("fer");
 				} catch (SyntacticError e) {
+					Error.escriuError(27, "percada", alex.getLiniaActual(), "");
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
 				}	// fer	
 				LL_INST();
@@ -730,6 +736,7 @@ public class Asin {
 				try {
 					Acceptar("fiper"); // fiper	
 				} catch (SyntacticError e) {
+					Error.escriuError(27, "percada", alex.getLiniaActual(), "");
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
 				}
 
