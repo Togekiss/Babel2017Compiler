@@ -19,7 +19,11 @@ public class Asin {
 		
 	}
 	
-
+	public boolean fiOk() {
+		if (lookAhead.esEOF()) return true;
+		else return false;
+	}
+	
 	
 	private void Acceptar (String token) throws SyntacticError {
 		
@@ -30,29 +34,40 @@ public class Asin {
 			alex.writeToken(lookAhead);
 			
 		} else 
-			throw new SyntacticError("LINE " + alex.getLiniaActual() + ": ACCEPT ERROR: EXPECTED " + token + " BUT RECEIVED " + lookAhead.getTipus());
+			throw new SyntacticError(lookAhead.getLexema());
 			
-		if (lookAhead.esEOF()) {
-			
-			error.tancaFitxer();
-			alex.tancaFitxer();
-			//exit
-		}
 	}
 	
-	public void P() {
+	public boolean P() {
 		
 
 		System.out.println("\tDins P");
 		DECL();
 		try {
 			Acceptar("prog");
-		} catch (SyntacticError e) { }
+		} catch (SyntacticError e) {
+			Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
+		}
 		LL_INST();
 		try {
 			Acceptar("fiprog");
-		} catch (SyntacticError e) { }
-		return;
+		} catch (SyntacticError e) {
+			Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
+		}
+		
+		if (lookAhead.esEOF()) {
+			error.tancaFitxer();
+			alex.tancaFitxer();
+			return true;
+		}
+		else {
+			Error.escriuError(26, "", alex.getLiniaActual(), "");
+			error.tancaFitxer();
+			alex.tancaFitxer();
+			return false;
+		}
+		
+		
 
 	}
 
@@ -97,7 +112,9 @@ public class Asin {
 			EXPRESIO();
 			Acceptar("punt_i_coma");
 			
-		} catch (SyntacticError e) { }
+		} catch (SyntacticError e) {
+			Error.escriuError(23, "", alex.getLiniaActual(), "");
+		}
 		return;
 		
 	}
@@ -113,7 +130,9 @@ public class Asin {
 			TIPUS();
 			Acceptar("punt_i_coma");
 			
-		} catch (SyntacticError e) { }
+		} catch (SyntacticError e) {
+			Error.escriuError(24, "", alex.getLiniaActual(), "");
+		}
 		return;
 
 	}
@@ -134,16 +153,22 @@ public class Asin {
 					Acceptar("dos_punts");
 					Acceptar("tipus_simple");
 					Acceptar("punt_i_coma");
-				} catch (SyntacticError e) { }
+				} catch (SyntacticError e) {
+					Error.escriuError(25, "", alex.getLiniaActual(), "");
+				}
 				DECL_CONST_VAR();
 				try {
 					Acceptar("func");
-				} catch (SyntacticError e) { }
+				} catch (SyntacticError e) {
+					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[func]");
+				}
 				LL_INST();
 				try {
 					Acceptar("fifunc");
 					Acceptar("punt_i_coma");
-				} catch (SyntacticError e) { }
+				} catch (SyntacticError e) {
+					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
+				}
 				DECL_FUNC();
 				return;
 			
@@ -176,33 +201,41 @@ public class Asin {
 	private void LL_PARAM1() throws SyntacticError {
 		
 		System.out.println("\tDins LL_PARAM1");
+		try {
+			PER();
+			Acceptar("identificador");
+			Acceptar("dos_punts");
+		} catch (SyntacticError e) {
+			Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
+		}
+		
+		TIPUS();
+		LL_PARAM11();
+		return;
+		
+	}
+	
+	private void PER() throws SyntacticError {
+		
+		System.out.println("\tDins PER");
 		switch (lookAhead.getTipus()) {
 		
 			case "perref":
 				try {
 					Acceptar("perref");
-					Acceptar("identificador");
-					Acceptar("dos_punts");
 				} catch (SyntacticError e) { }
-				
-				TIPUS();
-				LL_PARAM11();
 				return;
 				
 			case "perval":
 				try {
 					Acceptar("perval");
-					Acceptar("identificador");
-					Acceptar("dos_punts");
 				} catch (SyntacticError e) { }
-				
-				TIPUS();
-				LL_PARAM11();
 				return;
 				
-			default: throw new SyntacticError("SYNTAX ERROR: EXPECTED perref OR perval BUT RECEIVED " + lookAhead.getTipus());
+			default: throw new SyntacticError("perref, perval");
 		
 		}
+		
 		
 	}
 	
@@ -659,7 +692,9 @@ public class Asin {
 					LL_INST();
 					Acceptar("fins"); // fins 	 
 					EXPRESIO();
-				} catch (SyntacticError e) { }
+				} catch (SyntacticError e) {
+					
+				}
 				return;
 				
 			case "mentre":
