@@ -376,9 +376,9 @@ System.out.println("Dins TERME");
 		} catch (SyntacticError e) {
 			Error.escriuError(28, "", alex.getLiniaActual(), "");
 			//TODO firsts de terme1
-			consumir(new ArrayList<String>(Arrays.asList("eof")));
-			if (lookAhead.getTipus().equals("punt_i_coma"))
-				try { Acceptar("punt_i_coma");} catch (SyntacticError e1){} //no generara error 
+			consumir(new ArrayList<String>(Arrays.asList("multiplicacio", "divisio", "and", "suma", "resta",
+					"or", "oper_rel", "punt_i_coma", "rang", "claudator_tancat", "parentesi_tancat", "coma",
+					"fer", "llavors","eof")));
 		}
 		TERME1();
 		return;
@@ -399,9 +399,9 @@ System.out.println("Dins TERME1");
 				} catch (SyntacticError e) {
 					Error.escriuError(28, "", alex.getLiniaActual(), "");
 					//TODO first de terme1
-					consumir(new ArrayList<String>(Arrays.asList("eof")));
-					if (lookAhead.getTipus().equals("punt_i_coma"))
-						try { Acceptar("punt_i_coma");} catch (SyntacticError e1){} //no generara error 
+					consumir(new ArrayList<String>(Arrays.asList("multiplicacio", "divisio", "and", "suma", "resta",
+							"or", "oper_rel", "punt_i_coma", "rang", "claudator_tancat", "parentesi_tancat", "coma",
+							"fer", "llavors","eof"))); 
 				}
 				
 				TERME1();
@@ -529,7 +529,9 @@ System.out.println("Dins FACTOR1");
 				} catch (SyntacticError e) {
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
 					//TODO follows factor1
-					consumir(new ArrayList<String>(Arrays.asList("parentesi_tancat", "eof")));
+					consumir(new ArrayList<String>(Arrays.asList("multiplicacio", "divisio", "and", "suma", "resta",
+							"or", "oper_rel", "punt_i_coma", "rang", "claudator_tancat", "parentesi_tancat", "coma",
+							"fer", "llavors","eof")));
 					if (lookAhead.getTipus().equals("parentesi_tancat"))
 						try { Acceptar("parentesi_tancat");} catch (SyntacticError e1){} //no generara error 
 				}
@@ -543,7 +545,9 @@ System.out.println("Dins FACTOR1");
 				} catch (SyntacticError e) {
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
 					//TODO completar amb follows factor1
-					consumir(new ArrayList<String>(Arrays.asList("claudator_tancat", "eof")));
+					consumir(new ArrayList<String>(Arrays.asList("multiplicacio", "divisio", "and", "suma", "resta",
+							"or", "oper_rel", "punt_i_coma", "rang", "claudator_tancat", "parentesi_tancat", "coma",
+							"fer", "llavors","eof")));
 					if (lookAhead.getTipus().equals("claudator_tancat"))
 						try { Acceptar("claudator_tancat");} catch (SyntacticError e1){} //no generara error 
 				}
@@ -633,8 +637,9 @@ System.out.println("Dins LL_INST");
 			Acceptar("punt_i_coma");
 		} catch (SyntacticError e) {
 			Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
-			consumir(new ArrayList<String>(Arrays.asList("punt_i_coma")));
-			//TODO completar amb firsts ll_inst1
+			//first ll_inst1
+			consumir(new ArrayList<String>(Arrays.asList("identificador", "escriure", "llegir", "cicle", "mentre", "si",
+					"retornar", "percada", "fifunc", "fiprog", "punt_i_coma", "fins", "fimentre", "per", "sino", "fisi","eof")));
 			if (lookAhead.getTipus().equals("punt_i_coma"))
 				try { Acceptar("punt_i_coma");} catch (SyntacticError e1){} //no generara error 
 		}
@@ -662,8 +667,9 @@ System.out.println("Dins LL_INST1");
 					
 				} catch (SyntacticError e) {
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
-					//TODO first de LL_INST1
-					consumir(new ArrayList<String>(Arrays.asList("funcio", "prog", "punt_i_coma", "eof")));
+					//first ll_inst1
+					consumir(new ArrayList<String>(Arrays.asList("identificador", "escriure", "llegir", "cicle", "mentre", "si",
+							"retornar", "percada", "fifunc", "fiprog", "punt_i_coma", "fins", "fimentre", "per", "sino", "fisi","eof")));
 					if (lookAhead.getTipus().equals("punt_i_coma"))
 						try { Acceptar("punt_i_coma");} catch (SyntacticError e1){} //no generara error 
 				}
@@ -687,8 +693,8 @@ System.out.println("Dins INSTRUCCIO");
 					INSTRUCCIO1();
 				} catch (SyntacticError e) {
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
-					//TODO follows instruccio
-					consumir(new ArrayList<String>(Arrays.asList("eof")));
+					//follows instruccio
+					consumir(new ArrayList<String>(Arrays.asList("punt_i_coma","eof")));
 					if (lookAhead.getTipus().equals("punt_i_coma"))
 						try { Acceptar("punt_i_coma");} catch (SyntacticError e1){} //no generara error 
 				}	
@@ -702,8 +708,8 @@ System.out.println("Dins INSTRUCCIO");
 					Acceptar("parentesi_tancat"); // )
 				} catch (SyntacticError e) {
 					Error.escriuError(27, "escriure", alex.getLiniaActual(), "");
-					//TODO follows instruccio
-					consumir(new ArrayList<String>(Arrays.asList("parentesi_tancat", "eof")));
+					//follows instruccio
+					consumir(new ArrayList<String>(Arrays.asList("punt_i_coma","parentesi_tancat", "eof")));
 					if (lookAhead.getTipus().equals("parentesi_tancat"))
 						try { Acceptar("parentesi_tancat");} catch (SyntacticError e1){} //no generara error 
 				}
@@ -717,8 +723,8 @@ System.out.println("Dins INSTRUCCIO");
 					Acceptar("parentesi_tancat"); // )
 				} catch (SyntacticError e) {
 					Error.escriuError(27, "llegir", alex.getLiniaActual(), "");
-					//TODO follows instruccio
-					consumir(new ArrayList<String>(Arrays.asList("parentesi_tancat", "eof")));
+					//follows instruccio
+					consumir(new ArrayList<String>(Arrays.asList("punt_i_coma","parentesi_tancat", "eof")));
 					if (lookAhead.getTipus().equals("parentesi_tancat"))
 						try { Acceptar("parentesi_tancat");} catch (SyntacticError e1){} //no generara error 
 				}	
@@ -732,8 +738,9 @@ System.out.println("Dins INSTRUCCIO");
 				} catch (SyntacticError e) {
 					Error.escriuError(27, "cicle", alex.getLiniaActual(), "");
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
-					//TODO first expresio
-					consumir(new ArrayList<String>(Arrays.asList("fins", "eof")));
+					//first expresio
+					consumir(new ArrayList<String>(Arrays.asList("suma", "resta", "not", "ct_entera", "ct_logica", "ct_cadena",
+							"identificador", "parentesi_obert","fins", "eof")));
 					if (lookAhead.getTipus().equals("fins"))
 						try { Acceptar("fins");} catch (SyntacticError e1){} //no generara error 
 				}
@@ -748,8 +755,9 @@ System.out.println("Dins INSTRUCCIO");
 				} catch (SyntacticError e) {
 					Error.escriuError(27, "mentre", alex.getLiniaActual(), "");
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
-					//TODO firsts ll_inst
-					consumir(new ArrayList<String>(Arrays.asList("fer", "eof")));
+					//firsts ll_inst
+					consumir(new ArrayList<String>(Arrays.asList("identificador", "escriure", "llegir", "cicle", "mentre",
+							"si", "retorna", "percada", "fer", "eof")));
 					if (lookAhead.getTipus().equals("fer"))
 						try { Acceptar("fer");} catch (SyntacticError e1){} //no generara error 
 				}
@@ -759,8 +767,8 @@ System.out.println("Dins INSTRUCCIO");
 				} catch (SyntacticError e) {
 					Error.escriuError(27, "mentre", alex.getLiniaActual(), "");
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
-					//TODO follows instruccio
-					consumir(new ArrayList<String>(Arrays.asList("fimentre", "eof")));
+					//follows instruccio
+					consumir(new ArrayList<String>(Arrays.asList("punt_i_coma","fimentre", "eof")));
 					if (lookAhead.getTipus().equals("fimentre"))
 						try { Acceptar("fimentre");} catch (SyntacticError e1){} //no generara error 
 				}	
@@ -774,8 +782,9 @@ System.out.println("Dins INSTRUCCIO");
 				} catch (SyntacticError e) {
 					Error.escriuError(27, "si", alex.getLiniaActual(), "");
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
-					//TODO fists ll_inst
-					consumir(new ArrayList<String>(Arrays.asList("llavors", "eof")));
+					//fists ll_inst
+					consumir(new ArrayList<String>(Arrays.asList("identificador", "escriure", "llegir", "cicle", "mentre",
+							"si", "retorna", "percada", "llavors", "eof")));
 					if (lookAhead.getTipus().equals("llavors"))
 						try { Acceptar("llavors");} catch (SyntacticError e1){} //no generara error 
 				}
@@ -786,8 +795,8 @@ System.out.println("Dins INSTRUCCIO");
 				} catch (SyntacticError e) { 
 					Error.escriuError(27, "si", alex.getLiniaActual(), "");
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
-					//TODO follows instruccio
-					consumir(new ArrayList<String>(Arrays.asList("fisi", "eof")));
+					//follows instruccio
+					consumir(new ArrayList<String>(Arrays.asList("punt_i_coma","fisi", "eof")));
 					if (lookAhead.getTipus().equals("fisi"))
 						try { Acceptar("fisi");} catch (SyntacticError e1){} //no generara error 
 				}	
@@ -808,8 +817,9 @@ System.out.println("Dins INSTRUCCIO");
 				} catch (SyntacticError e) {
 					Error.escriuError(27, "percada", alex.getLiniaActual(), "");
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
-					//TODO firsts ll_inst
-					consumir(new ArrayList<String>(Arrays.asList("fer", "eof")));
+					//firsts ll_inst
+					consumir(new ArrayList<String>(Arrays.asList("identificador", "escriure", "llegir", "cicle", "mentre",
+							"si", "retorna", "percada", "fer", "eof")));
 					if (lookAhead.getTipus().equals("fer"))
 						try { Acceptar("fer");} catch (SyntacticError e1){} //no generara error 
 				}
@@ -820,8 +830,8 @@ System.out.println("Dins INSTRUCCIO");
 				} catch (SyntacticError e) {
 					Error.escriuError(27, "percada", alex.getLiniaActual(), "");
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
-					//TODO follows instruccio
-					consumir(new ArrayList<String>(Arrays.asList("fiper", "eof")));
+					//follows instruccio
+					consumir(new ArrayList<String>(Arrays.asList("punt_i_coma", "fiper", "eof")));
 					if (lookAhead.getTipus().equals("fiper"))
 						try { Acceptar("fiper");} catch (SyntacticError e1){} //no generara error 
 				}
@@ -861,8 +871,8 @@ System.out.println("Dins INSTRUCCIO1");
 					EXPRESIO();
 				} catch (SyntacticError e) {
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
-					//TODO follows instruccio1
-					consumir(new ArrayList<String>(Arrays.asList("funcio", "prog", "punt_i_coma", "eof")));
+					//follows instruccio1
+					consumir(new ArrayList<String>(Arrays.asList("punt_i_coma", "eof")));
 					if (lookAhead.getTipus().equals("punt_i_coma"))
 						try { Acceptar("punt_i_coma");} catch (SyntacticError e1){} //no generara error 
 				}	
