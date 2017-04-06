@@ -63,6 +63,8 @@ System.out.println("Dins P");
 			//TODO SI DESPRES DE CONSUMIR ARRIBA AL TOKEN AL QUE TOCAVA, ES QUE HI HAVIA TOKEN DE MES!!!
 			//TODO COMPTANT LES VEGADES QUE CONSUMEIX PODEM SABER QUANTS TOKENS SOBREN
 			consumir(new ArrayList<String>(Arrays.asList("prog","identificador", "escriure", "llegir", "cicle", "mentre", "si", "percada", "retornar", "fiprog", "eof")));
+			if (lookAhead.getTipus().equals("prog"))
+				try { Acceptar("prog");} catch (SyntacticError e1){} //no generara error 
 		}
 		
 		LL_INST();
@@ -72,6 +74,8 @@ System.out.println("Dins P");
 		} catch (SyntacticError e) {
 			Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
 			consumir(new ArrayList<String>(Arrays.asList("fiprog", "eof")));
+			if (lookAhead.getTipus().equals("fiprog"))
+				try { Acceptar("fiprog");} catch (SyntacticError e1){} //no generara error 
 		}
 		
 		if (lookAhead.esEOF()) {
@@ -177,7 +181,7 @@ System.out.println("Dins DECL_FUNC");
 				} catch (SyntacticError e) {
 					Error.escriuError(25, "", alex.getLiniaActual(), "");
 					//si la caguen a la declaracio i a func, es menja tota la funció :I
-					consumir(new ArrayList<String>(Arrays.asList("const", "var", "func", "fifunc", "prog", "eof")));
+					consumir(new ArrayList<String>(Arrays.asList("const", "var", "func", "fifunc", "prog", "eof")));					
 				}
 				
 				DECL_CONST_VAR();
@@ -186,7 +190,9 @@ System.out.println("Dins DECL_FUNC");
 					Acceptar("func");
 				} catch (SyntacticError e) {
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
-					consumir(new ArrayList<String>(Arrays.asList("prog","identificador", "escriure", "llegir", "cicle", "mentre", "si", "percada", "retornar", "fifunc", "eof")));
+					consumir(new ArrayList<String>(Arrays.asList("func", "prog","identificador", "escriure", "llegir", "cicle", "mentre", "si", "percada", "retornar", "fifunc", "eof")));
+					if (lookAhead.getTipus().equals("func"))
+						try { Acceptar("func");} catch (SyntacticError e1){} //no generara error 
 				}
 				LL_INST();
 				try {
@@ -381,7 +387,7 @@ System.out.println("Dins TERME");
 	
 	private void TERME1() {
 		
-System.out.println("\tDins TERME1");
+System.out.println("Dins TERME1");
 		switch (lookAhead.getTipus()) {
 		
 			case "multiplicacio":
@@ -407,7 +413,7 @@ System.out.println("\tDins TERME1");
 	
 	private void OP_INICI_EXP() throws SyntacticError {
 		
-		System.out.println("\tDins INICI_EXP");
+System.out.println("Dins INICI_EXP");
 		switch(lookAhead.getTipus()) {
 		
 			case "suma":
@@ -431,7 +437,7 @@ System.out.println("\tDins TERME1");
 		
 	private void OP_EXP () throws SyntacticError {
 		
-		System.out.println("\tDins OP_EXP");
+System.out.println("Dins OP_EXP");
 		switch (lookAhead.getTipus()) {
 		
 			case "suma":
@@ -453,7 +459,7 @@ System.out.println("\tDins TERME1");
 	
 	private void OP_TERME () throws SyntacticError {
 		
-		System.out.println("\tDins OP_TERME");
+System.out.println("Dins OP_TERME");
 		switch (lookAhead.getTipus()) {
 		
 			case "multiplicacio":
@@ -476,7 +482,7 @@ System.out.println("\tDins TERME1");
 	
 	private void FACTOR () throws SyntacticError {
 		
-		System.out.println("\tDins FACTOR");
+System.out.println("Dins FACTOR");
 		switch (lookAhead.getTipus()) {
 		
 			case "ct_enter":
@@ -509,7 +515,7 @@ System.out.println("\tDins TERME1");
 	
 	private void FACTOR1 () {
 		
-		System.out.println("\tDins FACTOR1");
+System.out.println("Dins FACTOR1");
 		switch (lookAhead.getTipus()) {
 		
 			case "parentesi_obert":
@@ -519,6 +525,10 @@ System.out.println("\tDins TERME1");
 					Acceptar("parentesi_tancat"); // pot tirar error
 				} catch (SyntacticError e) {
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
+					//TODO completar amb follows
+					consumir(new ArrayList<String>(Arrays.asList("parentesi_tancat")));
+					if (lookAhead.getTipus().equals("parentesi_tancat"))
+						try { Acceptar("parentesi_tancat");} catch (SyntacticError e1){} //no generara error 
 				}
 				return;
 				
@@ -529,6 +539,10 @@ System.out.println("\tDins TERME1");
 					Acceptar("claudator_tancat"); // pot tirar error
 				} catch (SyntacticError e) {
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
+					//TODO completar amb follows
+					consumir(new ArrayList<String>(Arrays.asList("claudator_tancat")));
+					if (lookAhead.getTipus().equals("claudator_tancat"))
+						try { Acceptar("claudator_tancat");} catch (SyntacticError e1){} //no generara error 
 				}
 				return;
 			
@@ -540,7 +554,7 @@ System.out.println("\tDins TERME1");
 	
 	private void LL_EXPRESIO() throws SyntacticError {
 		
-		System.out.println("\tDins LL_EXPRESIO");
+System.out.println("Dins LL_EXPRESIO");
 		EXPRESIO();
 		LL_EXPRESIO1();
 		
@@ -548,7 +562,7 @@ System.out.println("\tDins TERME1");
 	
 	private void LL_EXPRESIO1 () throws SyntacticError{
 		
-		System.out.println("\tDins LL_EXPRESIO1");
+System.out.println("Dins LL_EXPRESIO1");
 		switch (lookAhead.getTipus()) {
 		
 			case "coma":
@@ -563,7 +577,7 @@ System.out.println("\tDins TERME1");
 	
 	private void LL_VAR () throws SyntacticError {
 		
-		System.out.println("\tDins LL_VAR");
+System.out.println("Dins LL_VAR");
 		VAR();
 		LL_VAR1();
 		
@@ -571,7 +585,7 @@ System.out.println("\tDins TERME1");
 	
 	private void LL_VAR1 () throws SyntacticError {
 		
-		System.out.println("\tDins LL_VAR1");
+System.out.println("Dins LL_VAR1");
 		switch (lookAhead.getTipus()) {
 		
 			case "coma":
@@ -586,7 +600,7 @@ System.out.println("\tDins TERME1");
 	
 	private void VAR () throws SyntacticError {
 		
-		System.out.println("\tDins VAR");
+System.out.println("Dins VAR");
 		Acceptar("identificador");
 		VAR1();
 		
@@ -594,7 +608,7 @@ System.out.println("\tDins TERME1");
 	
 	private void VAR1 () throws SyntacticError {
 		
-		System.out.println("\tDins VAR1");
+System.out.println("Dins VAR1");
 		switch (lookAhead.getTipus()) {
 		
 			case "claudator_obert":
@@ -610,12 +624,16 @@ System.out.println("\tDins TERME1");
 	
 	private void LL_INST () {
 		
-		System.out.println("\tDins LL_INST");
+System.out.println("Dins LL_INST");
 		try {
 			INSTRUCCIO(); //pot tirar error (switch)
 			Acceptar("punt_i_coma");
 		} catch (SyntacticError e) {
 			Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
+			consumir(new ArrayList<String>(Arrays.asList("punt_i_coma")));
+			//TODO completar amb follows
+			if (lookAhead.getTipus().equals("punt_i_coma"))
+				try { Acceptar("punt_i_coma");} catch (SyntacticError e1){} //no generara error 
 		}
 		LL_INST1();
 		return;
@@ -624,7 +642,7 @@ System.out.println("\tDins TERME1");
 	
 	private void LL_INST1 () {
 		
-		System.out.println("\tDins LL_INST1");
+System.out.println("Dins LL_INST1");
 		switch (lookAhead.getTipus()) {
 		
 			case "identificador":	
@@ -641,6 +659,10 @@ System.out.println("\tDins TERME1");
 					LL_INST1();
 				} catch (SyntacticError e) {
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
+					//TODO follows de LL_INST1
+					consumir(new ArrayList<String>(Arrays.asList("funcio", "prog", "punt_i_coma", "eof")));
+					if (lookAhead.getTipus().equals("punt_i_coma"))
+						try { Acceptar("punt_i_coma");} catch (SyntacticError e1){} //no generara error 
 				}	
 				return;
 				
@@ -651,7 +673,7 @@ System.out.println("\tDins TERME1");
 	
 	private void INSTRUCCIO () throws SyntacticError {
 		
-		System.out.println("\tDins INSTRUCCIO");
+System.out.println("Dins INSTRUCCIO");
 		switch (lookAhead.getTipus()) {
 		
 			case "identificador":
@@ -661,6 +683,10 @@ System.out.println("\tDins TERME1");
 					INSTRUCCIO1();
 				} catch (SyntacticError e) {
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
+					//TODO
+					consumir(new ArrayList<String>(Arrays.asList("funcio", "prog", "punt_i_coma", "eof")));
+					if (lookAhead.getTipus().equals("punt_i_coma"))
+						try { Acceptar("punt_i_coma");} catch (SyntacticError e1){} //no generara error 
 				}	
 				return;
 				
@@ -672,6 +698,10 @@ System.out.println("\tDins TERME1");
 					Acceptar("parentesi_tancat"); // )
 				} catch (SyntacticError e) {
 					Error.escriuError(27, "escriure", alex.getLiniaActual(), "");
+					//TODO follows
+					consumir(new ArrayList<String>(Arrays.asList("parentesi_tancat", "eof")));
+					if (lookAhead.getTipus().equals("parentesi_tancat"))
+						try { Acceptar("parentesi_tancat");} catch (SyntacticError e1){} //no generara error 
 				}
 				return;		
 				
@@ -683,6 +713,10 @@ System.out.println("\tDins TERME1");
 					Acceptar("parentesi_tancat"); // )
 				} catch (SyntacticError e) {
 					Error.escriuError(27, "llegir", alex.getLiniaActual(), "");
+					//TODO follows
+					consumir(new ArrayList<String>(Arrays.asList("parentesi_tancat", "eof")));
+					if (lookAhead.getTipus().equals("parentesi_tancat"))
+						try { Acceptar("parentesi_tancat");} catch (SyntacticError e1){} //no generara error 
 				}	
 				return;
 				
@@ -694,6 +728,10 @@ System.out.println("\tDins TERME1");
 				} catch (SyntacticError e) {
 					Error.escriuError(27, "cicle", alex.getLiniaActual(), "");
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
+					//TODO follows
+					consumir(new ArrayList<String>(Arrays.asList("fins", "eof")));
+					if (lookAhead.getTipus().equals("fins"))
+						try { Acceptar("fins");} catch (SyntacticError e1){} //no generara error 
 				}
 				EXPRESIO();
 				return;
@@ -706,6 +744,10 @@ System.out.println("\tDins TERME1");
 				} catch (SyntacticError e) {
 					Error.escriuError(27, "mentre", alex.getLiniaActual(), "");
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
+					//TODO follows
+					consumir(new ArrayList<String>(Arrays.asList("fer", "eof")));
+					if (lookAhead.getTipus().equals("fer"))
+						try { Acceptar("fer");} catch (SyntacticError e1){} //no generara error 
 				}
 				LL_INST();
 				try {	
@@ -713,6 +755,9 @@ System.out.println("\tDins TERME1");
 				} catch (SyntacticError e) {
 					Error.escriuError(27, "mentre", alex.getLiniaActual(), "");
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
+					consumir(new ArrayList<String>(Arrays.asList("fimentre", "eof")));
+					if (lookAhead.getTipus().equals("fimentre"))
+						try { Acceptar("fimentre");} catch (SyntacticError e1){} //no generara error 
 				}	
 				return;
 				
@@ -724,6 +769,10 @@ System.out.println("\tDins TERME1");
 				} catch (SyntacticError e) {
 					Error.escriuError(27, "si", alex.getLiniaActual(), "");
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
+					//TODO follows
+					consumir(new ArrayList<String>(Arrays.asList("llavors", "eof")));
+					if (lookAhead.getTipus().equals("llavors"))
+						try { Acceptar("llavors");} catch (SyntacticError e1){} //no generara error 
 				}
 				LL_INST();
 				SINO();
@@ -732,6 +781,10 @@ System.out.println("\tDins TERME1");
 				} catch (SyntacticError e) { 
 					Error.escriuError(27, "si", alex.getLiniaActual(), "");
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
+					//TODO follows
+					consumir(new ArrayList<String>(Arrays.asList("fisi", "eof")));
+					if (lookAhead.getTipus().equals("fisi"))
+						try { Acceptar("fisi");} catch (SyntacticError e1){} //no generara error 
 				}	
 				return;
 				
@@ -750,7 +803,11 @@ System.out.println("\tDins TERME1");
 				} catch (SyntacticError e) {
 					Error.escriuError(27, "percada", alex.getLiniaActual(), "");
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
-				}	// fer	
+					//TODO follows
+					consumir(new ArrayList<String>(Arrays.asList("fer", "eof")));
+					if (lookAhead.getTipus().equals("fer"))
+						try { Acceptar("fer");} catch (SyntacticError e1){} //no generara error 
+				}
 				LL_INST();
 				
 				try {
@@ -758,6 +815,10 @@ System.out.println("\tDins TERME1");
 				} catch (SyntacticError e) {
 					Error.escriuError(27, "percada", alex.getLiniaActual(), "");
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
+					//TODO follows
+					consumir(new ArrayList<String>(Arrays.asList("fiper", "eof")));
+					if (lookAhead.getTipus().equals("fiper"))
+						try { Acceptar("fiper");} catch (SyntacticError e1){} //no generara error 
 				}
 
 				return;
@@ -770,7 +831,7 @@ System.out.println("\tDins TERME1");
 	
 	private void INSTRUCCIO1 () throws SyntacticError {
 		
-		System.out.println("\tDins INSTRUCCIO1");
+System.out.println("Dins INSTRUCCIO1");
 		switch (lookAhead.getTipus()) {
 		
 			case "suma":			
@@ -795,6 +856,10 @@ System.out.println("\tDins TERME1");
 					EXPRESIO();
 				} catch (SyntacticError e) {
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
+					//TODO follows expressio
+					consumir(new ArrayList<String>(Arrays.asList("funcio", "prog", "punt_i_coma", "eof")));
+					if (lookAhead.getTipus().equals("punt_i_coma"))
+						try { Acceptar("punt_i_coma");} catch (SyntacticError e1){} //no generara error 
 				}	
 				return;
 							
@@ -805,7 +870,7 @@ System.out.println("\tDins TERME1");
 	
 	private void LL_EXP_ESCRIURE () throws SyntacticError {
 		
-		System.out.println("\tDins LL_EXP_ESCRIURE");
+System.out.println("Dins LL_EXP_ESCRIURE");
 		switch (lookAhead.getTipus()) {
 		
 			case "suma":			
@@ -827,7 +892,7 @@ System.out.println("\tDins TERME1");
 	
 	private void LL_EXP_ESCRIURE1 () throws SyntacticError {
 		
-		System.out.println("\tDins LL_EXP_ESCRIURE1");
+System.out.println("Dins LL_EXP_ESCRIURE1");
 		switch (lookAhead.getTipus()) {
 		
 			case "coma":
@@ -842,7 +907,7 @@ System.out.println("\tDins TERME1");
 	
 	private void SINO () {
 		
-		System.out.println("\tDins SINO");
+System.out.println("Dins SINO");
 		switch (lookAhead.getTipus()) {
 		
 			case "sino":
