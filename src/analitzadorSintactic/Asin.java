@@ -152,7 +152,7 @@ System.out.println("Fora DECL");
 
 	private void DECL_CONST_VAR() {
 
-System.out.println("Dins CONST_VAR");
+System.out.println("Dins DECL_CONST_VAR");
 		switch (lookAhead.getTipus()) {
 
 			case "const":
@@ -160,7 +160,7 @@ System.out.println("Dins CONST_VAR");
 					DECL_CONST();
 				} catch (SyntacticError e) {
 					Error.escriuError(23, "", alex.getLiniaActual(), "");
-					consumir(new ArrayList<String>(Arrays.asList("const", "var", "funcio", "prog", "eof")));
+					consumir(new ArrayList<String>(Arrays.asList("const", "var", "funcio", "prog","identificador", "eof")));
 				}
 				DECL_CONST_VAR();
 System.out.println("Fora DECL_CONST_VAR");
@@ -171,7 +171,7 @@ System.out.println("Fora DECL_CONST_VAR");
 					DECL_VAR();
 				} catch (SyntacticError e) {
 					Error.escriuError(24, "", alex.getLiniaActual(), "");
-					consumir(new ArrayList<String>(Arrays.asList("const", "var", "funcio", "prog", "eof")));
+					consumir(new ArrayList<String>(Arrays.asList("const", "var", "funcio", "prog", "identificador", "eof")));
 				}
 				DECL_CONST_VAR();
 System.out.println("Fora DECL_CONST_VAR");
@@ -232,7 +232,7 @@ System.out.println("Dins DECL_FUNC");
 				} catch (SyntacticError e) {
 					Error.escriuError(25, "", alex.getLiniaActual(), "");
 					//si la caguen a la declaracio i a func, es menja tota la funció :I
-					consumir(new ArrayList<String>(Arrays.asList("const", "var", "func", "fifunc", "prog", "eof")));					
+					consumir(new ArrayList<String>(Arrays.asList("const", "var", "identificador", "func", "fifunc", "prog", "eof")));					
 				}
 				
 				DECL_CONST_VAR();

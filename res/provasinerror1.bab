@@ -1,9 +1,8 @@
 const CONSTANT = 5;
 
-//variable sense el token var al principi
-id: logic;
-var id: vector [0 .. 24] de sencer;
+var id: logic;
 
+//funcio sense token final
 funcio lamevafuncio (perref id:sencer, perval id: logic): logic;
 func
 	
@@ -12,30 +11,26 @@ func
 		retornar cert;
 	sino
 		retornar fals;
-	
-fifunc;
+	fisi;
 
-//funcio ben feta
-funcio a (perref id:sencer): logic;
+//funcio amb error a la capçalera
+funcio a (perref > id:sencer): logic;
 func
 	i = 1;
 fifunc;
 
+//codi entre decl i prog
+id = 7364/6665+ 35;
 
 prog 
 
-	//rang mal definit
-	id[sempre ?? ajdbj si ] = ds;
+	//coma enlloc de punt i coma
+	id[sempre] = ds,
 	
 	id = lamevafuncio(id, id);
 	
-	
-	//mentre sense el token mentre
-	 id < 10 fer
-		escriure(id);
-		id = (id + 1);
-	fimentre;
-	
+	//declaracio dins de prog
+	var id:sencer;
 	
 	//cicle ben fet
 	cicle
@@ -43,13 +38,14 @@ prog
 	 fins (sentis);
 	
 	
-	//percada amb token de mes
-	percada tecla 7485 en teclat fer
+	//percada amb declaracio de funcio dins
+	percada tecla en teclat fer
 		llegir(tecla);
+		funcio b ():sencer;
+		func
+			returnar 12;
+		fifunc;
 	fiper;
 	
 	id = 454;
  fiprog
- 
- //codi extra despres de fiprog
- codi!!
