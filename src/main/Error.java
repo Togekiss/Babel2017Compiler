@@ -52,13 +52,7 @@ public class Error {
 		
 		case 28: writer.println("[ERR_SIN_8] " + numLinia + ", el factor conte errors");
 		return true;
-		
-		case 29: writer.println("[ERR_SIN_9] El procediment principal conte errors");
-		return true;
-		
-		case 210: writer.println("[ERR_SIN_10] " + numLinia + ", Error en la llista de parametres.");
-				return true;
-		
+
 		default: return false;
 		}
 	}
