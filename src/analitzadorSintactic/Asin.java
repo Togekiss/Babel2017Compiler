@@ -404,7 +404,7 @@ System.out.println("Dins TERME");
 			FACTOR();
 		} catch (SyntacticError e) {
 			Error.escriuError(28, "", alex.getLiniaActual(), "");
-			//TODO firsts de terme1
+			// firsts de terme1
 			consumir(new ArrayList<String>(Arrays.asList("multiplicacio", "divisio", "and", "suma", "resta",
 					"or", "oper_rel", "punt_i_coma", "rang", "claudator_tancat", "parentesi_tancat", "coma",
 					"fer", "llavors","eof")));
@@ -428,7 +428,7 @@ System.out.println("Dins TERME1");
 					FACTOR();
 				} catch (SyntacticError e) {
 					Error.escriuError(28, "", alex.getLiniaActual(), "");
-					//TODO first de terme1
+					//first de terme1
 					consumir(new ArrayList<String>(Arrays.asList("multiplicacio", "divisio", "and", "suma", "resta",
 							"or", "oper_rel", "punt_i_coma", "rang", "claudator_tancat", "parentesi_tancat", "coma",
 							"fer", "llavors","eof"))); 
@@ -577,7 +577,7 @@ System.out.println("Dins FACTOR1");
 					Acceptar("parentesi_tancat"); // pot tirar error
 				} catch (SyntacticError e) {
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
-					//TODO follows factor1
+					//follows factor1
 					consumir(new ArrayList<String>(Arrays.asList("multiplicacio", "divisio", "and", "suma", "resta",
 							"or", "oper_rel", "punt_i_coma", "rang", "claudator_tancat", "parentesi_tancat", "coma",
 							"fer", "llavors","eof")));
@@ -594,7 +594,7 @@ System.out.println("Fora FACTOR1");
 					Acceptar("claudator_tancat"); // pot tirar error
 				} catch (SyntacticError e) {
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
-					//TODO completar amb follows factor1
+					//follows factor1
 					consumir(new ArrayList<String>(Arrays.asList("multiplicacio", "divisio", "and", "suma", "resta",
 							"or", "oper_rel", "punt_i_coma", "rang", "claudator_tancat", "parentesi_tancat", "coma",
 							"fer", "llavors","eof")));
@@ -765,7 +765,8 @@ System.out.println("Dins INSTRUCCIO");
 				} catch (SyntacticError e) {
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
 					//follows instruccio
-					consumir(new ArrayList<String>(Arrays.asList("punt_i_coma","eof")));
+					consumir(new ArrayList<String>(Arrays.asList("escriure", "llegir", "cicle", "mentre", "si",
+							"retornar", "percada", "fifunc", "fiprog", "punt_i_coma", "fins", "fimentre", "per", "sino", "fisi","eof")));
 				}
 System.out.println("Fora INSTRUCCIO");
 				return;
@@ -779,7 +780,7 @@ System.out.println("Fora INSTRUCCIO");
 				} catch (SyntacticError e) {
 					Error.escriuError(27, "escriure", alex.getLiniaActual(), "");
 					//follows instruccio
-					consumir(new ArrayList<String>(Arrays.asList("punt_i_coma","parentesi_tancat", "eof")));
+					consumir(new ArrayList<String>(Arrays.asList("punt_i_coma","parentesi_tancat", "fiprog", "eof")));
 					if (lookAhead.getTipus().equals("parentesi_tancat"))
 						try { Acceptar("parentesi_tancat");} catch (SyntacticError e1){} //no generara error 
 				}
@@ -795,7 +796,7 @@ System.out.println("Fora INSTRUCCIO");
 				} catch (SyntacticError e) {
 					Error.escriuError(27, "llegir", alex.getLiniaActual(), "");
 					//follows instruccio
-					consumir(new ArrayList<String>(Arrays.asList("punt_i_coma","parentesi_tancat", "eof")));
+					consumir(new ArrayList<String>(Arrays.asList("punt_i_coma","parentesi_tancat","fiprog", "eof")));
 					if (lookAhead.getTipus().equals("parentesi_tancat"))
 						try { Acceptar("parentesi_tancat");} catch (SyntacticError e1){} //no generara error 
 				}
@@ -812,7 +813,7 @@ System.out.println("Fora INSTRUCCIO");
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
 					//first expresio
 					consumir(new ArrayList<String>(Arrays.asList("suma", "resta", "not", "ct_entera", "ct_logica", "ct_cadena",
-							"identificador", "parentesi_obert","fins", "eof")));
+							"identificador", "parentesi_obert","fins", "eof", "fiprog")));
 					if (lookAhead.getTipus().equals("fins"))
 						try { Acceptar("fins");} catch (SyntacticError e1){} //no generara error 
 				}
@@ -830,7 +831,7 @@ System.out.println("Fora INSTRUCCIO");
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
 					//firsts ll_inst
 					consumir(new ArrayList<String>(Arrays.asList("identificador", "escriure", "llegir", "cicle", "mentre",
-							"si", "retorna", "percada", "fer", "eof")));
+							"si", "retorna", "percada", "fer", "eof", "fiprog")));
 					if (lookAhead.getTipus().equals("fer"))
 						try { Acceptar("fer");} catch (SyntacticError e1){} //no generara error 
 				}
@@ -841,7 +842,7 @@ System.out.println("Fora INSTRUCCIO");
 					Error.escriuError(27, "mentre", alex.getLiniaActual(), "");
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
 					//follows instruccio
-					consumir(new ArrayList<String>(Arrays.asList("punt_i_coma","fimentre", "eof")));
+					consumir(new ArrayList<String>(Arrays.asList("punt_i_coma","fimentre", "eof", "fiprog")));
 					if (lookAhead.getTipus().equals("fimentre"))
 						try { Acceptar("fimentre");} catch (SyntacticError e1){} //no generara error 
 				}
@@ -858,7 +859,7 @@ System.out.println("Fora INSTRUCCIO");
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
 					//fists ll_inst
 					consumir(new ArrayList<String>(Arrays.asList("identificador", "escriure", "llegir", "cicle", "mentre",
-							"si", "retornar", "percada", "llavors", "eof")));
+							"si", "retornar", "percada", "llavors", "eof", "fiprog")));
 					if (lookAhead.getTipus().equals("llavors"))
 						try { Acceptar("llavors");} catch (SyntacticError e1){} //no generara error 
 				}
@@ -870,7 +871,7 @@ System.out.println("Fora INSTRUCCIO");
 					Error.escriuError(27, "si", alex.getLiniaActual(), "");
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
 					//follows instruccio
-					consumir(new ArrayList<String>(Arrays.asList("punt_i_coma","fisi", "eof")));
+					consumir(new ArrayList<String>(Arrays.asList("punt_i_coma","fisi", "eof", "fiprog")));
 					if (lookAhead.getTipus().equals("fisi"))
 						try { Acceptar("fisi");} catch (SyntacticError e1){} //no generara error 
 				}
@@ -895,7 +896,7 @@ System.out.println("Fora INSTRUCCIO");
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
 					//firsts ll_inst
 					consumir(new ArrayList<String>(Arrays.asList("identificador", "escriure", "llegir", "cicle", "mentre",
-							"si", "retorna", "percada", "fer", "eof")));
+							"si", "retorna", "percada", "fer", "eof", "fiprog")));
 					if (lookAhead.getTipus().equals("fer"))
 						try { Acceptar("fer");} catch (SyntacticError e1){} //no generara error 
 				}
@@ -907,7 +908,7 @@ System.out.println("Fora INSTRUCCIO");
 					Error.escriuError(27, "percada", alex.getLiniaActual(), "");
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
 					//follows instruccio
-					consumir(new ArrayList<String>(Arrays.asList("punt_i_coma", "fiper", "eof")));
+					consumir(new ArrayList<String>(Arrays.asList("punt_i_coma", "fiper", "eof", "fiprog")));
 					if (lookAhead.getTipus().equals("fiper"))
 						try { Acceptar("fiper");} catch (SyntacticError e1){} //no generara error 
 				}
@@ -951,9 +952,7 @@ System.out.println("Fora INSTRUCCIO1");
 				} catch (SyntacticError e) {
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
 					//follows instruccio1
-					consumir(new ArrayList<String>(Arrays.asList("punt_i_coma", "eof")));
-					if (lookAhead.getTipus().equals("punt_i_coma"))
-						try { Acceptar("punt_i_coma");} catch (SyntacticError e1){} //no generara error 
+					consumir(new ArrayList<String>(Arrays.asList("punt_i_coma", "eof", "fiprog")));
 				}
 System.out.println("Fora INSTRUCCIO1");
 				return;

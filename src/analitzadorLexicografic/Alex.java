@@ -244,6 +244,7 @@ public class Alex {
 						seguent = true;
 						Error.escriuError(1, ".", liniaActual, "");
 					}
+					break;
 					
 				case ('-'):
 					token.setTipus("resta");

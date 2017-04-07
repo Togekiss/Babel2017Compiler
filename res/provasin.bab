@@ -1,6 +1,6 @@
 const CONSTANT = 5;
 
-var id: sencer;
+var id: vector [0 .. 24] de sencer;
 
 funcio lamevafuncio (perref id:sencer): logic;
 func
@@ -14,11 +14,13 @@ fifunc;
 
 prog 
 
-i&/d = 0;
+id = 0;
 mentre id < 10 fer
 	escriure(id);
 	id = (id + 1);
 fimentre;
 
+
+id[sempre] = ds;
 
 fiprog
