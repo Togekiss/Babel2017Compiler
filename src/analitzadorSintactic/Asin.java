@@ -35,7 +35,7 @@ System.out.println("\t" + lookAhead.getLexema() + " ACCEPTAT");
 			alex.writeToken(lookAhead);
 			
 		} else 
-			throw new SyntacticError(lookAhead.getLexema());
+			throw new SyntacticError(token);
 	}
 	
 	
@@ -98,6 +98,7 @@ System.out.println("Dins P");
 System.out.println("Dins DECL");
 		DECL_CONST_VAR();
 		DECL_FUNC();
+System.out.println("Fora DECL");
 		return;
 
 	}
@@ -116,6 +117,7 @@ System.out.println("Dins CONST_VAR");
 					consumir(new ArrayList<String>(Arrays.asList("const", "var", "funcio", "prog", "eof")));
 				}
 				DECL_CONST_VAR();
+System.out.println("Fora DECL_CONST_VAR");
 				return;
 	
 			case "var":
@@ -126,9 +128,12 @@ System.out.println("Dins CONST_VAR");
 					consumir(new ArrayList<String>(Arrays.asList("const", "var", "funcio", "prog", "eof")));
 				}
 				DECL_CONST_VAR();
+System.out.println("Fora DECL_CONST_VAR");
 				return;
 	
-			default: return;
+			default: 
+System.out.println("Fora DECL_CONST_VAR");
+				return;
 		}
 	}
 
@@ -142,6 +147,7 @@ System.out.println("Dins DECL_CONST");
 		Acceptar("igual");
 		EXPRESIO();
 		Acceptar("punt_i_coma");
+System.out.println("Fora DECL_CONST");
 		return;
 		
 	}
@@ -156,6 +162,7 @@ System.out.println("Dins DECL_VAR");
 		Acceptar("dos_punts");
 		TIPUS();
 		Acceptar("punt_i_coma");
+System.out.println("Fora DECL_VAR");
 		return;
 
 	}
@@ -205,9 +212,12 @@ System.out.println("Dins DECL_FUNC");
 						try { Acceptar("punt_i_coma");} catch (SyntacticError e1){} //no generara error 
 				}
 				DECL_FUNC();
+System.out.println("Fora DECL_FUNC");
 				return;
 			
-			default: return;
+			default:
+System.out.println("Fora DECL_FUNC");
+				return;
 
 		}
 
@@ -222,9 +232,12 @@ System.out.println("Dins LL_PARAM");
 			case "perref":
 			case "perval":
 				LL_PARAM1();
+System.out.println("Fora LL_PARAM");
 				return;
 			
-			default: return;
+			default:
+System.out.println("Fora LL_PARAM");
+				return;
 		
 		}
 		
@@ -240,6 +253,7 @@ System.out.println("Dins LL_PARAM1");
 		Acceptar("dos_punts");
 		TIPUS();
 		LL_PARAM11();
+System.out.println("Fora LL_PARAM1");
 		return;
 		
 	}
@@ -251,10 +265,12 @@ System.out.println("Dins PER");
 		
 			case "perref":
 				Acceptar("perref");
+System.out.println("Fora PER");
 				return;
 				
 			case "perval":
 				Acceptar("perval");
+System.out.println("Fora PER");
 				return;
 				
 			default: throw new SyntacticError("perref, perval");
@@ -272,9 +288,12 @@ System.out.println("Dins LL_PARAM11");
 			case ",":
 				Acceptar("coma");
 				LL_PARAM1();
+System.out.println("Fora LL_PARAM11");
 				return;
 					
-			default: return;
+			default:
+System.out.println("Fora LL_PARAM11");
+				return;
 		
 		}
 		
@@ -287,6 +306,7 @@ System.out.println("Dins TIPUS");
 			
 			case "tipus_simple": 
 				Acceptar("tipus_simple");
+System.out.println("Fora TIPUS");
 				return;
 				
 			case "vector":
@@ -298,6 +318,7 @@ System.out.println("Dins TIPUS");
 				Acceptar("claudator_tancat");
 				Acceptar("de");
 				Acceptar("tipus_simple");
+System.out.println("Fora TIPUS");
 				return;
 				
 			default: throw new SyntacticError("tipus_simple, vector");
@@ -311,6 +332,7 @@ System.out.println("Dins TIPUS");
 System.out.println("Dins EXPRESIO");
 		EXPRESIO_SIMPLE();
 		EXPRESIO1();
+System.out.println("Fora EXPRESIO");
 		return;
 		
 	}
@@ -326,9 +348,12 @@ System.out.println("Dins EXPRESIO1");
 					Acceptar("oper_rel"); //mai donara error	
 				} catch (SyntacticError e) {}
 				EXPRESIO_SIMPLE();
+System.out.println("Fora EXPRESIO1");
 				return;
 				
-			default: return;
+			default: 
+System.out.println("Fora EXPRESIO1");
+				return;
 		
 		}
 	}
@@ -342,6 +367,7 @@ System.out.println("Dins EXPRESIO_SIMPLE");
 		} catch (SyntacticError e) { }
 		TERME();
 		EXPRESIO_SIMPLE1();
+System.out.println("Fora EXPRESIO_SIMPLE");
 		return;
 		
 	}
@@ -360,9 +386,12 @@ System.out.println("Dins EXPRESIO_SIMPLE1");
 				} catch (SyntacticError e) { }
 				TERME();
 				EXPRESIO_SIMPLE1();
+System.out.println("Fora EXPRESIO_SIMPLE1");
 				return;
 				
-			default: return;
+			default:
+System.out.println("Fora EXPRESIO_SIMPLE1");
+				return;
 		
 		}
 		
@@ -381,6 +410,7 @@ System.out.println("Dins TERME");
 					"fer", "llavors","eof")));
 		}
 		TERME1();
+System.out.println("Fora TERME");
 		return;
 		
 	}
@@ -405,9 +435,12 @@ System.out.println("Dins TERME1");
 				}
 				
 				TERME1();
+System.out.println("Fora TERME1");
 				return;
 				
-			default: return;
+			default: 
+System.out.println("Fora TERME1");
+				return;
 			
 		}
 		
@@ -416,22 +449,27 @@ System.out.println("Dins TERME1");
 	
 	private void OP_INICI_EXP() throws SyntacticError {
 		
-System.out.println("Dins INICI_EXP");
+System.out.println("Dins OP_INICI_EXP");
 		switch(lookAhead.getTipus()) {
 		
 			case "suma":
 				Acceptar("suma");
+System.out.println("Fora OP_INICI_EXP");
 				return;
 				
 			case "resta":
 				Acceptar("resta");
+System.out.println("Fora OP_INICI_EXP");
 				return;
 				
 			case "not":
 				Acceptar("not");
+System.out.println("Fora OP_INICI_EXP");
 				return;
 				
-			default: return;
+			default:
+System.out.println("Fora OP_INICI_EXP");
+				return;
 		
 		}
 		
@@ -445,14 +483,17 @@ System.out.println("Dins OP_EXP");
 		
 			case "suma":
 				Acceptar("suma");
+System.out.println("Fora OP_EXP");
 				return;
 							
 			case "resta":
 				Acceptar("resta");
+System.out.println("Fora OP_EXP");
 				return;
 							
 			case "or":
 				Acceptar("or");
+System.out.println("Fora OP_EXP");
 				return;
 				
 			default: throw new SyntacticError("+, -, or");
@@ -467,14 +508,17 @@ System.out.println("Dins OP_TERME");
 		
 			case "multiplicacio":
 				Acceptar("multiplicacio");
+System.out.println("Fora OP_TERME");
 				return;
 				
 			case "divisio":
 				Acceptar("divisio");
+System.out.println("Fora OP_TERME");
 				return;
 				
 			case "and":
 				Acceptar("and");
+System.out.println("Fora OP_TERME");
 				return;	
 				
 			default: throw new SyntacticError("*, /, and");
@@ -490,25 +534,30 @@ System.out.println("Dins FACTOR");
 		
 			case "ct_enter":
 				Acceptar("ct_enter"); //no tirara error
+System.out.println("Fora FACTOR");
 				return;
 				
 			case "ct_logica":
 				Acceptar("ct_logica"); //no tirara error
+System.out.println("Fora FACTOR");
 				return;
 				
 			case "ct_cadena":
 				Acceptar("ct_cadena"); //no tirara error
+System.out.println("Fora FACTOR");
 				return;
 				
 			case "identificador":
 				Acceptar("identificador"); //no tirara errror
 				FACTOR1();
+System.out.println("Fora FACTOR");
 				return;	
 				
 			case "parentesi_obert":
 				Acceptar("parentesi_obert"); //no tirara errror
 				EXPRESIO();
 				Acceptar("parentesi_tancat"); //pot tirar error
+System.out.println("Fora FACTOR");
 				return;
 				
 			default: throw new SyntacticError("ct_enter, ct_logica, ct_cadena, identificador, (");
@@ -535,6 +584,7 @@ System.out.println("Dins FACTOR1");
 					if (lookAhead.getTipus().equals("parentesi_tancat"))
 						try { Acceptar("parentesi_tancat");} catch (SyntacticError e1){} //no generara error 
 				}
+System.out.println("Fora FACTOR1");
 				return;
 				
 			case "claudator_obert":
@@ -551,9 +601,12 @@ System.out.println("Dins FACTOR1");
 					if (lookAhead.getTipus().equals("claudator_tancat"))
 						try { Acceptar("claudator_tancat");} catch (SyntacticError e1){} //no generara error 
 				}
+System.out.println("Fora FACTOR1");
 				return;
 			
-			default: return;
+			default:
+System.out.println("Fora FACTOR");
+				return;
 								
 		}
 	}
@@ -564,6 +617,8 @@ System.out.println("Dins FACTOR1");
 System.out.println("Dins LL_EXPRESIO");
 		EXPRESIO();
 		LL_EXPRESIO1();
+System.out.println("Fora LL_EXPRESIO");
+		return;
 		
 	}
 	
@@ -575,9 +630,12 @@ System.out.println("Dins LL_EXPRESIO1");
 			case "coma":
 				Acceptar("coma");
 				LL_EXPRESIO();
+System.out.println("Fora LL_EXPRESIO1");
 				return;
 			
-			default: return;
+			default: 
+System.out.println("Fora LL_EXPRESIO1");
+				return;
 								
 		}
 	}
@@ -587,7 +645,8 @@ System.out.println("Dins LL_EXPRESIO1");
 System.out.println("Dins LL_VAR");
 		VAR();
 		LL_VAR1();
-		
+System.out.println("Fora LL_VAR");
+		return;
 	}
 	
 	private void LL_VAR1 () throws SyntacticError {
@@ -598,9 +657,12 @@ System.out.println("Dins LL_VAR1");
 			case "coma":
 				Acceptar("coma");
 				LL_VAR();
+System.out.println("Fora LL_VAR1");
 				return;
 			
-			default: return;
+			default:
+System.out.println("Fora LL_VAR1");
+				return;
 								
 		}
 	}
@@ -610,6 +672,8 @@ System.out.println("Dins LL_VAR1");
 System.out.println("Dins VAR");
 		Acceptar("identificador");
 		VAR1();
+System.out.println("Fora VAR");
+		return;
 		
 	}
 	
@@ -622,9 +686,12 @@ System.out.println("Dins VAR1");
 				Acceptar("claudator_obert");
 				EXPRESIO();
 				Acceptar("claudator_tancat");
+System.out.println("Fora VAR1");
 				return;						
 									
-			default: return;
+			default:
+System.out.println("Fora VAR1");
+				return;
 								
 		}
 	}
@@ -644,6 +711,7 @@ System.out.println("Dins LL_INST");
 				try { Acceptar("punt_i_coma");} catch (SyntacticError e1){} //no generara error 
 		}
 		LL_INST1();
+System.out.println("Fora LL_INST");
 		return;
 		
 	}
@@ -674,9 +742,12 @@ System.out.println("Dins LL_INST1");
 						try { Acceptar("punt_i_coma");} catch (SyntacticError e1){} //no generara error 
 				}
 				LL_INST1();	
+System.out.println("Fora LL_INST1");
 				return;
 				
-			default: return;
+			default:
+System.out.println("Fora LL_INST1");
+				return;
 								
 		}
 	}
@@ -695,9 +766,8 @@ System.out.println("Dins INSTRUCCIO");
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
 					//follows instruccio
 					consumir(new ArrayList<String>(Arrays.asList("punt_i_coma","eof")));
-					if (lookAhead.getTipus().equals("punt_i_coma"))
-						try { Acceptar("punt_i_coma");} catch (SyntacticError e1){} //no generara error 
-				}	
+				}
+System.out.println("Fora INSTRUCCIO");
 				return;
 				
 			case "escriure":
@@ -713,6 +783,7 @@ System.out.println("Dins INSTRUCCIO");
 					if (lookAhead.getTipus().equals("parentesi_tancat"))
 						try { Acceptar("parentesi_tancat");} catch (SyntacticError e1){} //no generara error 
 				}
+System.out.println("Fora INSTRUCCIO");
 				return;		
 				
 			case "llegir":
@@ -727,7 +798,8 @@ System.out.println("Dins INSTRUCCIO");
 					consumir(new ArrayList<String>(Arrays.asList("punt_i_coma","parentesi_tancat", "eof")));
 					if (lookAhead.getTipus().equals("parentesi_tancat"))
 						try { Acceptar("parentesi_tancat");} catch (SyntacticError e1){} //no generara error 
-				}	
+				}
+System.out.println("Fora INSTRUCCIO");
 				return;
 				
 			case "cicle":
@@ -745,6 +817,7 @@ System.out.println("Dins INSTRUCCIO");
 						try { Acceptar("fins");} catch (SyntacticError e1){} //no generara error 
 				}
 				EXPRESIO();
+System.out.println("Fora INSTRUCCIO");
 				return;
 				
 			case "mentre":
@@ -771,7 +844,8 @@ System.out.println("Dins INSTRUCCIO");
 					consumir(new ArrayList<String>(Arrays.asList("punt_i_coma","fimentre", "eof")));
 					if (lookAhead.getTipus().equals("fimentre"))
 						try { Acceptar("fimentre");} catch (SyntacticError e1){} //no generara error 
-				}	
+				}
+System.out.println("Fora INSTRUCCIO");
 				return;
 				
 			case "si":
@@ -784,7 +858,7 @@ System.out.println("Dins INSTRUCCIO");
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
 					//fists ll_inst
 					consumir(new ArrayList<String>(Arrays.asList("identificador", "escriure", "llegir", "cicle", "mentre",
-							"si", "retorna", "percada", "llavors", "eof")));
+							"si", "retornar", "percada", "llavors", "eof")));
 					if (lookAhead.getTipus().equals("llavors"))
 						try { Acceptar("llavors");} catch (SyntacticError e1){} //no generara error 
 				}
@@ -799,12 +873,14 @@ System.out.println("Dins INSTRUCCIO");
 					consumir(new ArrayList<String>(Arrays.asList("punt_i_coma","fisi", "eof")));
 					if (lookAhead.getTipus().equals("fisi"))
 						try { Acceptar("fisi");} catch (SyntacticError e1){} //no generara error 
-				}	
+				}
+System.out.println("Fora INSTRUCCIO");
 				return;
 				
 			case "retornar":
 				Acceptar("retornar"); // mai donara error
 				EXPRESIO();
+System.out.println("Fora INSTRUCCIO");
 				return;
 				
 			case "percada":
@@ -835,7 +911,7 @@ System.out.println("Dins INSTRUCCIO");
 					if (lookAhead.getTipus().equals("fiper"))
 						try { Acceptar("fiper");} catch (SyntacticError e1){} //no generara error 
 				}
-
+System.out.println("Fora INSTRUCCIO");
 				return;
 									
 			default: throw new SyntacticError("identificador, escriure, llegir, cicle, mentre, si, percada, retornar");
@@ -856,7 +932,10 @@ System.out.println("Dins INSTRUCCIO1");
 			case "ct_logica":		
 			case "ct_cadena":		
 			case "identificador":			
-			case "parentesi_obert":	EXPRESIO();
+			case "parentesi_obert":
+				EXPRESIO();
+System.out.println("Fora INSTRUCCIO1");
+				return;
 		
 			
 			case "si":
@@ -875,7 +954,8 @@ System.out.println("Dins INSTRUCCIO1");
 					consumir(new ArrayList<String>(Arrays.asList("punt_i_coma", "eof")));
 					if (lookAhead.getTipus().equals("punt_i_coma"))
 						try { Acceptar("punt_i_coma");} catch (SyntacticError e1){} //no generara error 
-				}	
+				}
+System.out.println("Fora INSTRUCCIO1");
 				return;
 							
 			default: throw new SyntacticError("si, +, -, not, ct_enter, ct_logica, ct_cadena, identificador, (");
@@ -898,6 +978,7 @@ System.out.println("Dins LL_EXP_ESCRIURE");
 			case "parentesi_obert":
 				EXPRESIO();
 				LL_EXP_ESCRIURE1();
+System.out.println("Fora LL_EXP_ESCRIURE");
 				return;
 				
 			default: throw new SyntacticError("+, -, not, ct_enter, ct_logica, ct_cadena, identificador, (");
@@ -915,9 +996,12 @@ System.out.println("Dins LL_EXP_ESCRIURE1");
 					Acceptar("coma"); //mai tirara error
 				} catch (SyntacticError e) { }
 				EXPRESIO();
+System.out.println("Fora LL_EXP_ESCRIURE1");
 				return;
 							
-			default: return;
+			default:
+System.out.println("Fora LL_EXP_ESCRIURE1");
+				return;
 								
 		}
 	}
@@ -932,9 +1016,12 @@ System.out.println("Dins SINO");
 					Acceptar("sino"); //mai tirara error
 				} catch (SyntacticError e) { }
 				LL_INST();
+System.out.println("Fora SINO");				
 				return;
 				
-			default: return;
+			default:
+System.out.println("Fora SINO");
+				return;
 								
 		}
 	}

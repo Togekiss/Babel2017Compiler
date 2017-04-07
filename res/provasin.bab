@@ -1,10 +1,8 @@
 const CONSTANT = 5;
-const hola = "Benvingut!";
 
 var id: sencer;
-var boolea: logic;
 
-funcio lamevafuncio(perref id:sencer): logic;
+funcio lamevafuncio (perref id:sencer): logic;
 func
 	si (id > 1) llavors
 		retornar cert;
@@ -14,22 +12,13 @@ func
 fifunc;
 
 
-prog
+prog 
 
-escriure(hola);
-llegir(boolea);
-id =  si (cert)?22:255*0;
-boolea = lamevafuncio(id);
-
-id = 0;
+i&/d = 0;
 mentre id < 10 fer
 	escriure(id);
 	id = (id + 1);
 fimentre;
-
-cicle
-	id = id - 1;
-fins (i == 0);
 
 
 fiprog

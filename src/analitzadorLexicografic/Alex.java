@@ -26,7 +26,7 @@ public class Alex {
 			nomFitxer += ".lex";
 			writer = new PrintWriter(nomFitxer, "UTF-8");
 			charActual = (char) br.read();
-			liniaActual = 0;
+			liniaActual = 1;
 
 		} catch (IOException e) {
 			System.out.println("El fitxer " + nomFitxer + " no existeix.");
