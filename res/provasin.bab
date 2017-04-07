@@ -1,6 +1,6 @@
 const CONSTANT = 5;
 
- id: logic;
+var id: logic;
 var id: vector [0 .. 24] de sencer;
 
 funcio lamevafuncio (perref id:sencer, perval id: logic): logic;

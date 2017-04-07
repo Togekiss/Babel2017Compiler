@@ -19,8 +19,7 @@ public class Main {
 		}
 		
 		Asin asin = new Asin(args[0], name);
-		//asin.start();
 		asin.P();
-		System.out.println("FI!!");
+		System.out.println("Parseig finalitzat.");
 	}
 }
