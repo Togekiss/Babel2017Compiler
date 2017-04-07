@@ -3,7 +3,7 @@ const CONSTANT = 5;
 var id: logic;
 var id: vector [0 .. 24] de sencer;
 
-funcio lamevafuncio (perref id:sencer, perval id: logic): logic;
+ lamevafuncio (perref id:sencer, perval id: logic): logic;
 func
 	si (id > 1) llavors
 		retornar cert;
@@ -12,7 +12,10 @@ func
 	fisi;
 fifunc;
 
-id = 0;
+funcio a (perref id:sencer): logic;
+func
+	i = 1;
+fifunc;
 
 prog 
 	
@@ -33,3 +36,4 @@ prog
 	fiper;
 	
 	id = 454;
+ fiprog

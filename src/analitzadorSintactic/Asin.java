@@ -73,6 +73,7 @@ System.out.println("Dins P");
 			return true;
 		}
 		else {
+System.out.println("Token final: " + lookAhead.getTipus());
 			Error.escriuError(26, "", alex.getLiniaActual(), "");
 			error.tancaFitxer();
 			alex.tancaFitxer();
@@ -84,20 +85,56 @@ System.out.println("Dins P");
 	}
 	
 	private void PROG() {
+System.out.println("Dins PROG");
 		LL_INST();
 		
 		try {
 			Acceptar("fiprog");
 		} catch (SyntacticError e) {
 			Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
-			consumir(new ArrayList<String>(Arrays.asList("fiprog", "prog", "fifunc", "sino", "fisi", "fimentre", "fins", "fiper", "eof")));
+			consumir(new ArrayList<String>(Arrays.asList("fiprog","const", "funcio","var", "prog", "func", "fifunc", "sino", "fisi", "fimentre", "fins", "fiper", "eof")));
 			if (lookAhead.getTipus().equals("fiprog"))
 				try { Acceptar("fiprog");} catch (SyntacticError e1){} //no generara error 
 			else {
 				if (!lookAhead.getTipus().equals("eof"))
-					PROG();
+					
+				switch (lookAhead.getTipus()) {
+					case "fifunc":
+						try { Acceptar("fifunc"); } catch (SyntacticError e1) {} //mai donara error
+						break;
+					case "sino":
+						try { Acceptar("sino"); } catch (SyntacticError e1) {} //mai donara error
+						break;
+					case "fisi":
+						try { Acceptar("fisi"); } catch (SyntacticError e1) {} //mai donara error
+						break;
+					case "fimentre":
+						try { Acceptar("fimentre"); } catch (SyntacticError e1) {} //mai donara error
+						break;
+					case "fins":
+						try { Acceptar("fins"); } catch (SyntacticError e1) {} //mai donara error
+						break;
+					case "fiper":
+						try { Acceptar("fiper"); } catch (SyntacticError e1) {} //mai donara error
+						break;
+					case "func":
+						DECL_FUNC();
+						//try { Acceptar("func"); } catch (SyntacticError e1) {} //mai donara error
+						break;
+					case "const":
+						DECL();
+						break;
+					case "var":
+						DECL();
+						break;
+					case "funcio":
+						DECL_FUNC();
+						break;
+				}
+				PROG();
 			}
 		}
+System.out.println("Fora PROG");
 		return;
 	}
 
