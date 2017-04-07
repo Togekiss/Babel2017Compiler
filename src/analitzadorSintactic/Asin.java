@@ -91,9 +91,8 @@ public class Asin {
 			if (lookAhead.getTipus().equals("fiprog"))
 				try { Acceptar("fiprog");} catch (SyntacticError e1){} //no generara error 
 			else {
-				if (!lookAhead.getTipus().equals("eof"))
-					
-				switch (lookAhead.getTipus()) {
+				if (!lookAhead.getTipus().equals("eof")) {
+					switch (lookAhead.getTipus()) {
 					case "fifunc":
 						try { Acceptar("fifunc"); } catch (SyntacticError e1) {} //mai donara error
 						break;
@@ -125,8 +124,11 @@ public class Asin {
 					case "funcio":
 						DECL_FUNC();
 						break;
+					}
+					PROG();
 				}
-				PROG();
+					
+				
 			}
 		}
 		return;

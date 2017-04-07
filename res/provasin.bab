@@ -14,7 +14,7 @@ fifunc;
 
 funcio a (perref id:sencer): logic;
 func
-	i = 1;
+	i = si(cert)?2:3;
 fifunc;
 
 prog 
