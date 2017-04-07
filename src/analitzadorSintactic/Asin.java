@@ -718,6 +718,7 @@ public class Asin {
 					Acceptar("igual");
 					INSTRUCCIO1();
 				} catch (SyntacticError e) {
+					Error.escriuError(27, "assignacio", alex.getLiniaActual(), "");
 					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
 					//follows instruccio
 					consumir(new ArrayList<String>(Arrays.asList("escriure", "llegir", "cicle", "mentre", "si",
