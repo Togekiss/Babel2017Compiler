@@ -1,8 +1,9 @@
 const CONSTANT = 5;
 
+var id: logic;
 var id: vector [0 .. 24] de sencer;
 
-funcio lamevafuncio (perref id:sencer): logic;
+funcio lamevafuncio (perref id:sencer, perval id: logic): logic;
 func
 	si (id > 1) llavors
 		retornar cert;
@@ -11,16 +12,24 @@ func
 	fisi;
 fifunc;
 
+id = 0;
 
 prog 
-
-id = 0;
-mentre id < 10 fer
-	escriure(id);
-	id = (id + 1);
-fimentre;
-
-
-id[sempre] = ds;
-
-fiprog
+	
+	id[sempre] = ds;
+	
+	id = lamevafuncio(id, id);
+	mentre id < 10 fer
+		escriure(id);
+		id = (id + 1);
+	fimentre;
+	
+	cicle
+		marta = zapatero;
+	 fins (sentis);
+	
+	percada tecla en teclat fer
+		llegir(tecla);
+	fiper;
+	
+	id = 454;

@@ -34,8 +34,8 @@ public class Error {
 			" pero ha aparegut en l'entrada el token " + variableError);
 		return true;
 		
-		case 22: writer.println("[ERR_SIN_2] " + numLinia + ", Oblit del token " + variableEsperada);
-		System.out.println("[ERR_SIN_2] " + numLinia + ", Oblit del token " + variableEsperada);
+		case 22: writer.println("[ERR_SIN_2] " + numLinia + ", Hi ha codi abans de l'inici del programa");
+		System.out.println("[ERR_SIN_2] " + numLinia + ", Hi ha codi abans de l'inici del programa");
 		return true;
 		
 		case 23: writer.println("[ERR_SIN_3] " + numLinia + ", La construccio de la declaracio de la constant no es correcta");

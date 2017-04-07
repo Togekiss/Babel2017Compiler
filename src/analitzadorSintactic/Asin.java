@@ -59,22 +59,13 @@ System.out.println("Dins P");
 		try {
 			Acceptar("prog");
 		} catch (SyntacticError e) {
-			Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
+			Error.escriuError(22, "", alex.getLiniaActual(), "");
 			consumir(new ArrayList<String>(Arrays.asList("prog","identificador", "escriure", "llegir", "cicle", "mentre", "si", "percada", "retornar", "fiprog", "eof")));
 			if (lookAhead.getTipus().equals("prog"))
 				try { Acceptar("prog");} catch (SyntacticError e1){} //no generara error 
 		}
 		
-		LL_INST();
-		
-		try {
-			Acceptar("fiprog");
-		} catch (SyntacticError e) {
-			Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
-			consumir(new ArrayList<String>(Arrays.asList("fiprog", "eof")));
-			if (lookAhead.getTipus().equals("fiprog"))
-				try { Acceptar("fiprog");} catch (SyntacticError e1){} //no generara error 
-		}
+		PROG();
 		
 		if (lookAhead.esEOF()) {
 			error.tancaFitxer();
@@ -90,6 +81,24 @@ System.out.println("Dins P");
 		
 		
 
+	}
+	
+	private void PROG() {
+		LL_INST();
+		
+		try {
+			Acceptar("fiprog");
+		} catch (SyntacticError e) {
+			Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
+			consumir(new ArrayList<String>(Arrays.asList("fiprog", "prog", "fifunc", "sino", "fisi", "fimentre", "fins", "fiper", "eof")));
+			if (lookAhead.getTipus().equals("fiprog"))
+				try { Acceptar("fiprog");} catch (SyntacticError e1){} //no generara error 
+			else {
+				if (!lookAhead.getTipus().equals("eof"))
+					PROG();
+			}
+		}
+		return;
 	}
 
 
@@ -285,7 +294,7 @@ System.out.println("Fora PER");
 System.out.println("Dins LL_PARAM11");
 		switch (lookAhead.getTipus()) {
 		
-			case ",":
+			case "coma":
 				Acceptar("coma");
 				LL_PARAM1();
 System.out.println("Fora LL_PARAM11");
