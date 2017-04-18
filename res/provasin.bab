@@ -1,5 +1,4 @@
 const CONSTANT = 5;
-
 var id: logic;
 var id: vector [0 .. 24] de sencer;
 
@@ -20,7 +19,6 @@ fifunc;
 prog 
 	
 	id[sempre] = ds;
-	
 	id = lamevafuncio(id, id);
 	mentre id < 10 fer
 		escriure(id);

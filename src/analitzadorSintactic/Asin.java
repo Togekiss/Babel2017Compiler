@@ -590,9 +590,23 @@ public class Asin {
 	
 	private void LL_EXPRESIO() throws SyntacticError {
 		
-		EXPRESIO();
-		LL_EXPRESIO1();
-		return;
+		switch (lookAhead.getTipus()) {
+			
+			case "suma":
+			case "resta":
+			case "not":
+			case "ct_entera":
+			case "ct_logica":
+			case "ct_cadena":
+			case "identificador":
+			case "parentesi_obert":
+				EXPRESIO();
+				LL_EXPRESIO1();
+				return;
+				
+			default: return;
+		
+		}
 		
 	}
 	
