@@ -47,6 +47,16 @@ public class Bloc {
     public Constant obtenirConstant(String nom) {        
         return (Constant) llistaConstants.get(nom);
     } 
+    
+	/**
+	 * <p>Retorna si la constant existeix</p>
+	 * @param (String) nom 
+	 * @return Boolean
+	 */
+    public Boolean existeixConstant(String nom) {        
+        return llistaConstants.contains(nom);
+    } 
+
 
     /**
      * <p>Insereix la variable en la llista de variables</p>
@@ -65,6 +75,15 @@ public class Bloc {
         return (Variable) llistaVariables.get(nom);
     } 
 
+	/**
+	 * <p>Retorna si la variable existeix</p>
+	 * @param (String) nom 
+	 * @return Boolean
+	 */
+    public Boolean existeixVariable(String nom) {        
+        return llistaVariables.contains(nom);
+    } 
+    
     /**
      * <p>Insereix el procediment en la llista de procediments</p>
      * @param (Procediment) funcio 
@@ -82,6 +101,15 @@ public class Bloc {
         return (Procediment) llistaProcediments.get(nom);
     } 
 
+	/**
+	 * <p>Retorna si el procediment existeix</p>
+	 * @param (String) nom 
+	 * @return Boolean
+	 */
+    public Boolean existeixProcediment(String nom) {        
+        return llistaProcediments.contains(nom);
+    } 
+    
     /**
 	 * <p>Obté tota la informació del objecte en format XML</p>
 	 * @return String

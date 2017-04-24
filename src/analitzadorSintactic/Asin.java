@@ -2,23 +2,32 @@ package analitzadorSintactic;
 
 import main.Error;
 import main.Token;
+import taulasimbols.TaulaSimbols;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import analitzadorLexicografic.Alex;
+import analitzadorSemantic.Asem;
+import analitzadorSemantic.Semantic;
 
 public class Asin {
 	
 	private Alex alex;
+	private Asem asem;
 	private Error error;
 	private Token lookAhead;
+	private TaulaSimbols taulaSimbols;
+	private Semantic semantic;
 	
 	//CONSTRUCTOR
 	public Asin (String args, String name) {
 		
 		alex = new Alex(args);
+		asem = new Asem();
 		error = new Error(name);
+		semantic = new Semantic();
+		taulaSimbols = new TaulaSimbols();
 		lookAhead = alex.getToken();
 		alex.writeToken(lookAhead);
 		
@@ -51,6 +60,7 @@ public class Asin {
 	//SIMBOL AXIOMA
 	public boolean P() {
 		
+		taulaSimbols.setBlocActual(0);
 		DECL();
 		
 		try {
@@ -176,10 +186,17 @@ public class Asin {
 
 	private void DECL_CONST() throws SyntacticError{
 				
+		semantic.removeAll();
 		Acceptar("const");
+		if (lookAhead.getTipus().equals("identificador"))
+			semantic.setValue("lexema", lookAhead.getLexema());
 		Acceptar("identificador");
 		Acceptar("igual");
+		//semantic = EXPRESIO(semantic);
 		EXPRESIO();
+semantic.setValue("tipus", "undefined");
+semantic.setValue("valor", "null");
+		asem.afegirConstant(semantic, taulaSimbols);
 		Acceptar("punt_i_coma");
 		return;
 		
