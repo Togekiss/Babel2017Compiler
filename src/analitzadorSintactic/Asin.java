@@ -2,7 +2,10 @@ package analitzadorSintactic;
 
 import main.Error;
 import main.Token;
+import taulasimbols.Bloc;
+import taulasimbols.ITipus;
 import taulasimbols.TaulaSimbols;
+import taulasimbols.TipusIndefinit;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,6 +64,7 @@ public class Asin {
 	public boolean P() {
 		
 		taulaSimbols.setBlocActual(0);
+		taulaSimbols.inserirBloc(new Bloc());
 		DECL();
 		
 		try {
@@ -194,8 +198,9 @@ public class Asin {
 		Acceptar("igual");
 		//semantic = EXPRESIO(semantic);
 		EXPRESIO();
-semantic.setValue("tipus", "undefined");
+semantic.setValue("tipus", new TipusIndefinit("undefined", 0));
 semantic.setValue("valor", "null");
+semantic.setValue("esEstatic", true);
 		asem.afegirConstant(semantic, taulaSimbols);
 		Acceptar("punt_i_coma");
 		return;
