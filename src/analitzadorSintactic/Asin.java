@@ -5,6 +5,7 @@ import main.Token;
 import taulasimbols.Bloc;
 import taulasimbols.ITipus;
 import taulasimbols.TaulaSimbols;
+import taulasimbols.TipusArray;
 import taulasimbols.TipusIndefinit;
 import taulasimbols.TipusSimple;
 
@@ -220,10 +221,7 @@ semantic.setValue("ESTATIC", true);
 			semantic.setValue("TOKEN", lookAhead.getLexema());
 		Acceptar("identificador");
 		Acceptar("dos_punts");
-		TIPUS();
-semantic.setValue("TIPUS", new TipusSimple("undefined", 0, 0, 0));
-semantic.setValue("VALOR", "null");
-semantic.setValue("ESTATIC", false);
+		semantic = TIPUS(semantic);
 		asem.afegirVariable(semantic, taulaSimbols);
 		Acceptar("punt_i_coma");
 		return;
@@ -307,7 +305,7 @@ semantic.setValue("ESTATIC", false);
 		PER(); //no hauria de treure error
 		Acceptar("identificador");
 		Acceptar("dos_punts");
-		TIPUS();
+		semantic = TIPUS(semantic);
 		LL_PARAM11();
 		return;
 		
@@ -348,16 +346,23 @@ semantic.setValue("ESTATIC", false);
 		
 	}
 	
-	private void TIPUS() throws SyntacticError {
+	private Semantic TIPUS(Semantic sem) throws SyntacticError {
 		
 		switch (lookAhead.getTipus()) {
 			
 			case "tipus_simple": 
+				sem.setValue("TIPUS", new TipusSimple(lookAhead.getLexema(), 0, 0, 0));
+				sem.setValue("ESTATIC", false);
+				sem.setValue("VALOR", "null");
 				Acceptar("tipus_simple");
-				return;
+				return sem;
 				
 			case "vector":
+//TODO
 				Acceptar("vector");
+				sem.setValue("TIPUS", new TipusArray());
+sem.setValue("ESTATIC", false);
+sem.setValue("VALOR", "null");
 				Acceptar("claudator_obert");
 				EXPRESIO();
 				Acceptar("rang");
@@ -365,7 +370,7 @@ semantic.setValue("ESTATIC", false);
 				Acceptar("claudator_tancat");
 				Acceptar("de");
 				Acceptar("tipus_simple");
-				return;
+				return sem;
 				
 			default: throw new SyntacticError("tipus_simple, vector");
 				
