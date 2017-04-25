@@ -6,6 +6,7 @@ import taulasimbols.Bloc;
 import taulasimbols.ITipus;
 import taulasimbols.TaulaSimbols;
 import taulasimbols.TipusIndefinit;
+import taulasimbols.TipusSimple;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -196,14 +197,14 @@ System.out.println(taulaSimbols.toXml());
 		semantic.removeAll();
 		Acceptar("const");
 		if (lookAhead.getTipus().equals("identificador"))
-			semantic.setValue("lexema", lookAhead.getLexema());
+			semantic.setValue("TOKEN", lookAhead.getLexema());
 		Acceptar("identificador");
 		Acceptar("igual");
 		//semantic = EXPRESIO(semantic);
 		EXPRESIO();
-semantic.setValue("tipus", new TipusIndefinit("undefined", 0));
-semantic.setValue("valor", "null");
-semantic.setValue("esEstatic", true);
+semantic.setValue("TIPUS", new TipusSimple("undefined", 0, 0, 0));
+semantic.setValue("VALOR", "null");
+semantic.setValue("ESTATIC", true);
 		asem.afegirConstant(semantic, taulaSimbols);
 		Acceptar("punt_i_coma");
 		return;
@@ -213,11 +214,17 @@ semantic.setValue("esEstatic", true);
 
 	private void DECL_VAR() throws SyntacticError{
 
-	
+		semantic.removeAll();
 		Acceptar("var");
+		if (lookAhead.getTipus().equals("identificador"))
+			semantic.setValue("TOKEN", lookAhead.getLexema());
 		Acceptar("identificador");
 		Acceptar("dos_punts");
 		TIPUS();
+semantic.setValue("TIPUS", new TipusSimple("undefined", 0, 0, 0));
+semantic.setValue("VALOR", "null");
+semantic.setValue("ESTATIC", false);
+		asem.afegirVariable(semantic, taulaSimbols);
 		Acceptar("punt_i_coma");
 		return;
 
