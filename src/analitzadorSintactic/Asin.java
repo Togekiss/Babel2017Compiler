@@ -81,6 +81,7 @@ public class Asin {
 		if (lookAhead.esEOF()) {
 			error.tancaFitxer();
 			alex.tancaFitxer();
+System.out.println(taulaSimbols.toXml());
 			return true;
 		}
 		else {
@@ -89,6 +90,8 @@ public class Asin {
 			alex.tancaFitxer();
 			return false;
 		}
+		
+		
 		
 		
 

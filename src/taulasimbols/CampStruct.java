@@ -93,11 +93,11 @@ public class CampStruct {
 	 * @return String
 	 */
     public String toXml() {        
-    	String result = "<CampStruct Nom=\"" + nom + "\">";
+    	String result = "<CampStruct Nom=\"" + nom + "\">\n";
     	if (tipus != null)
     		result += tipus.toXml();
     	    	
-    	result += "</CampStruct>";
+    	result += "</CampStruct>\n";
         return result;
     } 
  }
