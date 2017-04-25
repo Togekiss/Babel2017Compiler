@@ -52,6 +52,66 @@ public class Error {
 		
 		case 28: writer.println("[ERR_SIN_8] " + numLinia + ", el factor conte errors");
 		return true;
+		
+		case 31: writer.println("[ERR_SEM_1] " + numLinia + ", Constant [" + variableError + "] doblement definida");
+		return true;
+		
+		case 32: writer.println("[ERR_SEM_2] " + numLinia + ", Variable [" + variableError + "] doblement definida");
+		return true;
+		
+		case 33: writer.println("[ERR_SEM_3] " + numLinia + ", Funció doblement definida");
+		return true;
+		
+		case 34: writer.println("[ERR_SEM_4] " + numLinia + ", Paràmetre [" + variableError + "] doblement definida");
+		return true;
+		
+		case 35: writer.println("[ERR_SEM_5] " + numLinia + ", Límits decreixents en vector");
+		return true;
+		
+		case 36: writer.println("[ERR_SEM_6] " + numLinia + ", El tipus de l’expressió no és SENCER");
+		return true;
+		
+		case 37: writer.println("[ERR_SEM_7] " + numLinia + ", El tipus de l’expressió no és LOGIC");
+		return true;
+		
+		case 38: writer.println("[ERR_SEM_8] " + numLinia + ", La condició no és de tipus LOGIC");
+		return true;
+		
+		case 39: writer.println("[ERR_SEM_9] " + numLinia + ", L’identificador [" + variableError + "] no ha estat declarat");
+		return true;
+		
+		case 310: writer.println("[ERR_SEM_10] " + numLinia + ", L’identificador [" + variableError + "] en la instrucció LLEGIR no és una variable de tipus simple");
+		return true;
+		
+		case 311: writer.println("[ERR_SEM_11] " + numLinia + ", L’identificador [" + variableError + "] en part esquerra d’assignació no és una variable ");
+		return true;
+		//Modificar
+		case 312: writer.println("[ERR_SEM_12] " + numLinia + ", La variable [" + variableError + "] i l'expressió de assignació tenen tipus diferents. El tipus de la variable és [" + variableEsperada + "] i el de l’expressió és [" + variableError + "]");
+		return true;
+		
+		case 313: writer.println("[ERR_SEM_13] " + numLinia + ", El tipus de l’índex d’accés del vector no és SENCER");
+		return true;
+		
+		case 314: writer.println("[ERR_SEM_14] " + numLinia + ", El tipus de la expressió en ESCRIURE no és simple o no és una constant cadena");
+		return true;
+		
+		case 315: writer.println("[ERR_SEM_15] " + numLinia + ", La funció en declaració té " + variableError + " paràmetres mentre que en ús té " + variableEsperada);
+		return true;
+		
+		case 316: writer.println("[ERR_SEM_16] " + numLinia + ", El tipus del paràmetre número " + variableError + " de la funció no coincideix amb el tipus en la seva declaració [" + variableEsperada + "]");
+		return true;
+		
+		case 317: writer.println("[ERR_SEM_17] " + numLinia + ", El paràmetre número " + variableError + " de la funció no es pot passar per referència");
+		return true;
+		//Modificar
+		case 318: writer.println("[ERR_SEM_18] " + numLinia + ", La funció [" + variableError + "] ha de ser del tipus [" + variableEsperada + "] però en la expressió del seu valor el tipus és [" + variableError + "]");
+		return true;
+		
+		case 319: writer.println("[ERR_SEM_19] " + numLinia + ", Retornar fora de funció");
+		return true;
+		
+		case 320: writer.println("[ERR_SEM_20] " + numLinia + ", L’expressió no és estàtica");
+		return true;
 
 		default: return false;
 		}
