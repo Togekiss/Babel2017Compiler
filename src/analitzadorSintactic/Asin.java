@@ -6,6 +6,7 @@ import taulasimbols.Bloc;
 import taulasimbols.ITipus;
 import taulasimbols.TaulaSimbols;
 import taulasimbols.TipusArray;
+import taulasimbols.TipusCadena;
 import taulasimbols.TipusIndefinit;
 import taulasimbols.TipusSimple;
 
@@ -23,7 +24,7 @@ public class Asin {
 	private Error error;
 	private Token lookAhead;
 	private TaulaSimbols taulaSimbols;
-	private Semantic semantic;
+	//private Semantic semantic;
 	
 	//CONSTRUCTOR
 	public Asin (String args, String name) {
@@ -31,7 +32,6 @@ public class Asin {
 		alex = new Alex(args);
 		asem = new Asem();
 		error = new Error(name);
-		semantic = new Semantic();
 		taulaSimbols = new TaulaSimbols();
 		lookAhead = alex.getToken();
 		alex.writeToken(lookAhead);
@@ -40,14 +40,14 @@ public class Asin {
 	
 	
 	//ACCEPTAR UN TOKEN
-	private void Acceptar (String token) throws SyntacticError {
+	private void Acceptar (String token) {
 		
 		if (lookAhead.getTipus().equals(token)) {
 			lookAhead = alex.getToken();
 			alex.writeToken(lookAhead);
 			
-		} else 
-			throw new SyntacticError(token);
+		}
+		
 	}
 	
 	
@@ -69,14 +69,7 @@ public class Asin {
 		taulaSimbols.inserirBloc(new Bloc());
 		DECL();
 		
-		try {
-			Acceptar("prog");
-		} catch (SyntacticError e) {
-			Error.escriuError(22, "", alex.getLiniaActual(), "");
-			consumir(new ArrayList<String>(Arrays.asList("prog","identificador", "escriure", "llegir", "cicle", "mentre", "si", "percada", "retornar", "fiprog", "eof")));
-			if (lookAhead.getTipus().equals("prog"))
-				try { Acceptar("prog");} catch (SyntacticError e1){} //no generara error 
-		}
+		Acceptar("prog");
 		
 		PROG();
 		
@@ -102,54 +95,7 @@ System.out.println(taulaSimbols.toXml());
 	private void PROG() {
 		LL_INST();
 		
-		try {
-			Acceptar("fiprog");
-		} catch (SyntacticError e) {
-			Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
-			consumir(new ArrayList<String>(Arrays.asList("fiprog","const", "funcio","var", "prog", "func", "fifunc", "sino", "fisi", "fimentre", "fins", "fiper", "eof")));
-			if (lookAhead.getTipus().equals("fiprog"))
-				try { Acceptar("fiprog");} catch (SyntacticError e1){} //no generara error 
-			else {
-				if (!lookAhead.getTipus().equals("eof")) {
-					switch (lookAhead.getTipus()) {
-					case "fifunc":
-						try { Acceptar("fifunc"); } catch (SyntacticError e1) {} //mai donara error
-						break;
-					case "sino":
-						try { Acceptar("sino"); } catch (SyntacticError e1) {} //mai donara error
-						break;
-					case "fisi":
-						try { Acceptar("fisi"); } catch (SyntacticError e1) {} //mai donara error
-						break;
-					case "fimentre":
-						try { Acceptar("fimentre"); } catch (SyntacticError e1) {} //mai donara error
-						break;
-					case "fins":
-						try { Acceptar("fins"); } catch (SyntacticError e1) {} //mai donara error
-						break;
-					case "fiper":
-						try { Acceptar("fiper"); } catch (SyntacticError e1) {} //mai donara error
-						break;
-					case "func":
-						DECL_FUNC();
-						//try { Acceptar("func"); } catch (SyntacticError e1) {} //mai donara error
-						break;
-					case "const":
-						DECL();
-						break;
-					case "var":
-						DECL();
-						break;
-					case "funcio":
-						DECL_FUNC();
-						break;
-					}
-					PROG();
-				}
-					
-				
-			}
-		}
+		Acceptar("fiprog");
 		return;
 	}
 
@@ -168,22 +114,12 @@ System.out.println(taulaSimbols.toXml());
 		switch (lookAhead.getTipus()) {
 
 			case "const":
-				try {
-					DECL_CONST();
-				} catch (SyntacticError e) {
-					Error.escriuError(23, "", alex.getLiniaActual(), "");
-					consumir(new ArrayList<String>(Arrays.asList("const", "var", "funcio", "prog","identificador", "eof")));
-				}
+			DECL_CONST();
 				DECL_CONST_VAR();
 				return;
 	
 			case "var":
-				try {
-					DECL_VAR();
-				} catch (SyntacticError e) {
-					Error.escriuError(24, "", alex.getLiniaActual(), "");
-					consumir(new ArrayList<String>(Arrays.asList("const", "var", "funcio", "prog", "identificador", "eof")));
-				}
+			DECL_VAR();
 				DECL_CONST_VAR();
 				return;
 	
@@ -193,16 +129,15 @@ System.out.println(taulaSimbols.toXml());
 	}
 
 
-	private void DECL_CONST() throws SyntacticError{
-				
-		semantic.removeAll();
+	private void DECL_CONST(){
+		Semantic semantic = new Semantic();
+		
 		Acceptar("const");
 		if (lookAhead.getTipus().equals("identificador"))
 			semantic.setValue("TOKEN", lookAhead.getLexema());
 		Acceptar("identificador");
 		Acceptar("igual");
-		//semantic = EXPRESIO(semantic);
-		EXPRESIO();
+		semantic = EXPRESIO(semantic);
 semantic.setValue("TIPUS", new TipusSimple("undefined", 0, 0, 0));
 semantic.setValue("VALOR", "null");
 semantic.setValue("ESTATIC", true);
@@ -213,9 +148,9 @@ semantic.setValue("ESTATIC", true);
 	}
 
 
-	private void DECL_VAR() throws SyntacticError{
-
-		semantic.removeAll();
+	private void DECL_VAR() {
+		Semantic semantic = new Semantic();
+		
 		Acceptar("var");
 		if (lookAhead.getTipus().equals("identificador"))
 			semantic.setValue("TOKEN", lookAhead.getLexema());
@@ -234,43 +169,21 @@ semantic.setValue("ESTATIC", true);
 		switch (lookAhead.getTipus()) {
 	
 			case "funcio":
-				try {
-					Acceptar("funcio"); //no hauria de treure error
-					Acceptar("identificador");
-					Acceptar("parentesi_obert");
-					LL_PARAM();
-					Acceptar("parentesi_tancat");
-					Acceptar("dos_punts");
-					Acceptar("tipus_simple");
-					Acceptar("punt_i_coma");
-				} catch (SyntacticError e) {
-					Error.escriuError(25, "", alex.getLiniaActual(), "");
-					//si la caguen a la declaracio i a func, es menja tota la funció :I
-					consumir(new ArrayList<String>(Arrays.asList("const", "var", "identificador", "func", "fifunc", "prog", "eof")));					
-				}
+			Acceptar("funcio"); //no hauria de treure error
+			Acceptar("identificador");
+			Acceptar("parentesi_obert");
+			LL_PARAM();
+			Acceptar("parentesi_tancat");
+			Acceptar("dos_punts");
+			Acceptar("tipus_simple");
+			Acceptar("punt_i_coma");
 				
 				DECL_CONST_VAR();
 				
-				try {
-					Acceptar("func");
-				} catch (SyntacticError e) {
-					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
-					consumir(new ArrayList<String>(Arrays.asList("func", "prog","identificador", "escriure", "llegir", "cicle", "mentre", "si", "percada", "retornar", "fifunc", "eof")));
-					if (lookAhead.getTipus().equals("func"))
-						try { Acceptar("func");} catch (SyntacticError e1){} //no generara error 
-				}
+			Acceptar("func");
 				LL_INST();
-				try {
-					Acceptar("fifunc");
-					Acceptar("punt_i_coma");
-				} catch (SyntacticError e) {
-					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
-					
-					//same, millor que no la caguin dos cops seguits :I
-					consumir(new ArrayList<String>(Arrays.asList("funcio", "prog", "punt_i_coma", "eof")));
-					if (lookAhead.getTipus().equals("punt_i_coma"))
-						try { Acceptar("punt_i_coma");} catch (SyntacticError e1){} //no generara error 
-				}
+			Acceptar("fifunc");
+			Acceptar("punt_i_coma");
 				DECL_FUNC();
 				return;
 			
@@ -282,7 +195,7 @@ semantic.setValue("ESTATIC", true);
 	}
 	
 	
-	private void LL_PARAM() throws SyntacticError {
+	private void LL_PARAM() {
 		
 		switch (lookAhead.getTipus()) {
 		
@@ -299,8 +212,9 @@ semantic.setValue("ESTATIC", true);
 	}
 	
 	
-	private void LL_PARAM1() throws SyntacticError {
+	private void LL_PARAM1() {
 		
+		Semantic semantic = new Semantic();
 		
 		PER(); //no hauria de treure error
 		Acceptar("identificador");
@@ -311,7 +225,7 @@ semantic.setValue("ESTATIC", true);
 		
 	}
 	
-	private void PER() throws SyntacticError {
+	private void PER() {
 		
 		switch (lookAhead.getTipus()) {
 		
@@ -323,14 +237,14 @@ semantic.setValue("ESTATIC", true);
 				Acceptar("perval");
 				return;
 				
-			default: throw new SyntacticError("perref, perval");
+			default: return;
 		
 		}
 		
 		
 	}
 	
-	private void LL_PARAM11() throws SyntacticError{
+	private void LL_PARAM11() {
 		
 		switch (lookAhead.getTipus()) {
 		
@@ -346,7 +260,7 @@ semantic.setValue("ESTATIC", true);
 		
 	}
 	
-	private Semantic TIPUS(Semantic sem) throws SyntacticError {
+	private Semantic TIPUS(Semantic sem) {
 		
 		switch (lookAhead.getTipus()) {
 			
@@ -364,55 +278,53 @@ semantic.setValue("ESTATIC", true);
 sem.setValue("ESTATIC", false);
 sem.setValue("VALOR", "null");
 				Acceptar("claudator_obert");
-				EXPRESIO();
+				sem = EXPRESIO(sem);
 				Acceptar("rang");
-				EXPRESIO();
+				sem = EXPRESIO(sem);
 				Acceptar("claudator_tancat");
 				Acceptar("de");
 				Acceptar("tipus_simple");
 				return sem;
 				
-			default: throw new SyntacticError("tipus_simple, vector");
+			default: return sem;
 				
 		}
 	}
 	
 	
-	private void EXPRESIO() {
+	private Semantic EXPRESIO(Semantic sem) {
 		
-		EXPRESIO_SIMPLE();
-		EXPRESIO1();
-		return;
+//TODO COMENCA EXPRESSIO
+		sem = EXPRESIO_SIMPLE(sem);
+		sem = EXPRESIO1(sem);
+		return sem;
 		
 	}
 	
 	
-	private void EXPRESIO1() {
+	private Semantic EXPRESIO1(Semantic sem) {
 		
 		switch (lookAhead.getTipus()) {
 		
 			case "oper_rel": 
-				try {
-					Acceptar("oper_rel"); //mai donara error	
-				} catch (SyntacticError e) {}
-				EXPRESIO_SIMPLE();
-				return;
+			Acceptar("oper_rel"); //mai donara error	
+				sem = EXPRESIO_SIMPLE(sem);
+				return sem;
 				
 			default: 
-				return;
+				return sem;
 		
 		}
 	}
 	
 	
-	private void EXPRESIO_SIMPLE() {
+	private Semantic EXPRESIO_SIMPLE(Semantic sem) {
 		
-		try {
-			OP_INICI_EXP(); //mai donara error
-		} catch (SyntacticError e) { }
-		TERME();
+		sem = OP_INICI_EXP(sem); //mai donara error
+		sem  = TERME(sem);
+//TODO anem per aqui
 		EXPRESIO_SIMPLE1();
-		return;
+		return sem;
 		
 	}
 	
@@ -424,9 +336,7 @@ sem.setValue("VALOR", "null");
 			case "suma":
 			case "resta":
 			case "or":
-				try {
-					OP_EXP(); //mai donara error
-				} catch (SyntacticError e) { }
+				OP_EXP(); //mai donara error
 				TERME();
 				EXPRESIO_SIMPLE1();
 				return;
@@ -438,19 +348,12 @@ sem.setValue("VALOR", "null");
 		
 	}
 	
-	private void TERME() {
+	private Semantic TERME(Semantic sem) {
 		
-		try {
-			FACTOR();
-		} catch (SyntacticError e) {
-			Error.escriuError(28, "", alex.getLiniaActual(), "");
-			// firsts de terme1
-			consumir(new ArrayList<String>(Arrays.asList("multiplicacio", "divisio", "and", "suma", "resta",
-					"or", "oper_rel", "punt_i_coma", "rang", "claudator_tancat", "parentesi_tancat", "coma",
-					"fer", "llavors","eof")));
-		}
+		sem = FACTOR(sem);
+//TODO anem per aqui
 		TERME1();
-		return;
+		return sem;
 		
 	}
 	
@@ -461,17 +364,8 @@ sem.setValue("VALOR", "null");
 			case "multiplicacio":
 			case "divisio":
 			case "and":
-				try {
 					OP_TERME(); //mai donara error
 					FACTOR();
-				} catch (SyntacticError e) {
-					Error.escriuError(28, "", alex.getLiniaActual(), "");
-					//first de terme1
-					consumir(new ArrayList<String>(Arrays.asList("multiplicacio", "divisio", "and", "suma", "resta",
-							"or", "oper_rel", "punt_i_coma", "rang", "claudator_tancat", "parentesi_tancat", "coma",
-							"fer", "llavors","eof"))); 
-				}
-				
 				TERME1();
 				return;
 				
@@ -483,31 +377,34 @@ sem.setValue("VALOR", "null");
 	}
 	
 	
-	private void OP_INICI_EXP() throws SyntacticError {
+	private Semantic OP_INICI_EXP(Semantic sem) {
 		
 		switch(lookAhead.getTipus()) {
 		
 			case "suma":
+				sem.setValue("OPERADOR", "suma");
 				Acceptar("suma");
-				return;
+				return sem;
 				
 			case "resta":
+				sem.setValue("OPERADOR", "resta");
 				Acceptar("resta");
-				return;
+				return sem;
 				
 			case "not":
+				sem.setValue("OPERADOR", "not");
 				Acceptar("not");
-				return;
+				return sem;
 				
 			default:
-				return;
+				return sem;
 		
 		}
 		
 		
 	}
 		
-	private void OP_EXP () throws SyntacticError {
+	private void OP_EXP () {
 		
 		switch (lookAhead.getTipus()) {
 		
@@ -523,12 +420,12 @@ sem.setValue("VALOR", "null");
 				Acceptar("or");
 				return;
 				
-			default: throw new SyntacticError("+, -, or");
+			default: return;
 				
 		}
 	}
 	
-	private void OP_TERME () throws SyntacticError {
+	private void OP_TERME () {
 		
 		switch (lookAhead.getTipus()) {
 		
@@ -544,88 +441,78 @@ sem.setValue("VALOR", "null");
 				Acceptar("and");
 				return;	
 				
-			default: throw new SyntacticError("*, /, and");
+			default: return;
 								
 		}
 		
 	}
 	
-	private void FACTOR () throws SyntacticError {
+	private Semantic FACTOR (Semantic sem) {
 		
 		switch (lookAhead.getTipus()) {
 		
 			case "ct_enter":
+				sem.setValue("TIPUSS", new TipusSimple("sencer", 0, 0, 0));
+				sem.setValue("VALORS", Integer.parseInt(lookAhead.getLexema()));
+				sem.setValue("ESTATICS", true);
 				Acceptar("ct_enter"); //no tirara error
-				return;
+				return sem;
 				
 			case "ct_logica":
+				sem.setValue("TIPUSS", new TipusSimple("logic", 0, 0, 0));
+				sem.setValue("VALORS", lookAhead.getLexema().equals("cert")?true:false);
+				sem.setValue("ESTATICS", true);
 				Acceptar("ct_logica"); //no tirara error
-				return;
+				return sem;
 				
 			case "ct_cadena":
+				sem.setValue("TIPUSS", new TipusCadena("cadena", 0, lookAhead.getLexema().length()));
+				sem.setValue("VALORS", lookAhead.getLexema());
+				sem.setValue("ESTATICS", true);
 				Acceptar("ct_cadena"); //no tirara error
-				return;
+				return sem;
 				
 			case "identificador":
+//TODO buscar si id existeix blablabla
 				Acceptar("identificador"); //no tirara errror
-				FACTOR1();
-				return;	
+				sem = FACTOR1(sem);
+				return sem;	
 				
 			case "parentesi_obert":
 				Acceptar("parentesi_obert"); //no tirara errror
-				EXPRESIO();
+				sem = EXPRESIO(sem);
 				Acceptar("parentesi_tancat"); //pot tirar error
-				return;
+				return sem;
 				
-			default: throw new SyntacticError("ct_enter, ct_logica, ct_cadena, identificador, (");
+			default: return sem;
 								
 		}
 	}
 	
-	private void FACTOR1 () {
+	private Semantic FACTOR1 (Semantic sem) {
 		
 		switch (lookAhead.getTipus()) {
 		
 			case "parentesi_obert":
-				try {
-					Acceptar("parentesi_obert"); //no tirara error
-					LL_EXPRESIO(); //tira error (falta ,)
-					Acceptar("parentesi_tancat"); // pot tirar error
-				} catch (SyntacticError e) {
-					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
-					//follows factor1
-					consumir(new ArrayList<String>(Arrays.asList("multiplicacio", "divisio", "and", "suma", "resta",
-							"or", "oper_rel", "punt_i_coma", "rang", "claudator_tancat", "parentesi_tancat", "coma",
-							"fer", "llavors","eof")));
-					if (lookAhead.getTipus().equals("parentesi_tancat"))
-						try { Acceptar("parentesi_tancat");} catch (SyntacticError e1){} //no generara error 
-				}
-				return;
+			Acceptar("parentesi_obert"); //no tirara error
+			LL_EXPRESIO(); //tira error (falta ,)
+			Acceptar("parentesi_tancat"); // pot tirar error
+				return sem;
 				
 			case "claudator_obert":
-				try {
-					Acceptar("claudator_obert"); //no tirara error
-					EXPRESIO();
-					Acceptar("claudator_tancat"); // pot tirar error
-				} catch (SyntacticError e) {
-					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
-					//follows factor1
-					consumir(new ArrayList<String>(Arrays.asList("multiplicacio", "divisio", "and", "suma", "resta",
-							"or", "oper_rel", "punt_i_coma", "rang", "claudator_tancat", "parentesi_tancat", "coma",
-							"fer", "llavors","eof")));
-					if (lookAhead.getTipus().equals("claudator_tancat"))
-						try { Acceptar("claudator_tancat");} catch (SyntacticError e1){} //no generara error 
-				}
-				return;
+			Acceptar("claudator_obert"); //no tirara error
+			sem = EXPRESIO(sem);
+			Acceptar("claudator_tancat"); // pot tirar error
+				return sem;
 			
 			default:
-				return;
+				return sem;
 								
 		}
 	}
 	
 	
-	private void LL_EXPRESIO() throws SyntacticError {
+	private void LL_EXPRESIO() {
 		
 		switch (lookAhead.getTipus()) {
 			
@@ -637,7 +524,7 @@ sem.setValue("VALOR", "null");
 			case "ct_cadena":
 			case "identificador":
 			case "parentesi_obert":
-				EXPRESIO();
+				semantic = EXPRESIO(semantic);
 				LL_EXPRESIO1();
 				return;
 				
@@ -647,7 +534,7 @@ sem.setValue("VALOR", "null");
 		
 	}
 	
-	private void LL_EXPRESIO1 () throws SyntacticError{
+	private void LL_EXPRESIO1 () {
 		
 		switch (lookAhead.getTipus()) {
 		
@@ -662,14 +549,14 @@ sem.setValue("VALOR", "null");
 		}
 	}
 	
-	private void LL_VAR () throws SyntacticError {
+	private void LL_VAR () {
 		
 		VAR();
 		LL_VAR1();
 		return;
 	}
 	
-	private void LL_VAR1 () throws SyntacticError {
+	private void LL_VAR1 () {
 		
 		switch (lookAhead.getTipus()) {
 		
@@ -684,7 +571,7 @@ sem.setValue("VALOR", "null");
 		}
 	}
 	
-	private void VAR () throws SyntacticError {
+	private void VAR () {
 		
 		Acceptar("identificador");
 		VAR1();
@@ -692,13 +579,13 @@ sem.setValue("VALOR", "null");
 		
 	}
 	
-	private void VAR1 () throws SyntacticError {
+	private void VAR1 () {
 		
 		switch (lookAhead.getTipus()) {
 		
 			case "claudator_obert":
 				Acceptar("claudator_obert");
-				EXPRESIO();
+				semantic = EXPRESIO(semantic);
 				Acceptar("claudator_tancat");
 				return;						
 									
@@ -710,17 +597,8 @@ sem.setValue("VALOR", "null");
 	
 	private void LL_INST () {
 		
-		try {
-			INSTRUCCIO(); //pot tirar error (switch)
-			Acceptar("punt_i_coma");
-		} catch (SyntacticError e) {
-			Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
-			//first ll_inst1
-			consumir(new ArrayList<String>(Arrays.asList("identificador", "escriure", "llegir", "cicle", "mentre", "si",
-					"retornar", "percada", "fifunc", "fiprog", "punt_i_coma", "fins", "fimentre", "per", "sino", "fisi","eof")));
-			if (lookAhead.getTipus().equals("punt_i_coma"))
-				try { Acceptar("punt_i_coma");} catch (SyntacticError e1){} //no generara error 
-		}
+		INSTRUCCIO(); //pot tirar error (switch)
+		Acceptar("punt_i_coma");
 		LL_INST1();
 		return;
 		
@@ -738,18 +616,8 @@ sem.setValue("VALOR", "null");
 			case "si":				
 			case "retornar":		
 			case "percada":
-				try {
-					INSTRUCCIO(); //pot tirar error
-					Acceptar("punt_i_coma"); //
-					
-				} catch (SyntacticError e) {
-					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
-					//first ll_inst1
-					consumir(new ArrayList<String>(Arrays.asList("identificador", "escriure", "llegir", "cicle", "mentre", "si",
-							"retornar", "percada", "fifunc", "fiprog", "punt_i_coma", "fins", "fimentre", "per", "sino", "fisi","eof")));
-					if (lookAhead.getTipus().equals("punt_i_coma"))
-						try { Acceptar("punt_i_coma");} catch (SyntacticError e1){} //no generara error 
-				}
+			INSTRUCCIO(); //pot tirar error
+			Acceptar("punt_i_coma"); //
 				LL_INST1();	
 				return;
 				
@@ -759,168 +627,84 @@ sem.setValue("VALOR", "null");
 		}
 	}
 	
-	private void INSTRUCCIO () throws SyntacticError {
+	private void INSTRUCCIO () {
 		
 		switch (lookAhead.getTipus()) {
 		
 			case "identificador":
-				try {
 					VAR();//pot tirar error
 					Acceptar("igual");
 					INSTRUCCIO1();
-				} catch (SyntacticError e) {
-					Error.escriuError(27, "assignacio", alex.getLiniaActual(), "");
-					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
-					//follows instruccio
-					consumir(new ArrayList<String>(Arrays.asList("escriure", "llegir", "cicle", "mentre", "si",
-							"retornar", "percada", "fifunc", "fiprog", "punt_i_coma", "fins", "fimentre", "per", "sino", "fisi","eof")));
-				}
 				return;
 				
 			case "escriure":
 				Acceptar("escriure"); // mai donara error
-				try {
 					Acceptar("parentesi_obert"); // (
 					LL_EXP_ESCRIURE(); 	 
 					Acceptar("parentesi_tancat"); // )
-				} catch (SyntacticError e) {
-					Error.escriuError(27, "escriure", alex.getLiniaActual(), "");
-					//follows instruccio
-					consumir(new ArrayList<String>(Arrays.asList("punt_i_coma","parentesi_tancat", "fiprog", "eof")));
-					if (lookAhead.getTipus().equals("parentesi_tancat"))
-						try { Acceptar("parentesi_tancat");} catch (SyntacticError e1){} //no generara error 
-				}
 				return;		
 				
 			case "llegir":
 				Acceptar("llegir"); // mai donara error
-				try {
 					Acceptar("parentesi_obert"); // (
 					LL_VAR(); 	 
 					Acceptar("parentesi_tancat"); // )
-				} catch (SyntacticError e) {
-					Error.escriuError(27, "llegir", alex.getLiniaActual(), "");
-					//follows instruccio
-					consumir(new ArrayList<String>(Arrays.asList("punt_i_coma","parentesi_tancat","fiprog", "eof")));
-					if (lookAhead.getTipus().equals("parentesi_tancat"))
-						try { Acceptar("parentesi_tancat");} catch (SyntacticError e1){} //no generara error 
-				}
+
 				return;
 				
 			case "cicle":
 				Acceptar("cicle"); // mai donara error
 				LL_INST();
-				try {
 					Acceptar("fins"); // fins 	 
-				} catch (SyntacticError e) {
-					Error.escriuError(27, "cicle", alex.getLiniaActual(), "");
-					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
-					//first expresio
-					consumir(new ArrayList<String>(Arrays.asList("suma", "resta", "not", "ct_entera", "ct_logica", "ct_cadena",
-							"identificador", "parentesi_obert","fins", "eof", "fiprog")));
-					if (lookAhead.getTipus().equals("fins"))
-						try { Acceptar("fins");} catch (SyntacticError e1){} //no generara error 
-				}
-				EXPRESIO();
+				semantic = EXPRESIO(semantic);
 				return;
 				
 			case "mentre":
 				Acceptar("mentre"); // mai donara error
-				EXPRESIO();
-				try {
+				semantic = EXPRESIO(semantic);
 					Acceptar("fer");
-				} catch (SyntacticError e) {
-					Error.escriuError(27, "mentre", alex.getLiniaActual(), "");
-					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
-					//firsts ll_inst
-					consumir(new ArrayList<String>(Arrays.asList("identificador", "escriure", "llegir", "cicle", "mentre",
-							"si", "retorna", "percada", "fer", "eof", "fiprog")));
-					if (lookAhead.getTipus().equals("fer"))
-						try { Acceptar("fer");} catch (SyntacticError e1){} //no generara error 
-				}
+
 				LL_INST();
-				try {	
 					Acceptar("fimentre");	
-				} catch (SyntacticError e) {
-					Error.escriuError(27, "mentre", alex.getLiniaActual(), "");
-					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
-					//follows instruccio
-					consumir(new ArrayList<String>(Arrays.asList("punt_i_coma","fimentre", "eof", "fiprog")));
-					if (lookAhead.getTipus().equals("fimentre"))
-						try { Acceptar("fimentre");} catch (SyntacticError e1){} //no generara error 
-				}
+
 				return;
 				
 			case "si":
 				Acceptar("si"); // mai donara error
-				EXPRESIO();
-				try {
+				semantic = EXPRESIO(semantic);
 					Acceptar("llavors");
-				} catch (SyntacticError e) {
-					Error.escriuError(27, "si", alex.getLiniaActual(), "");
-					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
-					//fists ll_inst
-					consumir(new ArrayList<String>(Arrays.asList("identificador", "escriure", "llegir", "cicle", "mentre",
-							"si", "retornar", "percada", "llavors", "eof", "fiprog")));
-					if (lookAhead.getTipus().equals("llavors"))
-						try { Acceptar("llavors");} catch (SyntacticError e1){} //no generara error 
-				}
+
 				LL_INST();
 				SINO();
-				try {
 					Acceptar("fisi"); // fisi	 
-				} catch (SyntacticError e) { 
-					Error.escriuError(27, "si", alex.getLiniaActual(), "");
-					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
-					//follows instruccio
-					consumir(new ArrayList<String>(Arrays.asList("punt_i_coma","fisi", "eof", "fiprog")));
-					if (lookAhead.getTipus().equals("fisi"))
-						try { Acceptar("fisi");} catch (SyntacticError e1){} //no generara error 
-				}
+
 				return;
 				
 			case "retornar":
 				Acceptar("retornar"); // mai donara error
-				EXPRESIO();
+				semantic = EXPRESIO(semantic);
 				return;
 				
 			case "percada":
 				Acceptar("percada"); // mai donara error
-				try {
 					Acceptar("identificador"); // id
 					Acceptar("en"); // en
 					Acceptar("identificador"); // id
 					Acceptar("fer");
-				} catch (SyntacticError e) {
-					Error.escriuError(27, "percada", alex.getLiniaActual(), "");
-					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
-					//firsts ll_inst
-					consumir(new ArrayList<String>(Arrays.asList("identificador", "escriure", "llegir", "cicle", "mentre",
-							"si", "retorna", "percada", "fer", "eof", "fiprog")));
-					if (lookAhead.getTipus().equals("fer"))
-						try { Acceptar("fer");} catch (SyntacticError e1){} //no generara error 
-				}
+
 				LL_INST();
 				
-				try {
 					Acceptar("fiper"); // fiper	
-				} catch (SyntacticError e) {
-					Error.escriuError(27, "percada", alex.getLiniaActual(), "");
-					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
-					//follows instruccio
-					consumir(new ArrayList<String>(Arrays.asList("punt_i_coma", "fiper", "eof", "fiprog")));
-					if (lookAhead.getTipus().equals("fiper"))
-						try { Acceptar("fiper");} catch (SyntacticError e1){} //no generara error 
-				}
+
 				return;
 									
-			default: throw new SyntacticError("identificador, escriure, llegir, cicle, mentre, si, percada, retornar");
+			default: return;
 								
 		}
 	}
 
 	
-	private void INSTRUCCIO1 () throws SyntacticError {
+	private void INSTRUCCIO1 () {
 		
 		switch (lookAhead.getTipus()) {
 		
@@ -932,33 +716,28 @@ sem.setValue("VALOR", "null");
 			case "ct_cadena":		
 			case "identificador":			
 			case "parentesi_obert":
-				EXPRESIO();
+				semantic = EXPRESIO(semantic);
 				return;
 		
 			
 			case "si":
 				Acceptar("si");
-				try {
 					Acceptar("parentesi_obert"); // (
-					EXPRESIO();
+					semantic = EXPRESIO(semantic);
 					Acceptar("parentesi_tancat"); // )
 					Acceptar("interrogant"); // ?
-					EXPRESIO();
+					semantic = EXPRESIO(semantic);
 					Acceptar("dos_punts"); // :
-					EXPRESIO();
-				} catch (SyntacticError e) {
-					Error.escriuError(21, "[" + lookAhead.getLexema() + "]", alex.getLiniaActual(), "[" + e.getMessage() + "]");
-					//follows instruccio1
-					consumir(new ArrayList<String>(Arrays.asList("punt_i_coma", "eof", "fiprog")));
-				}
+					semantic = EXPRESIO(semantic);
+
 				return;
 							
-			default: throw new SyntacticError("si, +, -, not, ct_enter, ct_logica, ct_cadena, identificador, (");
+			default: return;
 									
 		}
 	}
 	
-	private void LL_EXP_ESCRIURE () throws SyntacticError {
+	private void LL_EXP_ESCRIURE () {
 		
 		switch (lookAhead.getTipus()) {
 		
@@ -970,11 +749,11 @@ sem.setValue("VALOR", "null");
 			case "ct_cadena":		
 			case "identificador":		
 			case "parentesi_obert":
-				EXPRESIO();
+				semantic = EXPRESIO(semantic);
 				LL_EXP_ESCRIURE1();
 				return;
 				
-			default: throw new SyntacticError("+, -, not, ct_enter, ct_logica, ct_cadena, identificador, (");
+			default: return;
 									
 		}
 	}
@@ -984,10 +763,8 @@ sem.setValue("VALOR", "null");
 		switch (lookAhead.getTipus()) {
 		
 			case "coma":
-				try {
 					Acceptar("coma"); //mai tirara error
-				} catch (SyntacticError e) { }
-				EXPRESIO();
+				semantic = EXPRESIO(semantic);
 				return;
 							
 			default:
@@ -1001,9 +778,7 @@ sem.setValue("VALOR", "null");
 		switch (lookAhead.getTipus()) {
 		
 			case "sino":
-				try {
 					Acceptar("sino"); //mai tirara error
-				} catch (SyntacticError e) { }
 				LL_INST();
 				return;
 				
