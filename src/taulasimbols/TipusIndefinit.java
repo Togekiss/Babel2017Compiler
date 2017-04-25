@@ -27,7 +27,7 @@ public class TipusIndefinit extends ITipus {
 	 */
 	public String toXml() {
 		String str = "<TipusIndefinit Nom=\"" + nom + 
-			"\" Tamany=\"" + tamany + "\"></TipusIndefinit>";
+			"\" Tamany=\"" + tamany + "\"></TipusIndefinit>\n";
 		return str;
 	}
  }

@@ -120,11 +120,11 @@ public class TipusSimple extends ITipus {
 			str += " Mínim=\"null\"";
 		
 		if (maxim != null)
-			str += " Màxim=\"" + maxim.toString() + "\">";
+			str += " Màxim=\"" + maxim.toString() + "\">\n";
 		else
 			str += " Màxim=\"null\">";
 		
-		str += "</TipusSimple>";
+		str += "</TipusSimple>\n";
 		return str;
 	}
 }
