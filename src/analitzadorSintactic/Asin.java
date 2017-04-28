@@ -304,11 +304,15 @@ sem.setValue("VALOR", "null");
 	
 	private Semantic EXPRESIO1(Semantic sem) {
 		
+		Semantic sem2 = new Semantic();
+		
 		switch (lookAhead.getTipus()) {
 		
 			case "oper_rel": 
-			Acceptar("oper_rel"); //mai donara error	
-				sem = EXPRESIO_SIMPLE(sem);
+				sem.setValue("OPERADOR", lookAhead.getLexema());
+				Acceptar("oper_rel");
+				sem2 = EXPRESIO_SIMPLE(sem2);
+//TODO operar sem i sem2 segons operador
 				return sem;
 				
 			default: 
@@ -320,29 +324,33 @@ sem.setValue("VALOR", "null");
 	
 	private Semantic EXPRESIO_SIMPLE(Semantic sem) {
 		
-		sem = OP_INICI_EXP(sem); //mai donara error
+		sem = OP_INICI_EXP(sem); 
 		sem  = TERME(sem);
-//TODO anem per aqui
-		EXPRESIO_SIMPLE1();
+//TODO operar op inici exp amb terme
+		sem.removeAttribute("OPERADOR");
+		sem = EXPRESIO_SIMPLE1(sem);
 		return sem;
 		
 	}
 	
 	
-	private void EXPRESIO_SIMPLE1() {
+	private Semantic EXPRESIO_SIMPLE1(Semantic sem) {
+		
+		Semantic sem2 = new Semantic();
 		
 		switch (lookAhead.getTipus()) {
 		
 			case "suma":
 			case "resta":
 			case "or":
-				OP_EXP(); //mai donara error
-				TERME();
-				EXPRESIO_SIMPLE1();
-				return;
+				sem = OP_EXP(sem); 
+				sem2 = TERME(sem2);
+//TODO operar sem amb sem2 segons operador i guardar a sem
+				sem = EXPRESIO_SIMPLE1(sem);
+				return sem;
 				
 			default:
-				return;
+				return sem;
 		
 		}
 		
@@ -353,6 +361,7 @@ sem.setValue("VALOR", "null");
 		sem = FACTOR(sem);
 //TODO anem per aqui
 		TERME1();
+//operar factor i terme1
 		return sem;
 		
 	}
@@ -404,23 +413,26 @@ sem.setValue("VALOR", "null");
 		
 	}
 		
-	private void OP_EXP () {
+	private Semantic OP_EXP (Semantic sem) {
 		
 		switch (lookAhead.getTipus()) {
 		
 			case "suma":
+				sem.setValue("OPERADOR", lookAhead.getLexema());
 				Acceptar("suma");
-				return;
+				return sem;
 							
 			case "resta":
+				sem.setValue("OPERADOR", lookAhead.getLexema());
 				Acceptar("resta");
-				return;
+				return sem;
 							
 			case "or":
+				sem.setValue("OPERADOR", lookAhead.getLexema());
 				Acceptar("or");
-				return;
+				return sem;
 				
-			default: return;
+			default: return sem;
 				
 		}
 	}
@@ -473,7 +485,7 @@ sem.setValue("VALOR", "null");
 				return sem;
 				
 			case "identificador":
-//TODO buscar si id existeix blablabla
+//TODO buscar si id existeix i agafar tipus i valor i estatic
 				Acceptar("identificador"); //no tirara errror
 				sem = FACTOR1(sem);
 				return sem;	
@@ -490,19 +502,28 @@ sem.setValue("VALOR", "null");
 	}
 	
 	private Semantic FACTOR1 (Semantic sem) {
+		//sem es el descriptor del identificador del que ve
+		
+		Semantic sem2 = new Semantic();
 		
 		switch (lookAhead.getTipus()) {
 		
 			case "parentesi_obert":
-			Acceptar("parentesi_obert"); //no tirara error
-			LL_EXPRESIO(); //tira error (falta ,)
-			Acceptar("parentesi_tancat"); // pot tirar error
+			Acceptar("parentesi_obert"); 
+//TODO es funcio
+//basicament per passar-li el descriptor de la funcio i index param = 0
+			LL_EXPRESIO(sem2); 
+			Acceptar("parentesi_tancat");
+//retornar tipus de retorn de funcio
 				return sem;
 				
 			case "claudator_obert":
-			Acceptar("claudator_obert"); //no tirara error
-			sem = EXPRESIO(sem);
-			Acceptar("claudator_tancat"); // pot tirar error
+			Acceptar("claudator_obert"); 
+//TODO es vector
+			sem2 = EXPRESIO(sem2);
+//comprovar que expressio es int i esta dins el rang (si es estatica)
+			Acceptar("claudator_tancat"); 
+//retornar tipus d'element de vector
 				return sem;
 			
 			default:
@@ -512,7 +533,11 @@ sem.setValue("VALOR", "null");
 	}
 	
 	
-	private void LL_EXPRESIO() {
+	private void LL_EXPRESIO(Semantic sem) {
+		
+		//s'ha de comprovar que la expresio numero x correspongui
+		//amb el parametre numero x de la funcio
+		Semantic sem2 = new Semantic();
 		
 		switch (lookAhead.getTipus()) {
 			
@@ -524,8 +549,9 @@ sem.setValue("VALOR", "null");
 			case "ct_cadena":
 			case "identificador":
 			case "parentesi_obert":
-				semantic = EXPRESIO(semantic);
-				LL_EXPRESIO1();
+				sem2 = EXPRESIO(sem2);
+				//index param ++
+				LL_EXPRESIO1(sem);
 				return;
 				
 			default: return;
@@ -534,13 +560,13 @@ sem.setValue("VALOR", "null");
 		
 	}
 	
-	private void LL_EXPRESIO1 () {
+	private void LL_EXPRESIO1 (Semantic sem) {
 		
 		switch (lookAhead.getTipus()) {
 		
 			case "coma":
 				Acceptar("coma");
-				LL_EXPRESIO();
+				LL_EXPRESIO(sem);
 				return;
 			
 			default: 
