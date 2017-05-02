@@ -130,18 +130,17 @@ System.out.println(taulaSimbols.toXml());
 
 
 	private void DECL_CONST(){
-		Semantic semantic = new Semantic();
+		Semantic sem = new Semantic();
 		
 		Acceptar("const");
 		if (lookAhead.getTipus().equals("identificador"))
-			semantic.setValue("TOKEN", lookAhead.getLexema());
+			sem.setValue("TOKEN", lookAhead.getLexema());
 		Acceptar("identificador");
 		Acceptar("igual");
-		semantic = EXPRESIO(semantic);
-semantic.setValue("TIPUS", new TipusSimple("undefined", 0, 0, 0));
-semantic.setValue("VALOR", "null");
-semantic.setValue("ESTATIC", true);
-		asem.afegirConstant(semantic, taulaSimbols);
+		sem = EXPRESIO(sem);
+		//TODO expresio ja porta token, tipus, valor, estatic
+		//Comprovar que tipus i valor tenen sentit, i que es estatic
+		asem.afegirConstant(sem, taulaSimbols);
 		Acceptar("punt_i_coma");
 		return;
 		
@@ -149,15 +148,15 @@ semantic.setValue("ESTATIC", true);
 
 
 	private void DECL_VAR() {
-		Semantic semantic = new Semantic();
+		Semantic sem = new Semantic();
 		
 		Acceptar("var");
 		if (lookAhead.getTipus().equals("identificador"))
-			semantic.setValue("TOKEN", lookAhead.getLexema());
+			sem.setValue("TOKEN", lookAhead.getLexema());
 		Acceptar("identificador");
 		Acceptar("dos_punts");
-		semantic = TIPUS(semantic);
-		asem.afegirVariable(semantic, taulaSimbols);
+		sem = TIPUS(sem);
+		asem.afegirVariable(sem, taulaSimbols);
 		Acceptar("punt_i_coma");
 		return;
 
@@ -167,7 +166,7 @@ semantic.setValue("ESTATIC", true);
 	private void DECL_FUNC() {
 
 		switch (lookAhead.getTipus()) {
-	
+	//TODO funcio
 			case "funcio":
 			Acceptar("funcio"); //no hauria de treure error
 			Acceptar("identificador");
@@ -262,6 +261,8 @@ semantic.setValue("ESTATIC", true);
 	
 	private Semantic TIPUS(Semantic sem) {
 		
+		Semantic sem2 = new Semantic();
+		
 		switch (lookAhead.getTipus()) {
 			
 			case "tipus_simple": 
@@ -275,14 +276,17 @@ semantic.setValue("ESTATIC", true);
 //TODO
 				Acceptar("vector");
 				sem.setValue("TIPUS", new TipusArray());
-sem.setValue("ESTATIC", false);
-sem.setValue("VALOR", "null");
+				sem.setValue("ESTATIC", false);
+				sem.setValue("VALOR", "null");
 				Acceptar("claudator_obert");
-				sem = EXPRESIO(sem);
+				sem2 = EXPRESIO(sem2);
+				//TODO afegir rang a sem
 				Acceptar("rang");
 				sem = EXPRESIO(sem);
+				//calcular si rang ok i afegir a tipus de sem
 				Acceptar("claudator_tancat");
 				Acceptar("de");
+				//TODO afegir a tipus de sem
 				Acceptar("tipus_simple");
 				return sem;
 				
@@ -294,7 +298,6 @@ sem.setValue("VALOR", "null");
 	
 	private Semantic EXPRESIO(Semantic sem) {
 		
-//TODO COMENCA EXPRESSIO
 		sem = EXPRESIO_SIMPLE(sem);
 		sem = EXPRESIO1(sem);
 		return sem;
@@ -313,6 +316,7 @@ sem.setValue("VALOR", "null");
 				Acceptar("oper_rel");
 				sem2 = EXPRESIO_SIMPLE(sem2);
 //TODO operar sem i sem2 segons operador
+				sem.removeAttribute("OPERADOR");
 				return sem;
 				
 			default: 
@@ -346,6 +350,7 @@ sem.setValue("VALOR", "null");
 				sem = OP_EXP(sem); 
 				sem2 = TERME(sem2);
 //TODO operar sem amb sem2 segons operador i guardar a sem
+				sem.removeAttribute("OPERADOR");
 				sem = EXPRESIO_SIMPLE1(sem);
 				return sem;
 				
@@ -376,6 +381,7 @@ sem.setValue("VALOR", "null");
 					sem = OP_TERME(sem); //mai donara error
 					sem2 = FACTOR(sem2);
 					//TODO operar sem i sem2 segons OP_TERME
+					sem.removeAttribute("OPERADOR");
 					sem = TERME1(sem);
 					return sem;
 				
@@ -539,7 +545,7 @@ sem.setValue("VALOR", "null");
 	
 	private void LL_EXPRESIO(Semantic sem) {
 		
-		//s'ha de comprovar que la expresio numero x correspongui
+		//TODO s'ha de comprovar que la expresio numero x correspongui
 		//amb el parametre numero x de la funcio
 		Semantic sem2 = new Semantic();
 		
@@ -554,7 +560,7 @@ sem.setValue("VALOR", "null");
 			case "identificador":
 			case "parentesi_obert":
 				sem2 = EXPRESIO(sem2);
-				//index param ++
+				//TODO index param ++
 				LL_EXPRESIO1(sem);
 				return;
 				
