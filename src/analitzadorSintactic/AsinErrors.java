@@ -23,8 +23,6 @@ public class AsinErrors {
 	private Asem asem;
 	private Error error;
 	private Token lookAhead;
-	private TaulaSimbols taulaSimbols;
-	//private Semantic semantic;
 	
 	//CONSTRUCTOR
 	public AsinErrors (String args, String name) {
@@ -32,13 +30,12 @@ public class AsinErrors {
 		alex = new Alex(args);
 		asem = new Asem();
 		error = new Error(name);
-		taulaSimbols = new TaulaSimbols();
 		lookAhead = alex.getToken();
 		alex.writeToken(lookAhead);
 		
 	}
 	
-	
+	/*
 	//ACCEPTAR UN TOKEN
 	private void Acceptar (String token) throws SyntacticError {
 		
@@ -1030,4 +1027,7 @@ sem.setValue("VALOR", "null");
 								
 		}
 	}
+	
+	
+	*/
 }
