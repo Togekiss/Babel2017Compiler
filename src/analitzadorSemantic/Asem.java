@@ -87,7 +87,7 @@ System.out.println("#, Expresio invalida per constant");
 	public boolean EXP_tipusOperands (Semantic sem1, Semantic sem2) {
 		return sem1.getValue("TIPUS") == sem2.getValue("TIPUS");
 	}
-	//hola
+	//holaa
 	public boolean EXP_tipusOperadorRelacional (Semantic sem1, Semantic sem2) {
 		return EXP_tipusOperands(sem1, sem2) && sem1.getValue("TIPUS") instanceof TipusSimple && sem1.getValue("TIPUS") instanceof TipusSimple;
 	}
