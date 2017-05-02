@@ -359,27 +359,28 @@ sem.setValue("VALOR", "null");
 	private Semantic TERME(Semantic sem) {
 		
 		sem = FACTOR(sem);
-//TODO anem per aqui
-		TERME1();
-//operar factor i terme1
+		sem = TERME1(sem);
 		return sem;
 		
 	}
 	
-	private void TERME1() {
+	private Semantic TERME1(Semantic sem) {
+		
+		Semantic sem2 = new Semantic();
 		
 		switch (lookAhead.getTipus()) {
 		
 			case "multiplicacio":
 			case "divisio":
 			case "and":
-					OP_TERME(); //mai donara error
-					FACTOR();
-				TERME1();
-				return;
+					sem = OP_TERME(sem); //mai donara error
+					sem2 = FACTOR(sem2);
+					//TODO operar sem i sem2 segons OP_TERME
+					sem = TERME1(sem);
+					return sem;
 				
 			default: 
-				return;
+				return sem;
 			
 		}
 		
@@ -418,17 +419,17 @@ sem.setValue("VALOR", "null");
 		switch (lookAhead.getTipus()) {
 		
 			case "suma":
-				sem.setValue("OPERADOR", lookAhead.getLexema());
+				sem.setValue("OPERADOR", "suma");
 				Acceptar("suma");
 				return sem;
 							
 			case "resta":
-				sem.setValue("OPERADOR", lookAhead.getLexema());
+				sem.setValue("OPERADOR", "resta");
 				Acceptar("resta");
 				return sem;
 							
 			case "or":
-				sem.setValue("OPERADOR", lookAhead.getLexema());
+				sem.setValue("OPERADOR", "or");
 				Acceptar("or");
 				return sem;
 				
@@ -437,23 +438,26 @@ sem.setValue("VALOR", "null");
 		}
 	}
 	
-	private void OP_TERME () {
+	private Semantic OP_TERME (Semantic sem) {
 		
 		switch (lookAhead.getTipus()) {
 		
 			case "multiplicacio":
+				sem.setValue("OPERADOR", "multiplicacio");
 				Acceptar("multiplicacio");
-				return;
+				return sem;
 				
 			case "divisio":
+				sem.setValue("OPERADOR", "divisio");
 				Acceptar("divisio");
-				return;
+				return sem;
 				
 			case "and":
+				sem.setValue("OPERADOR", "and");
 				Acceptar("and");
-				return;	
+				return sem;	
 				
-			default: return;
+			default: return sem;
 								
 		}
 		
@@ -464,24 +468,24 @@ sem.setValue("VALOR", "null");
 		switch (lookAhead.getTipus()) {
 		
 			case "ct_enter":
-				sem.setValue("TIPUSS", new TipusSimple("sencer", 0, 0, 0));
-				sem.setValue("VALORS", Integer.parseInt(lookAhead.getLexema()));
-				sem.setValue("ESTATICS", true);
-				Acceptar("ct_enter"); //no tirara error
+				sem.setValue("TIPUS", new TipusSimple("sencer", 0, 0, 0));
+				sem.setValue("VALOR", Integer.parseInt(lookAhead.getLexema()));
+				sem.setValue("ESTATIC", true);
+				Acceptar("ct_enter"); 
 				return sem;
 				
 			case "ct_logica":
-				sem.setValue("TIPUSS", new TipusSimple("logic", 0, 0, 0));
-				sem.setValue("VALORS", lookAhead.getLexema().equals("cert")?true:false);
-				sem.setValue("ESTATICS", true);
-				Acceptar("ct_logica"); //no tirara error
+				sem.setValue("TIPUS", new TipusSimple("logic", 0, 0, 0));
+				sem.setValue("VALOR", lookAhead.getLexema().equals("cert")?true:false);
+				sem.setValue("ESTATIC", true);
+				Acceptar("ct_logica"); 
 				return sem;
 				
 			case "ct_cadena":
-				sem.setValue("TIPUSS", new TipusCadena("cadena", 0, lookAhead.getLexema().length()));
-				sem.setValue("VALORS", lookAhead.getLexema());
-				sem.setValue("ESTATICS", true);
-				Acceptar("ct_cadena"); //no tirara error
+				sem.setValue("TIPUS", new TipusCadena("cadena", 0, lookAhead.getLexema().length()));
+				sem.setValue("VALOR", lookAhead.getLexema());
+				sem.setValue("ESTATIC", true);
+				Acceptar("ct_cadena"); 
 				return sem;
 				
 			case "identificador":
