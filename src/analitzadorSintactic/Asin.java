@@ -543,7 +543,7 @@ System.out.println(taulaSimbols.toXml());
 	}
 	
 	
-	private void LL_EXPRESIO(Semantic sem) {
+	private Semantic LL_EXPRESIO(Semantic sem) {
 		
 		//TODO s'ha de comprovar que la expresio numero x correspongui
 		//amb el parametre numero x de la funcio
@@ -562,9 +562,9 @@ System.out.println(taulaSimbols.toXml());
 				sem2 = EXPRESIO(sem2);
 				//TODO index param ++
 				LL_EXPRESIO1(sem);
-				return;
+				return sem;
 				
-			default: return;
+			default: return sem;
 		
 		}
 		
@@ -587,7 +587,10 @@ System.out.println(taulaSimbols.toXml());
 	
 	private void LL_VAR () {
 		
-		VAR();
+		Semantic sem = new Semantic();
+		
+		sem = VAR(sem);
+		//TODO comprovar que sem tipus == tipus simple
 		LL_VAR1();
 		return;
 	}
@@ -607,33 +610,40 @@ System.out.println(taulaSimbols.toXml());
 		}
 	}
 	
-	private void VAR () {
+	private Semantic VAR (Semantic sem) {
 		
+		sem.setValue("TOKEN", lookAhead.getLexema());
 		Acceptar("identificador");
-		VAR1();
-		return;
+		sem = VAR1(sem);
+		//TODO comprovar que id es variable i tipus simple
+		return sem;
 		
 	}
 	
-	private void VAR1 () {
+	private Semantic VAR1 (Semantic sem) {
+		
+		Semantic sem2 = new Semantic();
 		
 		switch (lookAhead.getTipus()) {
 		
 			case "claudator_obert":
+				//TODO comprovar que identificador es array
 				Acceptar("claudator_obert");
-				semantic = EXPRESIO(semantic);
+				sem2 = EXPRESIO(sem2);
+				//comprovar que tipus sem2 == sencer
+				//i si es estatic, esta dins el rang de id
 				Acceptar("claudator_tancat");
-				return;						
+				return sem;						
 									
 			default:
-				return;
+				return sem;
 								
 		}
 	}
 	
 	private void LL_INST () {
 		
-		INSTRUCCIO(); //pot tirar error (switch)
+		INSTRUCCIO();
 		Acceptar("punt_i_coma");
 		LL_INST1();
 		return;
@@ -652,8 +662,8 @@ System.out.println(taulaSimbols.toXml());
 			case "si":				
 			case "retornar":		
 			case "percada":
-			INSTRUCCIO(); //pot tirar error
-			Acceptar("punt_i_coma"); //
+			INSTRUCCIO(); 
+			Acceptar("punt_i_coma"); 
 				LL_INST1();	
 				return;
 				
@@ -665,39 +675,45 @@ System.out.println(taulaSimbols.toXml());
 	
 	private void INSTRUCCIO () {
 		
+		Semantic sem = new Semantic();
+		Semantic sem2 = new Semantic();
+		
 		switch (lookAhead.getTipus()) {
 		
 			case "identificador":
-					VAR();//pot tirar error
+					sem = VAR(sem);
 					Acceptar("igual");
-					INSTRUCCIO1();
+					sem2 = EXPRESIO(sem2);
+					//TODO comprovar que tipus sem1 == tipus sem2
 				return;
 				
 			case "escriure":
-				Acceptar("escriure"); // mai donara error
-					Acceptar("parentesi_obert"); // (
+				Acceptar("escriure"); 
+					Acceptar("parentesi_obert"); 
 					LL_EXP_ESCRIURE(); 	 
-					Acceptar("parentesi_tancat"); // )
+					Acceptar("parentesi_tancat");
 				return;		
 				
 			case "llegir":
-				Acceptar("llegir"); // mai donara error
-					Acceptar("parentesi_obert"); // (
+				Acceptar("llegir"); 
+					Acceptar("parentesi_obert"); 
 					LL_VAR(); 	 
-					Acceptar("parentesi_tancat"); // )
+					Acceptar("parentesi_tancat"); 
 
 				return;
 				
 			case "cicle":
-				Acceptar("cicle"); // mai donara error
+				Acceptar("cicle");
 				LL_INST();
 					Acceptar("fins"); // fins 	 
-				semantic = EXPRESIO(semantic);
+				sem = EXPRESIO(sem);
+				//TODO comprovar que sem tipus == logic
 				return;
 				
 			case "mentre":
-				Acceptar("mentre"); // mai donara error
-				semantic = EXPRESIO(semantic);
+				Acceptar("mentre");
+				sem = EXPRESIO(sem);
+				//TODO comprovar que sem tipus == logic
 					Acceptar("fer");
 
 				LL_INST();
@@ -706,31 +722,35 @@ System.out.println(taulaSimbols.toXml());
 				return;
 				
 			case "si":
-				Acceptar("si"); // mai donara error
-				semantic = EXPRESIO(semantic);
+				Acceptar("si"); 
+				sem = EXPRESIO(sem);
+				//TODO comprovar que sem tipus == logic
 					Acceptar("llavors");
 
 				LL_INST();
 				SINO();
-					Acceptar("fisi"); // fisi	 
+					Acceptar("fisi"); 
 
 				return;
 				
 			case "retornar":
-				Acceptar("retornar"); // mai donara error
-				semantic = EXPRESIO(semantic);
+				Acceptar("retornar"); 
+				sem = EXPRESIO(sem);
+				//TODO comprovar que blocactual != 0
+				//comprovar que exp tipus == retorn funcio tipus
+				//comprovar que com a minim nhi hagi un
 				return;
 				
 			case "percada":
-				Acceptar("percada"); // mai donara error
-					Acceptar("identificador"); // id
-					Acceptar("en"); // en
-					Acceptar("identificador"); // id
+				Acceptar("percada"); 
+					Acceptar("identificador"); 
+					Acceptar("en");
+					Acceptar("identificador"); 
 					Acceptar("fer");
 
 				LL_INST();
 				
-					Acceptar("fiper"); // fiper	
+					Acceptar("fiper"); 
 
 				return;
 									
@@ -741,6 +761,9 @@ System.out.println(taulaSimbols.toXml());
 
 	
 	private void INSTRUCCIO1 () {
+		//Crec que ja no el fem servir but still
+		
+		Semantic semantic = new Semantic();
 		
 		switch (lookAhead.getTipus()) {
 		
@@ -775,6 +798,8 @@ System.out.println(taulaSimbols.toXml());
 	
 	private void LL_EXP_ESCRIURE () {
 		
+		Semantic sem = new Semantic();
+		
 		switch (lookAhead.getTipus()) {
 		
 			case "suma":			
@@ -785,7 +810,8 @@ System.out.println(taulaSimbols.toXml());
 			case "ct_cadena":		
 			case "identificador":		
 			case "parentesi_obert":
-				semantic = EXPRESIO(semantic);
+				sem = EXPRESIO(sem);
+				//TODO comprovar que tipus == tipus simple o cadena
 				LL_EXP_ESCRIURE1();
 				return;
 				
@@ -800,7 +826,7 @@ System.out.println(taulaSimbols.toXml());
 		
 			case "coma":
 					Acceptar("coma"); //mai tirara error
-				semantic = EXPRESIO(semantic);
+				LL_EXP_ESCRIURE();
 				return;
 							
 			default:
