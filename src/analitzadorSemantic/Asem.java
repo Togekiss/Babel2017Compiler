@@ -1,9 +1,11 @@
 package analitzadorSemantic;
 
 import taulasimbols.Constant;
+import taulasimbols.DimensioArray;
 import taulasimbols.ITipus;
 import taulasimbols.Parametre;
 import taulasimbols.TaulaSimbols;
+import taulasimbols.TipusArray;
 import taulasimbols.TipusSimple;
 import taulasimbols.Variable;
 
@@ -68,14 +70,26 @@ System.out.println("#, Expresio invalida per constant");
 		
 	}
 	
-	public boolean EXP_verificaExpressio (Semantic sem, TaulaSimbols ts) {
+	public boolean EXP_tipusExpressio (Semantic sem) {
 		if (sem.getValue("TIPUS") == null) return false;
 		return false;
+	}
+	
+	public boolean EXP_tipusIndex (Semantic sem, TaulaSimbols ts) {
+		DimensioArray dimensio = ((TipusArray)ts.obtenirBloc(ts.getBlocActual()).obtenirVariable((String)sem.getValue("TOKEN")).getTipus()).obtenirDimensio((int)sem.getValue("VALUE"));
+		if (sem.getValue("TIPUS") != dimensio.getTipusLimit() || sem.getValue("TIPUS") != "sencer") return false;
+		if ((boolean)sem.getValue("ESTATIC") == true && ((int)sem.getValue("VALUE") > (int)dimensio.getLimitSuperior() 
+				|| (int)sem.getValue("VALUE") < (int)dimensio.getLimitInferior())) return false;
+		return true; 
 	}
 	
 	//PER FACTOR i TERME
 	public boolean EXP_tipusOperands (Semantic sem1, Semantic sem2) {
 		return sem1.getValue("TIPUS") == sem2.getValue("TIPUS");
+	}
+	//holaa
+	public boolean EXP_tipusOperadorRelacional (Semantic sem1, Semantic sem2) {
+		return EXP_tipusOperands(sem1, sem2) && sem1.getValue("TIPUS") instanceof TipusSimple && sem1.getValue("TIPUS") instanceof TipusSimple;
 	}
 	
 	public boolean EXP_paramFuncio (Semantic sem, TaulaSimbols ts) {
@@ -89,4 +103,12 @@ System.out.println("#, Expresio invalida per constant");
 	public boolean EXP_midaFuncio (Semantic sem, TaulaSimbols ts) {
 		return (int)sem.getValue("NPARAM") == ts.obtenirBloc(0).obtenirProcediment((String)sem.getValue("FUNCNAME")).getNumeroParametres();
 	}
+	
+	public boolean INST_tipusOperands (Semantic sem1, Semantic sem2, TaulaSimbols ts) {
+		return sem1.getValue("TIPUS") == sem2.getValue("TIPUS") && !ts.obtenirBloc(ts.getBlocActual()).existeixConstant((String)sem1.getValue("TOKEN"));
+	}
+	
+	
+	
+	
 }
