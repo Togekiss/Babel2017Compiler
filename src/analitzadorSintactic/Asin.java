@@ -176,21 +176,26 @@ public class Asin {
 
 		case "funcio":
 			Acceptar("funcio"); 
-			sem.setValue("TOKEN", lookAhead.getLexema());
+			//sem.setValue("TOKEN", lookAhead.getLexema());
 			funcio.setNom(lookAhead.getLexema());
 			Acceptar("identificador");
 			Acceptar("parentesi_obert");
 			funcio = LL_PARAM(funcio);
 			Acceptar("parentesi_tancat");
 			Acceptar("dos_punts");
-			sem.setValue("TIPUS", lookAhead.getLexema());
+			//sem.setValue("TIPUS", lookAhead.getLexema());
+			//sem.setValue("ESTATIC", false);
+			//sem.setValue("VALOR", null);
 			funcio.setTipus(new TipusSimple(lookAhead.getLexema(), 0));
-			sem.setValue("ESTATIC", false);
-			sem.setValue("VALOR", null);
 			Acceptar("tipus_simple");
+			
 		//TODO comprovar que tot ok i inserir a la llista de funcions
+		
 			Acceptar("punt_i_coma");
-
+			taulaSimbols.setBlocActual(1);
+			taulaSimbols.inserirBloc(new Bloc());
+		//TAMBE!! INSERIR!! ELS!! PARAMETRES!! AL!! BLOC!! 1!!
+			
 			DECL_CONST_VAR();
 
 			Acceptar("func");
@@ -200,6 +205,8 @@ public class Asin {
 			Acceptar("fifunc");
 			Acceptar("punt_i_coma");
 			
+			taulaSimbols.esborrarBloc(1);
+			taulaSimbols.setBlocActual(0);
 			DECL_FUNC();
 			return;
 
@@ -238,7 +245,8 @@ public class Asin {
 		Acceptar("identificador");
 		Acceptar("dos_punts");
 		semantic = TIPUS(semantic);
-		//TODO afegir tipus al parametre
+		//TODO afegir tipus al parametre - no estic segura?
+		param.setTipus((ITipus)semantic.getValue("TIPUS"));
 		funcio.inserirParametre(param);
 		funcio = LL_PARAM11(funcio);
 		return funcio;
@@ -519,14 +527,14 @@ public class Asin {
 
 		case "identificador":
 			//TODO buscar si id existeix i agafar tipus i valor i estatic
-			Acceptar("identificador"); //no tirara errror
+			Acceptar("identificador");
 			sem = FACTOR1(sem);
 			return sem;	
 
 		case "parentesi_obert":
-			Acceptar("parentesi_obert"); //no tirara errror
+			Acceptar("parentesi_obert");
 			sem = EXPRESIO(sem);
-			Acceptar("parentesi_tancat"); //pot tirar error
+			Acceptar("parentesi_tancat");
 			return sem;
 
 		default: return sem;
