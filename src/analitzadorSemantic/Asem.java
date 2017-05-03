@@ -9,6 +9,7 @@ import taulasimbols.Parametre;
 import taulasimbols.TaulaSimbols;
 import taulasimbols.TipusArray;
 import taulasimbols.TipusCadena;
+import taulasimbols.TipusIndefinit;
 import taulasimbols.TipusSimple;
 import taulasimbols.Variable;
 
@@ -84,6 +85,25 @@ public class Asem {
 			
 			afegirVariable(sem, ts, l);
 		}
+		
+	}
+	
+	public TipusArray TIPUS_comprovaArray(int dim1, int dim2, String tipus) {
+		
+		TipusArray a;
+		
+		if (dim1 < dim2) {
+			String nom;
+			if (tipus.equals("sencer")) nom = "S_" + dim1 + "_" + dim2;
+			else nom = "L_" + dim1 + "_" + dim2;
+			a =  new TipusArray(nom, dim1 - dim2, new TipusSimple(tipus, 0));
+			a.inserirDimensio(new DimensioArray(new TipusSimple("sencer", 0), dim1, dim2));
+		} else {
+			a = new TipusArray("I_0_0", 0, new TipusIndefinit("indefinit", 0));
+			//TODO tira error
+		}
+		
+		return a;
 		
 	}
 

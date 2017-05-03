@@ -3,6 +3,7 @@ package analitzadorSintactic;
 import main.Error;
 import main.Token;
 import taulasimbols.Bloc;
+import taulasimbols.DimensioArray;
 import taulasimbols.Funcio;
 import taulasimbols.ITipus;
 import taulasimbols.Parametre;
@@ -291,7 +292,8 @@ public class Asin {
 	private Semantic TIPUS(Semantic sem) {
 
 		Semantic sem2 = new Semantic();
-
+		sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
+		
 		switch (lookAhead.getTipus()) {
 
 		case "tipus_simple": 
@@ -301,22 +303,38 @@ public class Asin {
 			Acceptar("tipus_simple");
 			return sem;
 
-		case "vector":
-			//TODO
+		case "vector":			
 			Acceptar("vector");
-			sem.setValue("TIPUS", new TipusArray());
-			sem.setValue("ESTATIC", false);
-			sem.setValue("VALOR", "null");
 			Acceptar("claudator_obert");
 			sem2 = EXPRESIO(sem2);
-			//TODO afegir rang a sem
+			int dim1;
+			//comprovem 1a dimensio del array
+			if (((TipusSimple)sem2.getValue("TIPUS")).getNom().equals("sencer"))
+				dim1 = (int)sem2.getValue("VALOR");
+			else {
+				//TODO ERROR
+				dim1 = Integer.MAX_VALUE;
+			}
+
 			Acceptar("rang");
-			sem = EXPRESIO(sem);
-			//calcular si rang ok i afegir a tipus de sem
+			sem2 = EXPRESIO(sem2);
+			int dim2;
+			//comprovem 2a dimensio del array
+			if (((TipusSimple)sem2.getValue("TIPUS")).getNom().equals("sencer"))
+				dim2 = (int)sem2.getValue("VALOR");
+			else {
+				//TODO ERROR
+				dim2 = Integer.MIN_VALUE;
+			}
+			
 			Acceptar("claudator_tancat");
 			Acceptar("de");
-			//TODO afegir a tipus de sem
+			
+			sem.setValue("TIPUS", asem.TIPUS_comprovaArray(dim1, dim2, lookAhead.getLexema()));
 			Acceptar("tipus_simple");
+
+			sem.setValue("ESTATIC", false);
+			sem.setValue("VALOR", "null");
 			return sem;
 
 		default: return sem;
