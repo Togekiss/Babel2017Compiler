@@ -309,7 +309,8 @@ public class Asin {
 			sem2 = EXPRESIO(sem2);
 			int dim1;
 			//comprovem 1a dimensio del array
-			if (((TipusSimple)sem2.getValue("TIPUS")).getNom().equals("sencer"))
+			if (((TipusSimple)sem2.getValue("TIPUS")).getNom().equals("sencer") &&
+					((boolean)sem2.getValue("ESTATIC")) == true)
 				dim1 = (int)sem2.getValue("VALOR");
 			else {
 				//TODO ERROR
@@ -320,7 +321,8 @@ public class Asin {
 			sem2 = EXPRESIO(sem2);
 			int dim2;
 			//comprovem 2a dimensio del array
-			if (((TipusSimple)sem2.getValue("TIPUS")).getNom().equals("sencer"))
+			if (((TipusSimple)sem2.getValue("TIPUS")).getNom().equals("sencer") &&
+					((boolean)sem2.getValue("ESTATIC")) == true)
 				dim2 = (int)sem2.getValue("VALOR");
 			else {
 				//TODO ERROR
@@ -363,6 +365,7 @@ public class Asin {
 			Acceptar("oper_rel");
 			sem2 = EXPRESIO_SIMPLE(sem2);
 			//TODO operar sem i sem2 segons operador
+			sem = asem.EXPRESIO1_operar(sem, sem2);
 			sem.removeAttribute("OPERADOR");
 			return sem;
 

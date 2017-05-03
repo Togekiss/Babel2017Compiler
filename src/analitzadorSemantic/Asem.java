@@ -19,6 +19,7 @@ public class Asem {
 	public void afegirConstant(Semantic sem, TaulaSimbols ts, int l) {
 
 		//EXISTEIX?
+		//TODO que no existeixi ni variable ni funcio tampoc
 		if (ts.obtenirBloc(ts.getBlocActual()).existeixConstant((String)sem.getValue("TOKEN"))) {
 			System.out.println(l + ", Constant [" + sem.getValue("TOKEN") + "] doblement definida");				
 			return;
@@ -43,13 +44,14 @@ public class Asem {
 
 	public void afegirVariable(Semantic sem, TaulaSimbols ts, int l) {
 
+		//TODO que no existeixi ni constant ni funcio tampoc
 		if (ts.obtenirBloc(ts.getBlocActual()).existeixVariable((String)sem.getValue("TOKEN"))) {
 			System.out.println(l + ", Variable [" + sem.getValue("TOKEN") + "] doblement definida");				
 			return;
 		}
 
 		if (!(sem.getValue("TIPUS") instanceof TipusSimple) &&
-			!(sem.getValue("TIPUS") instanceof TipusArray)) {
+				!(sem.getValue("TIPUS") instanceof TipusArray)) {
 			System.out.println(l + ", Tipus invalid per variable");	
 			return; 
 		}
@@ -65,6 +67,7 @@ public class Asem {
 
 		//TODO COMPROVAR RETORNAR
 
+		//TODO que no existeixi ni variable ni constant tampoc
 		//EXISTEIX?
 		if (ts.obtenirBloc(ts.getBlocActual()).existeixProcediment(funcio.getNom())) {
 			System.out.println(l + ", Funcio [" + funcio.getNom() + "] doblement definida");				
@@ -82,16 +85,16 @@ public class Asem {
 			Semantic sem = new Semantic();
 			sem.setValue("TOKEN", funcio.obtenirParametre(i).getNom());
 			sem.setValue("TIPUS", funcio.obtenirParametre(i).getTipus());
-			
+
 			afegirVariable(sem, ts, l);
 		}
-		
+
 	}
-	
+
 	public TipusArray TIPUS_comprovaArray(int dim1, int dim2, String tipus) {
-		
+
 		TipusArray a;
-		
+
 		if (dim1 < dim2) {
 			String nom;
 			if (tipus.equals("sencer")) nom = "S_" + dim1 + "_" + dim2;
@@ -102,9 +105,125 @@ public class Asem {
 			a = new TipusArray("I_0_0", 0, new TipusIndefinit("indefinit", 0));
 			//TODO tira error
 		}
-		
+
 		return a;
-		
+
+	}
+
+
+	public Semantic EXPRESIO1_operar(Semantic sem, Semantic sem2) {
+
+		//si no son del mateix tipus o un d'ells es indefinit
+		if (sem.getValue("TIPUS") != sem2.getValue("TIPUS") ||
+				sem.getValue("TIPUS").equals("indefinit") ||
+				sem2.getValue("TIPUS").equals("indefinit")) {
+			//TODO salta error "no son del mateix tipus"
+			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
+			sem.setValue("VALOR", "indefinit");
+			sem.setValue("ESTATIC", false);
+
+			return sem;
+		}	
+
+		//si no son de tipus simple
+		if (!(sem.getValue("TIPUS") instanceof TipusSimple) ||
+				!(sem2.getValue("TIPUS") instanceof TipusSimple)) {
+			//TODO salta error "tipus no valid per operacions relacionals"
+			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
+			sem.setValue("VALOR", "indefinit");
+			sem.setValue("ESTATIC", false);
+
+			return sem;
+		}
+
+		//si un d'ells no es estatic
+		if (!(boolean)sem.getValue("ESTATIC") || !(boolean)sem2.getValue("ESTATIC")) {
+			sem.setValue("TIPUS", new TipusSimple("logic", 0));
+			sem.setValue("VALOR", "desconegut");
+			sem.setValue("ESTATIC", false);
+
+			return sem;
+		}
+
+		//si els dos son tipus simples i son estatics es pot calcular
+
+		if (((TipusSimple)sem.getValue("TIPUS")).getNom().equals("sencer")) {
+			int vsem1 = (int)sem.getValue("VALOR");
+			int vsem2 = (int)sem2.getValue("VALOR");
+
+			switch ((String)sem.getValue("OPERADOR")) {
+
+			case "==":
+				if (vsem1 == vsem2)
+					sem.setValue("VALOR", true);
+				else sem.setValue("VALOR", false);
+				break;
+			case ">":
+				if (vsem1 > vsem2)
+					sem.setValue("VALOR", true);
+				else sem.setValue("VALOR", false);
+				break;
+			case ">=":
+				if (vsem1 >= vsem2)
+					sem.setValue("VALOR", true);
+				else sem.setValue("VALOR", false);
+				break;
+			case "<":
+				if (vsem1 < vsem2)
+					sem.setValue("VALOR", true);
+				else sem.setValue("VALOR", false);
+				break;
+			case "<=":
+				if (vsem1 <= vsem2)
+					sem.setValue("VALOR", true);
+				else sem.setValue("VALOR", false);
+				break;
+			default: sem.setValue("VALOR", false);
+
+			}
+
+		} else {
+			
+			boolean vsem1 = (boolean)sem.getValue("VALOR");
+			boolean vsem2 = (boolean)sem2.getValue("VALOR");
+
+			switch ((String)sem.getValue("OPERADOR")) {
+
+			case "==":
+				if (vsem1 == vsem2)
+					sem.setValue("VALOR", true);
+				else sem.setValue("VALOR", false);
+				break;
+			case ">":
+				if (vsem1 == true && vsem2 == false)
+					sem.setValue("VALOR", true);
+				else sem.setValue("VALOR", false);
+				break;
+			case ">=":
+				if (vsem1 == true)
+					sem.setValue("VALOR", true);
+				else sem.setValue("VALOR", false);
+				break;
+			case "<":
+				if (vsem1 == false && vsem2 == true)
+					sem.setValue("VALOR", true);
+				else sem.setValue("VALOR", false);
+				break;
+			case "<=":
+				if (vsem1 == false)
+					sem.setValue("VALOR", true);
+				else sem.setValue("VALOR", false);
+				break;
+			default: sem.setValue("VALOR", false);
+
+			}
+		}
+
+		sem.setValue("TIPUS", new TipusSimple("logic", 0));
+		sem.setValue("ESTATIC", true);
+
+		return sem;
+
 	}
 
 	public boolean EXP_tipusExpressio (Semantic sem) {
