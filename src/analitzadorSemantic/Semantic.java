@@ -85,7 +85,8 @@ if (exp.getAttributes().containsKey("TOKEN"))
 
 public String toString() {
 
-return "Valor: "+getValue("VALOR")+
+return "Token: "+getValue("TOKEN")+
+	   "; Valor: "+getValue("VALOR")+
        "; Estatic: "+getValue("ESTATIC")+
        "; Tipus: "+getValue("TIPUS")+
        "; Oper: "+getValue("OPERADOR")+

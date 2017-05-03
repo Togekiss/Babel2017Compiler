@@ -108,7 +108,8 @@ public class Bloc {
 	 */
     public Boolean existeixProcediment(String nom) {        
         return llistaProcediments.contains(nom);
-    } 
+    }
+    
     
     /**
 	 * <p>Obté tota la informació del objecte en format XML</p>

@@ -78,6 +78,7 @@ public class Asin {
 		if (lookAhead.esEOF()) {
 			error.tancaFitxer();
 			alex.tancaFitxer();
+			System.out.println("Taula de simbols:");
 			System.out.println(taulaSimbols.toXml());
 			return true;
 		}
@@ -142,7 +143,8 @@ public class Asin {
 		sem = EXPRESIO(sem);
 		//expresio ja porta token, tipus, valor, estatic
 		//Comprovar que tipus i valor tenen sentit, i que es estatic
-		asem.afegirConstant(sem, taulaSimbols);
+		System.out.println(sem.toString());
+		asem.afegirConstant(sem, taulaSimbols, alex.getLiniaActual());
 		Acceptar("punt_i_coma");
 		return;
 
@@ -158,7 +160,7 @@ public class Asin {
 		Acceptar("identificador");
 		Acceptar("dos_punts");
 		sem = TIPUS(sem);
-		asem.afegirVariable(sem, taulaSimbols);
+		asem.afegirVariable(sem, taulaSimbols, alex.getLiniaActual());
 		Acceptar("punt_i_coma");
 		return;
 
@@ -188,14 +190,10 @@ public class Asin {
 			//sem.setValue("VALOR", null);
 			funcio.setTipus(new TipusSimple(lookAhead.getLexema(), 0));
 			Acceptar("tipus_simple");
-			
-		//TODO comprovar que tot ok i inserir a la llista de funcions
-		
+					
+			asem.afegirFuncio(funcio, taulaSimbols, alex.getLiniaActual());
 			Acceptar("punt_i_coma");
-			taulaSimbols.setBlocActual(1);
-			taulaSimbols.inserirBloc(new Bloc());
-		//TAMBE!! INSERIR!! ELS!! PARAMETRES!! AL!! BLOC!! 1!!
-			
+						
 			DECL_CONST_VAR();
 
 			Acceptar("func");
@@ -361,6 +359,7 @@ public class Asin {
 
 		sem = OP_INICI_EXP(sem); 
 		sem  = TERME(sem);
+sem.toString();
 		//TODO operar op inici exp amb terme
 		sem.removeAttribute("OPERADOR");
 		sem = EXPRESIO_SIMPLE1(sem);
@@ -522,12 +521,15 @@ public class Asin {
 			sem.setValue("TIPUS", new TipusCadena("cadena", 0, lookAhead.getLexema().length()));
 			sem.setValue("VALOR", lookAhead.getLexema());
 			sem.setValue("ESTATIC", true);
-			Acceptar("ct_cadena"); 
+			Acceptar("ct_cadena");
 			return sem;
 
 		case "identificador":
 			//TODO buscar si id existeix i agafar tipus i valor i estatic
 			Acceptar("identificador");
+			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
+			sem.setValue("VALOR", 0);
+			sem.setValue("ESTATIC", false);
 			sem = FACTOR1(sem);
 			return sem;	
 
