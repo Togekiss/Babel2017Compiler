@@ -81,7 +81,7 @@ public class TipusCadena extends ITipus {
 	public String toXml() {
 		String str = "<TipusCadena Nom=\"" + nom + 
 			"\" Tamany=\"" + tamany + 
-			"\" Longitud=\"" + longitud + "\"></TipusCadena>\n";
+			"\" Longitud=\"" + longitud + "\"></TipusCadena>";
 		return str;
 	}
 }

@@ -103,13 +103,13 @@ public class Funcio extends Procediment {
 	 * @return String
 	 */
     public String toXml() {        
-    	String result = "<Funcio Nom=\"" + getNom() + "\">\n";
-    	result += "<Parametres>\n";
+    	String result = "<Funcio Nom=\"" + getNom() + "\">";
+    	result += "<Parametres>";
     	for (int i=0; i<getNumeroParametres(); i++)
     		result += obtenirParametre(i).toXml();
-    	result += "</Parametres>\n";
+    	result += "</Parametres>";
     	result += tipus.toXml();
-    	result += "</Funcio>\n";
+    	result += "</Funcio>";
         return result;
     } 
  }

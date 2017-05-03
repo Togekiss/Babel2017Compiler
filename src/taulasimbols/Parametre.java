@@ -66,9 +66,9 @@ public class Parametre extends Variable {
     public String toXml() {        
     	String result = "<Parametre Nom=\"" + getNom() + 
     		"\" Desplacament=\"" + getDesplacament() + 
-    		"\" TipusPasParametre=\"" + tipusPas.toString() + "\">\n";
+    		"\" TipusPasParametre=\"" + tipusPas.toString() + "\">";
     	result += getTipus().toXml();
-    	result += "</Parametre>\n";
+    	result += "</Parametre>";
         return result;
     } 
  }

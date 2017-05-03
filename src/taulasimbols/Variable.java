@@ -92,9 +92,9 @@ public class Variable {
 	 * @return String
 	 */
     public String toXml() {        
-    	String result = "<Variable Nom=\"" + nom + "\" Desplacament=\"" + desplacament + "\">\n";
+    	String result = "<Variable Nom=\"" + nom + "\" Desplacament=\"" + desplacament + "\">";
     	result += tipus.toXml();
-    	result += "</Variable>\n";
+    	result += "</Variable>";
         return result;
     } 
  }

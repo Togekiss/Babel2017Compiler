@@ -84,14 +84,14 @@ public class Constant {
 	 * @return String
 	 */
     public String toXml() {
-    	String result = "<Constant Nom=\"" + nom + "\"\n";
+    	String result = "<Constant Nom=\"" + nom + "\"";
     	if (valor != null)
-    		result += " Valor=\"" + valor.toString() + "\">\n";
+    		result += " Valor=\"" + valor.toString() + "\">";
     	else
-    		result += " Valor=\"null\">\n";
+    		result += " Valor=\"null\">";
     	
     	result += tipus.toXml();
-    	result += "</Constant>\n";
+    	result += "</Constant>";
         return result;
     } 
  }

@@ -131,13 +131,13 @@ public class DimensioArray {
         	result += " LimitInferior=\"null\"";
         
         if (limitSuperior != null)
-        	result += " LimitSuperior=\"" + limitSuperior.toString() + "\">\n";
+        	result += " LimitSuperior=\"" + limitSuperior.toString() + "\">";
         else
-        	result += " LimitSuperior=\"null\">\n";
+        	result += " LimitSuperior=\"null\">";
         
         if (tipusLimit != null)
         	result += tipusLimit.toXml();
-        result += "</DimensioArray>\n";
+        result += "</DimensioArray>";
         return result;
     } 
  }

@@ -116,24 +116,24 @@ public class Bloc {
 	 * @return String
 	 */
     public String toXml() {        
-    	String result = "<Bloc>\n";
+    	String result = "<Bloc>";
     	
-    	result += "<Constants>\n";
+    	result += "<Constants>";
     	for (int i=0; i<llistaConstants.size(); i++)
     		result += ((Constant)llistaConstants.values().toArray()[i]).toXml();
-    	result += "</Constants>\n";
+    	result += "</Constants>";
     	
-    	result += "<Variables>\n";
+    	result += "<Variables>";
     	for (int i=0; i<llistaVariables.size(); i++)
     		result += ((Variable)llistaVariables.values().toArray()[i]).toXml();
-    	result += "</Variables>\n";
+    	result += "</Variables>";
     	
-    	result += "<Procediments>\n";
+    	result += "<Procediments>";
     	for (int i=0; i<llistaProcediments.size(); i++)
     		result += ((Procediment)llistaProcediments.values().toArray()[i]).toXml();
-    	result += "</Procediments>\n";
+    	result += "</Procediments>";
     	
-    	result += "</Bloc>\n";
+    	result += "</Bloc>";
         return result;
     }  
  }

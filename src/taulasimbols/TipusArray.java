@@ -112,18 +112,18 @@ public class TipusArray extends ITipus {
 	 */
 	public String toXml() {
 		String str = "<TipusArray Nom=\"" + nom + "\" Tamany=\"" + tamany + "\"" + 
-			" Numerodimensions=\"" + getNumeroDimensions() + "\">\n";
-		str += "<TipusElements>\n";
+			" Numerodimensions=\"" + getNumeroDimensions() + "\">";
+		str += "<TipusElements>";
 		if (tipusElements != null)
 			str += tipusElements.toXml();
-		str += "</TipusElements>\n";
-		str += "<Dimensions>\n";
+		str += "</TipusElements>";
+		str += "<Dimensions>";
 		for (int i = 0; i < getNumeroDimensions(); i++) {
 			DimensioArray dim = obtenirDimensio(i);
 			str += dim.toXml();
 		}
-		str += "</Dimensions>\n";
-		str += "</TipusArray>\n";
+		str += "</Dimensions>";
+		str += "</TipusArray>";
 		return str;
 	}
 }

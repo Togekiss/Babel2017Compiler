@@ -68,12 +68,12 @@ public class TaulaSimbols {
 	 * @return String
 	 */
     public String toXml() {        
-    	String result = "<TaulaSimbols>\n";
-    	result += "<Blocs>\n";
+    	String result = "<TaulaSimbols>";
+    	result += "<Blocs>";
     	for (int i=0; i<getNumeroBlocs(); i++)
     		result += obtenirBloc(i).toXml();
-    	result += "</Blocs>\n";
-    	result += "</TaulaSimbols>\n";
+    	result += "</Blocs>";
+    	result += "</TaulaSimbols>";
         return result;
     } 
  }

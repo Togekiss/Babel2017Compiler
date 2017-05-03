@@ -132,12 +132,12 @@ public class Procediment {
 	 * @return String
 	 */
     public String toXml() {        
-    	String result = "<Procediment Nom=\"" + nom + "\">\n";
-    	result += "<Parametres>\n";
+    	String result = "<Procediment Nom=\"" + nom + "\">";
+    	result += "<Parametres>";
     	for (int i=0; i<getNumeroParametres(); i++)
     		result += obtenirParametre(i).toXml();
-    	result += "</Parametres>\n";
-    	result += "</Procediment>\n";
+    	result += "</Parametres>";
+    	result += "</Procediment>";
         return result;
     } 
  }
