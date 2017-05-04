@@ -244,7 +244,6 @@ public class Asin {
 		Acceptar("identificador");
 		Acceptar("dos_punts");
 		semantic = TIPUS(semantic);
-		//TODO afegir tipus al parametre - no estic segura?
 		param.setTipus((ITipus)semantic.getValue("TIPUS"));
 		funcio.inserirParametre(param);
 		funcio = LL_PARAM11(funcio);
@@ -364,7 +363,7 @@ public class Asin {
 			sem.setValue("OPERADOR", lookAhead.getLexema());
 			Acceptar("oper_rel");
 			sem2 = EXPRESIO_SIMPLE(sem2);
-			//TODO operar sem i sem2 segons operador
+			//operar sem i sem2 segons operador
 			sem = asem.EXPRESIO1_operar(sem, sem2);
 			sem.removeAttribute("OPERADOR");
 			return sem;
@@ -380,8 +379,8 @@ public class Asin {
 
 		sem = OP_INICI_EXP(sem); 
 		sem  = TERME(sem);
-sem.toString();
 		//TODO operar op inici exp amb terme
+		asem.EXPRESIO_SIMPLE_operar(sem);
 		sem.removeAttribute("OPERADOR");
 		sem = EXPRESIO_SIMPLE1(sem);
 		return sem;

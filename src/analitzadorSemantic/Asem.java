@@ -225,7 +225,52 @@ public class Asem {
 		return sem;
 
 	}
+	
+	
+	public Semantic EXPRESIO_SIMPLE_operar(Semantic sem) {
+		
+		//si es indefinit o no es tipus simple o operador no coincideix amb tipus
+		if (sem.getValue("TIPUS").equals("indefinit")
+				|| !(sem.getValue("TIPUS") instanceof TipusSimple)
+				|| ((String)sem.getValue("OPERADOR")).equals("not")
+				&& !((TipusSimple)sem.getValue("TIPUS")).getNom().equals("logic")
+				|| (((String)sem.getValue("OPERADOR")).equals("suma")
+						|| ((String)sem.getValue("OPERADOR")).equals("resta"))
+				&& !((TipusSimple)sem.getValue("TIPUS")).getNom().equals("sencer")) {
+			//TODO salta error "tipus invalid"
+			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
+			sem.setValue("VALOR", "indefinit");
+			sem.setValue("ESTATIC", false);
 
+			return sem;
+		}	
+
+				
+		//si no es estatic
+		if (!(boolean)sem.getValue("ESTATIC")) {
+			sem.setValue("VALOR", "desconegut");
+			return sem;
+		}
+		
+		//si es estatic es pot calcular
+		
+		switch ((String)sem.getValue("OPERADOR")) {
+		
+		case "not":
+			sem.setValue("VALOR", !((boolean)sem.getValue("VALOR")));
+			break;
+		case "resta":
+			sem.setValue("VALOR", 0 - ((int)sem.getValue("VALOR")));
+			break;
+		default:
+		}
+		
+		return sem;
+	}
+
+	
+	
+	
 	public boolean EXP_tipusExpressio (Semantic sem) {
 		if (sem.getValue("TIPUS") == null) return false;
 		return false;
