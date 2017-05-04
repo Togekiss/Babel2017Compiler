@@ -401,7 +401,34 @@ public class Asem {
 	}
 
 
+	
+	public boolean esLogic(Semantic sem) {
+		
+		if (!(sem.getValue("TIPUS") instanceof TipusSimple)) return false;
+		
+		if (((TipusSimple)sem.getValue("TIPUS")).getNom().equals("logic")) return true;
+		else return false;
+		
+	}
 
+	
+	public boolean LL_EXP_ESCRIURE_esValid(Semantic sem) {
+		//comprovar que tipus == tipus simple o cadena
+		
+		if (sem.getValue("TIPUS") instanceof TipusCadena
+				|| sem.getValue("TIPUS") instanceof TipusSimple)
+			return true;
+		else return false;
+		
+	}
+	
+	
+	public boolean VAR_esVariable(Semantic sem, TaulaSimbols ts) {
+		
+		return true;
+	}
+	
+	
 	public boolean EXP_tipusExpressio (Semantic sem) {
 		if (sem.getValue("TIPUS") == null) return false;
 		return false;

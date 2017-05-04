@@ -3,19 +3,14 @@ package analitzadorSintactic;
 import main.Error;
 import main.Token;
 import taulasimbols.Bloc;
-import taulasimbols.DimensioArray;
 import taulasimbols.Funcio;
 import taulasimbols.ITipus;
 import taulasimbols.Parametre;
 import taulasimbols.TaulaSimbols;
-import taulasimbols.TipusArray;
 import taulasimbols.TipusCadena;
 import taulasimbols.TipusIndefinit;
 import taulasimbols.TipusPasParametre;
 import taulasimbols.TipusSimple;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import analitzadorLexicografic.Alex;
 import analitzadorSemantic.Asem;
@@ -56,12 +51,12 @@ public class Asin {
 
 
 	//CONSUMIR TOKENS FINS TROBAR UN DEL CONJUNT DE SINCRONITZACIO 
-	private void consumir (ArrayList<String> l) {
+	/*private void consumir (ArrayList<String> l) {
 
 		while (!l.contains(lookAhead.getTipus())) {
 			lookAhead = alex.getToken();
 		}
-	}
+	}*/
 
 
 
@@ -170,7 +165,6 @@ public class Asin {
 
 	private void DECL_FUNC() {
 
-		Semantic sem = new Semantic();
 		//creem descriptor per omplir llistat de parametres??
 		Funcio funcio = new Funcio();
 		
@@ -179,16 +173,12 @@ public class Asin {
 
 		case "funcio":
 			Acceptar("funcio"); 
-			//sem.setValue("TOKEN", lookAhead.getLexema());
 			funcio.setNom(lookAhead.getLexema());
 			Acceptar("identificador");
 			Acceptar("parentesi_obert");
 			funcio = LL_PARAM(funcio);
 			Acceptar("parentesi_tancat");
 			Acceptar("dos_punts");
-			//sem.setValue("TIPUS", lookAhead.getLexema());
-			//sem.setValue("ESTATIC", false);
-			//sem.setValue("VALOR", null);
 			funcio.setTipus(new TipusSimple(lookAhead.getLexema(), 0));
 			Acceptar("tipus_simple");
 					
@@ -645,7 +635,10 @@ public class Asin {
 		Semantic sem = new Semantic();
 
 		sem = VAR(sem);
-		//TODO comprovar que sem tipus == tipus simple
+		//comprovar que sem tipus == tipus simple
+		if (!(sem.getValue("TIPUS") instanceof TipusSimple)) {
+			//TODO ERROR
+		}
 		LL_VAR1();
 		return;
 	}
@@ -670,7 +663,11 @@ public class Asin {
 		sem.setValue("TOKEN", lookAhead.getLexema());
 		Acceptar("identificador");
 		sem = VAR1(sem);
-		//TODO comprovar que id es variable i tipus simple
+		//TODO comprovar que id es variable
+		if (!asem.VAR_esVariable(sem, taulaSimbols)) {
+			//TODO error
+			//crear nova variable fantasma
+		}
 		return sem;
 
 	}
@@ -739,7 +736,10 @@ public class Asin {
 			sem = VAR(sem);
 			Acceptar("igual");
 			sem2 = EXPRESIO(sem2);
-			//TODO comprovar que tipus sem1 == tipus sem2
+			//comprovar que tipus sem1 == tipus sem2
+			if (sem.getValue("TIPUS") != sem2.getValue("TIPUS")) {
+				//TODO error
+			}
 			return;
 
 		case "escriure":
@@ -762,15 +762,20 @@ public class Asin {
 			LL_INST();
 			Acceptar("fins"); // fins 	 
 			sem = EXPRESIO(sem);
-			//TODO comprovar que sem tipus == logic
+			//comprovar que sem tipus == logic
+			if (!asem.esLogic(sem)) {
+				//TODO error
+			}
 			return;
 
 		case "mentre":
 			Acceptar("mentre");
 			sem = EXPRESIO(sem);
-			//TODO comprovar que sem tipus == logic
+			//comprovar que sem tipus == logic
+			if (!asem.esLogic(sem)) {
+				//TODO error
+			}
 			Acceptar("fer");
-
 			LL_INST();
 			Acceptar("fimentre");	
 
@@ -779,9 +784,11 @@ public class Asin {
 		case "si":
 			Acceptar("si"); 
 			sem = EXPRESIO(sem);
-			//TODO comprovar que sem tipus == logic
+			//comprovar que sem tipus == logic
+			if (!asem.esLogic(sem)) {
+				//TODO error
+			}
 			Acceptar("llavors");
-
 			LL_INST();
 			SINO();
 			Acceptar("fisi"); 
@@ -836,12 +843,12 @@ public class Asin {
 
 		case "si":
 			Acceptar("si");
-			Acceptar("parentesi_obert"); // (
+			Acceptar("parentesi_obert");
 			semantic = EXPRESIO(semantic);
-			Acceptar("parentesi_tancat"); // )
-			Acceptar("interrogant"); // ?
+			Acceptar("parentesi_tancat");
+			Acceptar("interrogant");
 			semantic = EXPRESIO(semantic);
-			Acceptar("dos_punts"); // :
+			Acceptar("dos_punts");
 			semantic = EXPRESIO(semantic);
 
 			return;
@@ -866,7 +873,10 @@ public class Asin {
 		case "identificador":		
 		case "parentesi_obert":
 			sem = EXPRESIO(sem);
-			//TODO comprovar que tipus == tipus simple o cadena
+			//comprovar que tipus == tipus simple o cadena
+			if (asem.LL_EXP_ESCRIURE_esValid(sem)) {
+				//TODO error
+			}
 			LL_EXP_ESCRIURE1();
 			return;
 
@@ -880,7 +890,7 @@ public class Asin {
 		switch (lookAhead.getTipus()) {
 
 		case "coma":
-			Acceptar("coma"); //mai tirara error
+			Acceptar("coma");
 			LL_EXP_ESCRIURE();
 			return;
 
@@ -895,7 +905,7 @@ public class Asin {
 		switch (lookAhead.getTipus()) {
 
 		case "sino":
-			Acceptar("sino"); //mai tirara error
+			Acceptar("sino");
 			LL_INST();
 			return;
 
