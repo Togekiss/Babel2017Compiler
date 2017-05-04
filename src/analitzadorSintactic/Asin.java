@@ -379,7 +379,7 @@ public class Asin {
 
 		sem = OP_INICI_EXP(sem); 
 		sem  = TERME(sem);
-		//TODO operar op inici exp amb terme
+		//operar op inici exp amb terme
 		asem.EXPRESIO_SIMPLE_operar(sem);
 		sem.removeAttribute("OPERADOR");
 		sem = EXPRESIO_SIMPLE1(sem);
@@ -399,7 +399,8 @@ public class Asin {
 		case "or":
 			sem = OP_EXP(sem); 
 			sem2 = TERME(sem2);
-			//TODO operar sem amb sem2 segons operador i guardar a sem
+			//operar sem amb sem2 segons operador i guardar a sem
+			asem.EXPRESIO_SIMPLE1_operar(sem, sem2);
 			sem.removeAttribute("OPERADOR");
 			sem = EXPRESIO_SIMPLE1(sem);
 			return sem;
@@ -430,7 +431,8 @@ public class Asin {
 		case "and":
 			sem = OP_TERME(sem); //mai donara error
 			sem2 = FACTOR(sem2);
-			//TODO operar sem i sem2 segons OP_TERME
+			//operar sem i sem2 segons OP_TERME
+			asem.TERME_operar(sem, sem2);
 			sem.removeAttribute("OPERADOR");
 			sem = TERME1(sem);
 			return sem;

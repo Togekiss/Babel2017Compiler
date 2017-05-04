@@ -112,6 +112,7 @@ public class Asem {
 
 
 	public Semantic EXPRESIO1_operar(Semantic sem, Semantic sem2) {
+		//operadors relacionals
 
 		//si no son del mateix tipus o un d'ells es indefinit
 		if (sem.getValue("TIPUS") != sem2.getValue("TIPUS") ||
@@ -183,7 +184,7 @@ public class Asem {
 			}
 
 		} else {
-			
+
 			boolean vsem1 = (boolean)sem.getValue("VALOR");
 			boolean vsem2 = (boolean)sem2.getValue("VALOR");
 
@@ -225,10 +226,12 @@ public class Asem {
 		return sem;
 
 	}
-	
-	
+
+
+
 	public Semantic EXPRESIO_SIMPLE_operar(Semantic sem) {
-		
+		//suma, resta, not
+
 		//si es indefinit o no es tipus simple o operador no coincideix amb tipus
 		if (sem.getValue("TIPUS").equals("indefinit")
 				|| !(sem.getValue("TIPUS") instanceof TipusSimple)
@@ -245,17 +248,16 @@ public class Asem {
 			return sem;
 		}	
 
-				
+
 		//si no es estatic
 		if (!(boolean)sem.getValue("ESTATIC")) {
 			sem.setValue("VALOR", "desconegut");
 			return sem;
 		}
-		
+
 		//si es estatic es pot calcular
-		
 		switch ((String)sem.getValue("OPERADOR")) {
-		
+
 		case "not":
 			sem.setValue("VALOR", !((boolean)sem.getValue("VALOR")));
 			break;
@@ -264,13 +266,142 @@ public class Asem {
 			break;
 		default:
 		}
-		
+
 		return sem;
 	}
 
-	
-	
-	
+
+
+	public Semantic EXPRESIO_SIMPLE1_operar(Semantic sem, Semantic sem2) {
+		//suma, resta, or
+
+		//si no son del mateix tipus o un d'ells es indefinit
+		if (sem.getValue("TIPUS") != sem2.getValue("TIPUS") ||
+				sem.getValue("TIPUS").equals("indefinit") ||
+				sem2.getValue("TIPUS").equals("indefinit")) {
+			//TODO salta error "no son del mateix tipus"
+			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
+			sem.setValue("VALOR", "indefinit");
+			sem.setValue("ESTATIC", false);
+
+			return sem;
+		}	
+
+		//si no son de tipus simple o operador no coincideix amb tipus
+		if (!(sem.getValue("TIPUS") instanceof TipusSimple) ||
+				!(sem2.getValue("TIPUS") instanceof TipusSimple
+						|| ((String)sem.getValue("OPERADOR")).equals("or")
+						&& !((TipusSimple)sem.getValue("TIPUS")).getNom().equals("logic")
+						|| (((String)sem.getValue("OPERADOR")).equals("suma")
+								|| ((String)sem.getValue("OPERADOR")).equals("resta"))
+						&& !((TipusSimple)sem.getValue("TIPUS")).getNom().equals("sencer"))) {
+			//TODO salta error "tipus no valid per aquesta operacio"
+			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
+			sem.setValue("VALOR", "indefinit");
+			sem.setValue("ESTATIC", false);
+
+			return sem;
+		}
+
+
+		//si un d'ells no es estatic
+		if (!(boolean)sem.getValue("ESTATIC") || !(boolean)sem2.getValue("ESTATIC")) {
+			sem.setValue("VALOR", "desconegut");
+			sem.setValue("ESTATIC", false);
+
+			return sem;
+		}
+
+		//si es estatic es pot calcular
+		switch ((String)sem.getValue("OPERADOR")) {
+
+		case "or":
+			sem.setValue("VALOR", (boolean)sem.getValue("VALOR") || (boolean)sem2.getValue("VALOR"));
+			break;
+		case "suma":
+			sem.setValue("VALOR", ((int)sem.getValue("VALOR")) + ((int)sem2.getValue("VALOR")));
+			break;
+		case "resta":
+			sem.setValue("VALOR", ((int)sem.getValue("VALOR")) - ((int)sem2.getValue("VALOR")));
+			break;
+		default:
+		}
+
+		return sem;
+	}
+
+
+
+
+
+
+	public Semantic TERME_operar(Semantic sem, Semantic sem2) {
+		//multiplicacio, divisio, and
+
+		//si no son del mateix tipus o un d'ells es indefinit
+		if (sem.getValue("TIPUS") != sem2.getValue("TIPUS") ||
+				sem.getValue("TIPUS").equals("indefinit") ||
+				sem2.getValue("TIPUS").equals("indefinit")) {
+			//TODO salta error "no son del mateix tipus"
+			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
+			sem.setValue("VALOR", "indefinit");
+			sem.setValue("ESTATIC", false);
+
+			return sem;
+		}	
+
+		//si no son de tipus simple o operador no coincideix amb tipus
+		if (!(sem.getValue("TIPUS") instanceof TipusSimple) ||
+				!(sem2.getValue("TIPUS") instanceof TipusSimple
+						|| ((String)sem.getValue("OPERADOR")).equals("and")
+						&& !((TipusSimple)sem.getValue("TIPUS")).getNom().equals("logic")
+						|| (((String)sem.getValue("OPERADOR")).equals("multiplicacio")
+								|| ((String)sem.getValue("OPERADOR")).equals("divisio"))
+						&& !((TipusSimple)sem.getValue("TIPUS")).getNom().equals("sencer"))) {
+			//TODO salta error "tipus no valid per aquesta operacio"
+			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
+			sem.setValue("VALOR", "indefinit");
+			sem.setValue("ESTATIC", false);
+
+			return sem;
+		}
+
+
+		//si un d'ells no es estatic
+		if (!(boolean)sem.getValue("ESTATIC") || !(boolean)sem2.getValue("ESTATIC")) {
+			sem.setValue("VALOR", "desconegut");
+			sem.setValue("ESTATIC", false);
+
+			return sem;
+		}
+
+		//si es estatic es pot calcular
+		switch ((String)sem.getValue("OPERADOR")) {
+
+		case "and":
+			sem.setValue("VALOR", (boolean)sem.getValue("VALOR") && (boolean)sem2.getValue("VALOR"));
+			break;
+		case "multiplicacio":
+			sem.setValue("VALOR", ((int)sem.getValue("VALOR")) * ((int)sem2.getValue("VALOR")));
+			break;
+		case "divisio":
+			if (((int)sem2.getValue("VALOR")) == 0) {
+				//TODO error "no es pot dividir per 0"
+				sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
+				sem.setValue("VALOR", "indefinit");
+				sem.setValue("ESTATIC", false);
+				break;
+			}
+			sem.setValue("VALOR", ((int)sem.getValue("VALOR")) / ((int)sem2.getValue("VALOR")));
+			break;
+		default:
+		}
+
+		return sem;
+	}
+
+
+
 	public boolean EXP_tipusExpressio (Semantic sem) {
 		if (sem.getValue("TIPUS") == null) return false;
 		return false;
