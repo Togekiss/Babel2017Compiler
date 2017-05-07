@@ -662,12 +662,10 @@ public class Asin {
 
 		sem.setValue("TOKEN", lookAhead.getLexema());
 		Acceptar("identificador");
+		//comprovar que id es variable
+		//retorna tipus variable o variable fantasma
+		sem = asem.VAR_esVariable(sem, taulaSimbols);
 		sem = VAR1(sem);
-		//TODO comprovar que id es variable
-		if (!asem.VAR_esVariable(sem, taulaSimbols)) {
-			//TODO error
-			//crear nova variable fantasma
-		}
 		return sem;
 
 	}
@@ -684,6 +682,7 @@ public class Asin {
 			sem2 = EXPRESIO(sem2);
 			//comprovar que tipus sem2 == sencer
 			//i si es estatic, esta dins el rang de id
+			sem = asem.VAR1_comprovaArray(sem, sem2, taulaSimbols);
 			Acceptar("claudator_tancat");
 			return sem;						
 

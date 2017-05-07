@@ -19,16 +19,18 @@ public class Asem {
 	public void afegirConstant(Semantic sem, TaulaSimbols ts, int l) {
 
 		//EXISTEIX?
-		//TODO que no existeixi ni variable ni funcio tampoc
-		if (ts.obtenirBloc(ts.getBlocActual()).existeixConstant((String)sem.getValue("TOKEN"))) {
+		if (ts.obtenirBloc(ts.getBlocActual()).existeixConstant((String)sem.getValue("TOKEN")) ||
+				ts.obtenirBloc(ts.getBlocActual()).existeixVariable((String)sem.getValue("TOKEN")) ||
+				ts.obtenirBloc(ts.getBlocActual()).existeixProcediment((String)sem.getValue("TOKEN"))) {
+			//TODO error constant ja declarada
 			System.out.println(l + ", Constant [" + sem.getValue("TOKEN") + "] doblement definida");				
 			return;
 		}
-		//TODO Si el valor es igual a CONSTANT + VALOR, comprovar la constant
 		//TIPUS CORRECTE?
 		if (!(sem.getValue("TIPUS") instanceof TipusSimple) &&
 				!(sem.getValue("TIPUS") instanceof TipusCadena) &&
 				!(boolean)sem.getValue("ESTATIC")) {
+			//TODO error constant invalida
 			System.out.println(l + ", Expresio invalida per constant");	
 			return; 
 		}
@@ -44,14 +46,18 @@ public class Asem {
 
 	public void afegirVariable(Semantic sem, TaulaSimbols ts, int l) {
 
-		//TODO que no existeixi ni constant ni funcio tampoc
-		if (ts.obtenirBloc(ts.getBlocActual()).existeixVariable((String)sem.getValue("TOKEN"))) {
+		//mirar que no existeixi
+		if (ts.obtenirBloc(ts.getBlocActual()).existeixVariable((String)sem.getValue("TOKEN")) ||
+				ts.obtenirBloc(ts.getBlocActual()).existeixConstant((String)sem.getValue("TOKEN")) ||
+				ts.obtenirBloc(ts.getBlocActual()).existeixProcediment((String)sem.getValue("TOKEN"))) {
+			//TODO error variable ja declarada
 			System.out.println(l + ", Variable [" + sem.getValue("TOKEN") + "] doblement definida");				
 			return;
 		}
 
 		if (!(sem.getValue("TIPUS") instanceof TipusSimple) &&
 				!(sem.getValue("TIPUS") instanceof TipusArray)) {
+			//TODO error tipus invalid per variable
 			System.out.println(l + ", Tipus invalid per variable");	
 			return; 
 		}
@@ -69,7 +75,10 @@ public class Asem {
 
 		//TODO que no existeixi ni variable ni constant tampoc
 		//EXISTEIX?
-		if (ts.obtenirBloc(ts.getBlocActual()).existeixProcediment(funcio.getNom())) {
+		if (ts.obtenirBloc(ts.getBlocActual()).existeixProcediment(funcio.getNom()) ||
+				ts.obtenirBloc(ts.getBlocActual()).existeixConstant((funcio.getNom())) ||
+				ts.obtenirBloc(ts.getBlocActual()).existeixConstant(funcio.getNom())) {
+			//TODO error funcio ja declarada
 			System.out.println(l + ", Funcio [" + funcio.getNom() + "] doblement definida");				
 			return;
 		}
@@ -401,34 +410,68 @@ public class Asem {
 	}
 
 
-	
+
 	public boolean esLogic(Semantic sem) {
-		
+
 		if (!(sem.getValue("TIPUS") instanceof TipusSimple)) return false;
-		
+
 		if (((TipusSimple)sem.getValue("TIPUS")).getNom().equals("logic")) return true;
 		else return false;
-		
+
 	}
 
-	
+
 	public boolean LL_EXP_ESCRIURE_esValid(Semantic sem) {
 		//comprovar que tipus == tipus simple o cadena
-		
+
 		if (sem.getValue("TIPUS") instanceof TipusCadena
 				|| sem.getValue("TIPUS") instanceof TipusSimple)
 			return true;
 		else return false;
-		
+
 	}
-	
-	
-	public boolean VAR_esVariable(Semantic sem, TaulaSimbols ts) {
-		
-		return true;
+
+
+	public Semantic VAR_esVariable(Semantic sem, TaulaSimbols ts) {
+
+		//si existeix a aquest bloc
+		if (ts.obtenirBloc(ts.getBlocActual()).existeixVariable((String)sem.getValue("TOKEN"))) {
+			sem.setValue("TIPUS", ts.obtenirBloc(ts.getBlocActual()).obtenirVariable((String)sem.getValue("TOKEN")).getTipus());
+			return sem;
+		}
+
+		//si estavem a bloc 1 i existeix a bloc 0
+		else if (ts.getBlocActual() > 0 && ts.obtenirBloc(0).existeixVariable((String)sem.getValue("TOKEN"))) {
+			sem.setValue("TIPUS", ts.obtenirBloc(0).obtenirVariable((String)sem.getValue("TOKEN")).getTipus());
+			return sem;
+		}
+		else {
+			//si es constant o funcio
+			if (ts.obtenirBloc(ts.getBlocActual()).existeixConstant((String)sem.getValue("TOKEN")) ||
+					ts.obtenirBloc(ts.getBlocActual()).existeixProcediment((String)sem.getValue("TOKEN")) ||
+					ts.getBlocActual() > 0 && ts.obtenirBloc(0).existeixConstant((String)sem.getValue("TOKEN")) ||
+					ts.getBlocActual() > 0 && ts.obtenirBloc(0).existeixProcediment((String)sem.getValue("TOKEN"))) {
+				//TODO error: nomes es poden fer servir variables
+			} else {
+				//error: variable no declarada
+				//creem variable fantasma
+				ts.obtenirBloc(ts.getBlocActual()).inserirVariable(new Variable(
+						(String)sem.getValue("TOKEN"),
+						new TipusIndefinit("indefinit", 0),
+						0
+						));
+			}
+			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
+			return sem;
+		}
 	}
-	
-	
+
+	public Semantic VAR1_comprovaArray(Semantic sem, Semantic sem2, TaulaSimbols ts) {
+
+		return sem;
+
+	}
+
 	public boolean EXP_tipusExpressio (Semantic sem) {
 		if (sem.getValue("TIPUS") == null) return false;
 		return false;
