@@ -538,10 +538,9 @@ public class Asin {
 
 		case "identificador":
 			//TODO buscar si id existeix i agafar tipus i valor i estatic
+			sem.setValue("TOKEN", lookAhead.getLexema());
+			sem = asem.FACTOR_getIdentificador(sem, taulaSimbols);
 			Acceptar("identificador");
-			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
-			sem.setValue("VALOR", 0);
-			sem.setValue("ESTATIC", false);
 			sem = FACTOR1(sem);
 			return sem;	
 

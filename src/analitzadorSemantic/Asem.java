@@ -455,15 +455,19 @@ public class Asem {
 			} else {
 				//error: variable no declarada
 				//creem variable fantasma
-				ts.obtenirBloc(ts.getBlocActual()).inserirVariable(new Variable(
-						(String)sem.getValue("TOKEN"),
-						new TipusIndefinit("indefinit", 0),
-						0
-						));
+				creaVariableFantasma(sem, ts);
 			}
 			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
 			return sem;
 		}
+	}
+	
+	private void creaVariableFantasma(Semantic sem, TaulaSimbols ts) {
+		ts.obtenirBloc(ts.getBlocActual()).inserirVariable(new Variable(
+				(String)sem.getValue("TOKEN"),
+				new TipusIndefinit("indefinit", 0),
+				0
+				));
 	}
 
 	public Semantic VAR1_comprovaArray(Semantic sem, Semantic sem2, TaulaSimbols ts) {
@@ -498,7 +502,58 @@ public class Asem {
 
 	}
 	
-	
+	public Semantic FACTOR_getIdentificador(Semantic sem, TaulaSimbols ts) {
+		
+		//si esta al bloc 1, primer busca alla
+		if (ts.getBlocActual() > 0) {
+			if (ts.obtenirBloc(ts.getBlocActual()).existeixConstant((String)sem.getValue("TOKEN"))) {
+				sem.setValue("TIPUS", ts.obtenirBloc(ts.getBlocActual()).obtenirConstant((String)sem.getValue("TOKEN")).getTipus());
+				sem.setValue("VALOR", ts.obtenirBloc(ts.getBlocActual()).obtenirConstant((String)sem.getValue("TOKEN")).getValor());
+				sem.setValue("ESTATIC", true);
+				return sem;
+			}
+			if (ts.obtenirBloc(ts.getBlocActual()).existeixVariable((String)sem.getValue("TOKEN"))) {
+				sem.setValue("TIPUS", ts.obtenirBloc(ts.getBlocActual()).obtenirVariable((String)sem.getValue("TOKEN")).getTipus());
+				sem.setValue("VALOR", "desconegut");
+				sem.setValue("ESTATIC", false);
+				return sem;
+			}
+			if (ts.obtenirBloc(ts.getBlocActual()).existeixProcediment((String)sem.getValue("TOKEN"))) {
+				sem.setValue("TIPUS", ((Funcio)ts.obtenirBloc(ts.getBlocActual()).obtenirProcediment((String)sem.getValue("TOKEN"))).getTipus());
+				sem.setValue("VALOR", "desconegut");
+				sem.setValue("ESTATIC", false);
+				return sem;
+			}
+			
+		}
+		
+		//sino, busca al bloc 0
+		if (ts.obtenirBloc(0).existeixConstant((String)sem.getValue("TOKEN"))) {
+			sem.setValue("TIPUS", ts.obtenirBloc(0).obtenirConstant((String)sem.getValue("TOKEN")).getTipus());
+			sem.setValue("VALOR", ts.obtenirBloc(0).obtenirConstant((String)sem.getValue("TOKEN")).getValor());
+			sem.setValue("ESTATIC", true);
+			return sem;
+		}
+		if (ts.obtenirBloc(0).existeixVariable((String)sem.getValue("TOKEN"))) {
+			sem.setValue("TIPUS", ts.obtenirBloc(0).obtenirVariable((String)sem.getValue("TOKEN")).getTipus());
+			sem.setValue("VALOR", "desconegut");
+			sem.setValue("ESTATIC", false);
+			return sem;
+		}
+		if (ts.obtenirBloc(0).existeixProcediment((String)sem.getValue("TOKEN"))) {
+			sem.setValue("TIPUS", ((Funcio)ts.obtenirBloc(0).obtenirProcediment((String)sem.getValue("TOKEN"))).getTipus());
+			sem.setValue("VALOR", "desconegut");
+			sem.setValue("ESTATIC", false);
+			return sem;
+		}
+		
+		//TODO sino ERROR variable no definida
+		creaVariableFantasma(sem, ts);
+		sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
+		sem.setValue("VALOR", "indefinit");
+		sem.setValue("ESTATIC", false);
+		return sem;
+	}
 	
 	
 	
