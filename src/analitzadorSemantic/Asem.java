@@ -468,6 +468,17 @@ public class Asem {
 
 	public Semantic VAR1_comprovaArray(Semantic sem, Semantic sem2, TaulaSimbols ts) {
 
+		//comprova si sem es array
+		if (!(sem.getValue("TIPUS") instanceof TipusArray)) {
+			//TODO error: variable no declarada com array
+			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
+			
+		}
+		
+		//comprova si sem2 es sencer
+		
+		//si sem2 es estatic, comprova que estigui dins el rang
+		
 		return sem;
 
 	}
