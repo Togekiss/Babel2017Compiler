@@ -574,9 +574,10 @@ public class Asin {
 
 		case "claudator_obert":
 			Acceptar("claudator_obert"); 
-			//TODO es vector
+			//es vector
 			sem2 = EXPRESIO(sem2);
 			//comprovar que expressio es int i esta dins el rang (si es estatica)
+			sem = asem.VAR1_comprovaArray(sem, sem2, taulaSimbols);
 			Acceptar("claudator_tancat"); 
 			//retornar tipus d'element de vector
 			return sem;
@@ -677,7 +678,7 @@ public class Asin {
 		switch (lookAhead.getTipus()) {
 
 		case "claudator_obert":
-			//TODO comprovar que identificador es array
+			//comprovar que identificador es array
 			Acceptar("claudator_obert");
 			sem2 = EXPRESIO(sem2);
 			//comprovar que tipus sem2 == sencer

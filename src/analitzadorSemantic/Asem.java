@@ -472,14 +472,28 @@ public class Asem {
 		if (!(sem.getValue("TIPUS") instanceof TipusArray)) {
 			//TODO error: variable no declarada com array
 			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
-			//todgaer
-			
+			return sem;
 		}
 		
 		//comprova si sem2 es sencer
+		if (!(sem2.getValue("TIPUS") instanceof TipusSimple) || !((TipusSimple)sem2.getValue("TIPUS")).getNom().equals("sencer")) {
+			//TODO error: rang invalid
+			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
+			return sem;
+		}
 		
 		//si sem2 es estatic, comprova que estigui dins el rang
+		if ((boolean)sem2.getValue("ESTATIC")) {
+			int v = (int)sem2.getValue("VALOR");
+			if ((int)((TipusArray)ts.obtenirBloc(ts.getBlocActual()).obtenirVariable((String)sem.getValue("TOKEN")).getTipus()).obtenirDimensio(0).getLimitInferior() > v ||
+					(int)((TipusArray)ts.obtenirBloc(ts.getBlocActual()).obtenirVariable((String)sem.getValue("TOKEN")).getTipus()).obtenirDimensio(0).getLimitSuperior() < v) {
+				//TODO error: index fora de rang
+				sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
+				return sem;
+			}
+		}
 		
+		sem.setValue("TIPUS",((TipusArray)ts.obtenirBloc(ts.getBlocActual()).obtenirVariable((String)sem.getValue("TOKEN")).getTipus()).getTipusElements());
 		return sem;
 
 	}
