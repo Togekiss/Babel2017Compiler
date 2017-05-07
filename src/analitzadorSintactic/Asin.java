@@ -165,7 +165,7 @@ public class Asin {
 
 	private void DECL_FUNC() {
 
-		//creem descriptor per omplir llistat de parametres??
+		//creem descriptor per omplir llistat de parametres
 		Funcio funcio = new Funcio();
 		
 		
@@ -229,7 +229,7 @@ public class Asin {
 		Semantic semantic = new Semantic();
 		Parametre param = new Parametre();
 
-		param = PER(param); //no hauria de treure error
+		param = PER(param);
 		param.setNom(lookAhead.getLexema());
 		Acceptar("identificador");
 		Acceptar("dos_punts");
@@ -419,7 +419,7 @@ public class Asin {
 		case "multiplicacio":
 		case "divisio":
 		case "and":
-			sem = OP_TERME(sem); //mai donara error
+			sem = OP_TERME(sem); 
 			sem2 = FACTOR(sem2);
 			//operar sem i sem2 segons OP_TERME
 			asem.TERME_operar(sem, sem2);

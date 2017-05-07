@@ -497,8 +497,13 @@ public class Asem {
 		return sem;
 
 	}
+	
+	
+	
+	
+	
 
-	public boolean EXP_tipusExpressio (Semantic sem) {
+	/*public boolean EXP_tipusExpressio (Semantic sem) {
 		if (sem.getValue("TIPUS") == null) return false;
 		return false;
 	}
@@ -534,7 +539,7 @@ public class Asem {
 
 	public boolean INST_tipusOperands (Semantic sem1, Semantic sem2, TaulaSimbols ts) {
 		return sem1.getValue("TIPUS") == sem2.getValue("TIPUS") && !ts.obtenirBloc(ts.getBlocActual()).existeixConstant((String)sem1.getValue("TOKEN"));
-	}
+	}*/
 
 
 
