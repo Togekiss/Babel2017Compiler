@@ -472,6 +472,7 @@ public class Asem {
 		if (!(sem.getValue("TIPUS") instanceof TipusArray)) {
 			//TODO error: variable no declarada com array
 			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
+			//todgaer
 			
 		}
 		
