@@ -586,6 +586,25 @@ public class Asem {
 		return sem;
 	}
 	
+	
+	public void INSTRUCCIO_comprovaRetornar(Semantic sem, ITipus tipus, int bloc) {
+		//comprovar que blocactual != 0
+		//comprovar que exp tipus == retorn funcio tipus
+		
+		if (bloc == 0) {
+			//TODO error: no es pot retornar al main
+			return;
+		}
+		
+		if (!((ITipus)sem.getValue("TIPUS")).equals(tipus)) {
+			//error: tipus de retorn incorrecte
+			return;
+		}
+		
+		return;
+		
+	}
+	
 
 	/*public boolean EXP_tipusExpressio (Semantic sem) {
 		if (sem.getValue("TIPUS") == null) return false;

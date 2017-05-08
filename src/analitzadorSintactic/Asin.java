@@ -23,6 +23,8 @@ public class Asin {
 	private Error error;
 	private Token lookAhead;
 	private TaulaSimbols taulaSimbols;
+	private boolean hiHaReturn;
+	private ITipus tipusReturn;
 
 	//CONSTRUCTOR
 	public Asin (String args, String name) {
@@ -33,6 +35,8 @@ public class Asin {
 		taulaSimbols = new TaulaSimbols();
 		lookAhead = alex.getToken();
 		alex.writeToken(lookAhead);
+		hiHaReturn = false;
+		tipusReturn = new TipusIndefinit("indefinit", 0);
 
 	}
 
@@ -180,6 +184,8 @@ public class Asin {
 			Acceptar("parentesi_tancat");
 			Acceptar("dos_punts");
 			funcio.setTipus(new TipusSimple(lookAhead.getLexema(), 0));
+			tipusReturn = new TipusSimple(lookAhead.getLexema(), 0);
+			hiHaReturn = false;
 			Acceptar("tipus_simple");
 					
 			asem.afegirFuncio(funcio, taulaSimbols, alex.getLiniaActual());
@@ -193,6 +199,11 @@ public class Asin {
 			
 			Acceptar("fifunc");
 			Acceptar("punt_i_coma");
+			
+			//hi ha algun return
+			if (!hiHaReturn) {
+				//TODO error: no hi ha cap return
+			}
 			
 			taulaSimbols.esborrarBloc(1);
 			taulaSimbols.setBlocActual(0);
@@ -803,9 +814,10 @@ public class Asin {
 		case "retornar":
 			Acceptar("retornar"); 
 			sem = EXPRESIO(sem);
-			//TODO comprovar que blocactual != 0
+			//comprovar que blocactual != 0
 			//comprovar que exp tipus == retorn funcio tipus
-			//comprovar que com a minim nhi hagi un
+			asem.INSTRUCCIO_comprovaRetornar(sem, tipusReturn, taulaSimbols.getBlocActual());
+			hiHaReturn = true;
 			return;
 
 		case "percada":
