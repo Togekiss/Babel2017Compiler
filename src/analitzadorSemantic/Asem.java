@@ -11,6 +11,7 @@ import taulasimbols.TaulaSimbols;
 import taulasimbols.TipusArray;
 import taulasimbols.TipusCadena;
 import taulasimbols.TipusIndefinit;
+import taulasimbols.TipusPasParametre;
 import taulasimbols.TipusSimple;
 import taulasimbols.Variable;
 
@@ -121,8 +122,8 @@ public class Asem {
 			String nom;
 			if (tipus.equals("sencer")) nom = "S_" + dim1 + "_" + dim2;
 			else nom = "L_" + dim1 + "_" + dim2;
-			a =  new TipusArray(nom, dim1 - dim2, new TipusSimple(tipus, 0));
-			a.inserirDimensio(new DimensioArray(new TipusSimple("sencer", 0), dim1, dim2));
+			a =  new TipusArray(nom, dim1 - dim2, new TipusSimple(tipus, 0, 0, 0));
+			a.inserirDimensio(new DimensioArray(new TipusSimple("sencer", 0, 0, 0), dim1, dim2));
 		} else {
 			a = new TipusArray("I_0_0", 0, new TipusIndefinit("indefinit", 0));
 			//tira error
@@ -137,7 +138,9 @@ public class Asem {
 
 	public Semantic EXPRESIO1_operar(Semantic sem, Semantic sem2, int l) {
 		//operadors relacionals
-
+		
+		sem.setValue("REFERENCIA", false);
+		
 		//si no son del mateix tipus o un d'ells es indefinit
 		if (!sem.getValue("TIPUS").equals(sem2.getValue("TIPUS")) ||
 				sem.getValue("TIPUS").equals("indefinit") ||
@@ -168,7 +171,7 @@ public class Asem {
 
 		//si un d'ells no es estatic
 		if (!(boolean)sem.getValue("ESTATIC") || !(boolean)sem2.getValue("ESTATIC")) {
-			sem.setValue("TIPUS", new TipusSimple("logic", 0));
+			sem.setValue("TIPUS", new TipusSimple("logic", 0, 0, 0));
 			sem.setValue("VALOR", "desconegut");
 			sem.setValue("ESTATIC", false);
 
@@ -259,7 +262,7 @@ public class Asem {
 			}
 		}
 
-		sem.setValue("TIPUS", new TipusSimple("logic", 0));
+		sem.setValue("TIPUS", new TipusSimple("logic", 0, 0, 0));
 		sem.setValue("ESTATIC", true);
 
 		return sem;
@@ -276,6 +279,8 @@ public class Asem {
 		if (sem.getValue("OPERADOR") == null) 
 			return sem;
 
+		sem.setValue("REFERENCIA", false);
+		
 		//si es indefinit o no es tipus simple o operador no coincideix amb tipus
 		if (sem.getValue("TIPUS").equals("indefinit")
 				|| !(sem.getValue("TIPUS") instanceof TipusSimple)
@@ -320,6 +325,8 @@ public class Asem {
 
 	public Semantic EXPRESIO_SIMPLE1_operar(Semantic sem, Semantic sem2, int l) {
 		//suma, resta, or
+		
+		sem.setValue("REFERENCIA", false);
 
 		//si no son del mateix tipus o un d'ells es indefinit
 		if (!sem.getValue("TIPUS").equals(sem2.getValue("TIPUS")) ||
@@ -389,6 +396,8 @@ public class Asem {
 	public Semantic TERME_operar(Semantic sem, Semantic sem2, int l) {
 		//multiplicacio, divisio, and
 
+		sem.setValue("REFERENCIA", false);
+		
 		//si no son del mateix tipus o un d'ells es indefinit
 		if (!sem.getValue("TIPUS").equals(sem2.getValue("TIPUS")) ||
 				sem.getValue("TIPUS").equals("indefinit") ||
@@ -635,6 +644,8 @@ public class Asem {
 		return sem;
 	}
 	
+	
+	
 	public Semantic FACTOR1_buscaFuncio(Semantic sem, TaulaSimbols ts, int l) {
 		
 		if (!ts.obtenirBloc(0).existeixProcediment((String)sem.getValue("TOKEN"))) {
@@ -643,9 +654,10 @@ public class Asem {
 			System.out.println("buscaFuncio [ERR_SEM_22] " + l + ", Tipus [" + ((ITipus)sem.getValue("TIPUS")).getNom() + "] invalid per aquest tipus d'operació");
 			sem.setValue("FUNCIO", new TipusIndefinit("indefinit", 0));
 			sem.setValue("INDEX", 0);
+			System.out.println("linia " + l + ", funcio no trobada");
 			return sem;
 		}
-		
+		System.out.println("linia " + l + ", funcio trobada");
 		sem.setValue("FUNCIO", ts.obtenirBloc(0).obtenirProcediment((String)sem.getValue("TOKEN")));
 		sem.setValue("INDEX", 0);
 		return sem;
@@ -653,7 +665,7 @@ public class Asem {
 	
 	public Semantic LL_EXPRESIO_comprovaParametre(Semantic sem, Semantic sem2, int l) {
 		
-		if (!(sem.getValue("TIPUS") instanceof Funcio)) {
+		if (!(sem.getValue("FUNCIO") instanceof Funcio)) {
 			//error id no es una funcio
 			Error.escriuError(322, ((ITipus)sem.getValue("TIPUS")).getNom(), l, "");
 			System.out.println("comprovaParametre [ERR_SEM_22] " + l + ", Tipus [" + ((ITipus)sem.getValue("TIPUS")).getNom() + "] invalid per aquest tipus d'operació");
@@ -678,7 +690,8 @@ public class Asem {
 			return sem;
 		}
 		
-		if (!(boolean)sem.getValue("REFERENCIA")) {
+		if (!(boolean)sem2.getValue("REFERENCIA") &&
+				f.obtenirParametre((int)sem.getValue("INDEX")).getTipusPasParametre().equals(TipusPasParametre.REFERENCIA)) {
 			//error no es pot passar per referencia
 			Error.escriuError(317, (int)sem.getValue("INDEX") + "", l, "");
 			System.out.println("[ERR_SEM_17] " + l + ", El parametre numero " + (int)sem.getValue("INDEX") + " de la funcio no es pot passar per referencia");

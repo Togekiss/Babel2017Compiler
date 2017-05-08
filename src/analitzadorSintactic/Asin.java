@@ -184,8 +184,8 @@ public class Asin {
 			funcio = LL_PARAM(funcio);
 			Acceptar("parentesi_tancat");
 			Acceptar("dos_punts");
-			funcio.setTipus(new TipusSimple(lookAhead.getLexema(), 0));
-			tipusReturn = new TipusSimple(lookAhead.getLexema(), 0);
+			funcio.setTipus(new TipusSimple(lookAhead.getLexema(), 0, 0, 0));
+			tipusReturn = new TipusSimple(lookAhead.getLexema(), 0, 0, 0);
 			hiHaReturn = false;
 			Acceptar("tipus_simple");
 					
@@ -376,7 +376,6 @@ public class Asin {
 		switch (lookAhead.getTipus()) {
 
 		case "oper_rel": 
-			sem.setValue("REFERENCIA", false);
 			sem.setValue("OPERADOR", lookAhead.getLexema());
 			Acceptar("oper_rel");
 			sem2 = EXPRESIO_SIMPLE(sem2);
@@ -414,7 +413,6 @@ public class Asin {
 		case "suma":
 		case "resta":
 		case "or":
-			sem.setValue("REFERENCIA", false);
 			sem = OP_EXP(sem); 
 			sem2 = TERME(sem2);
 			//System.out.println("DINS EXP_SIMPLE1 ABANS DE OPERAR");
@@ -453,7 +451,6 @@ public class Asin {
 		case "multiplicacio":
 		case "divisio":
 		case "and":
-			sem.setValue("REFERENCIA", false);
 			sem = OP_TERME(sem); 
 			sem2 = FACTOR(sem2);
 			//operar sem i sem2 segons OP_TERME
@@ -477,19 +474,16 @@ public class Asin {
 		case "suma":
 			sem.setValue("OPERADOR", "suma");
 			Acceptar("suma");
-			sem.setValue("REFERENCIA", false);
 			return sem;
 
 		case "resta":
 			sem.setValue("OPERADOR", "resta");
 			Acceptar("resta");
-			sem.setValue("REFERENCIA", false);
 			return sem;
 
 		case "not":
 			sem.setValue("OPERADOR", "not");
 			Acceptar("not");
-			sem.setValue("REFERENCIA", false);
 			return sem;
 
 		default:
@@ -509,19 +503,16 @@ public class Asin {
 		case "suma":
 			sem.setValue("OPERADOR", "suma");
 			Acceptar("suma");
-			sem.setValue("REFERENCIA", false);
 			return sem;
 
 		case "resta":
 			sem.setValue("OPERADOR", "resta");
 			Acceptar("resta");
-			sem.setValue("REFERENCIA", false);
 			return sem;
 
 		case "or":
 			sem.setValue("OPERADOR", "or");
 			Acceptar("or");
-			sem.setValue("REFERENCIA", false);
 			return sem;
 
 		default: return sem;
@@ -536,19 +527,16 @@ public class Asin {
 		case "multiplicacio":
 			sem.setValue("OPERADOR", "multiplicacio");
 			Acceptar("multiplicacio");
-			sem.setValue("REFERENCIA", false);
 			return sem;
 
 		case "divisio":
 			sem.setValue("OPERADOR", "divisio");
 			Acceptar("divisio");
-			sem.setValue("REFERENCIA", false);
 			return sem;
 
 		case "and":
 			sem.setValue("OPERADOR", "and");
 			Acceptar("and");
-			sem.setValue("REFERENCIA", false);
 			return sem;	
 
 		default: return sem;
@@ -594,6 +582,7 @@ public class Asin {
 			sem.setValue("TOKEN", lookAhead.getLexema());
 			sem = asem.FACTOR_getIdentificador(sem, taulaSimbols, alex.getLiniaActual());
 			Acceptar("identificador");
+			sem.setValue("REFERENCIA", true);
 			sem = FACTOR1(sem);
 			return sem;	
 
@@ -624,10 +613,10 @@ public class Asin {
 			LL_EXPRESIO(sem2); 
 			Acceptar("parentesi_tancat");
 			//comprovar que num parametres ok
-			if (!(sem2.getValue("TIPUS") instanceof Funcio) || (int)sem2.getValue("INDEX") != ((Funcio)sem2.getValue("FUNCIO")).getNumeroParametres()) {
+			if (!(sem2.getValue("FUNCIO") instanceof Funcio) || (int)sem2.getValue("INDEX") != ((Funcio)sem2.getValue("FUNCIO")).getNumeroParametres()) {
 				//error: num de parametres incorrecte
 				int nparam = 0;
-				if (sem2.getValue("TIPUS") instanceof Funcio) nparam = ((Funcio)sem2.getValue("FUNCIO")).getNumeroParametres();
+				if (sem2.getValue("FUNCIO") instanceof Funcio) nparam = ((Funcio)sem2.getValue("FUNCIO")).getNumeroParametres();
 				else nparam = 0;
 				Error.escriuError(315, (int)sem2.getValue("INDEX") + "", alex.getLiniaActual(), nparam + "");
 				System.out.println("[ERR_SEM_15] " + alex.getLiniaActual() + ", La funció en declaració té " + nparam + " paràmetres mentre que en ús té " + (int)sem2.getValue("INDEX"));
@@ -806,8 +795,11 @@ public class Asin {
 			//comprovar que tipus sem1 == tipus sem2
 			if (!sem.getValue("TIPUS").equals(sem2.getValue("TIPUS"))) {
 				//error
+				
+				//System.out.println("SEM " + ((ITipus)sem.getValue("TIPUS")).toXml());
+				//System.out.println("SEM2 " + ((ITipus)sem2.getValue("TIPUS")).toXml());
 				Error.escriuError(312, ((ITipus)sem2.getValue("TIPUS")).getNom(), alex.getLiniaActual(), ((ITipus)sem.getValue("TIPUS")).getNom());
-				System.out.println("[ERR_SEM_12] " + alex.getLiniaActual() +
+				System.out.println("igualacio [ERR_SEM_12] " + alex.getLiniaActual() +
 						", La variable i l'expressió de assignació tenen tipus diferents. El tipus de la variable és ["
 						+ ((ITipus)sem.getValue("TIPUS")).getNom() + "] i el de l’expressió és [" + ((ITipus)sem2.getValue("TIPUS")).getNom() + "]");
 				
