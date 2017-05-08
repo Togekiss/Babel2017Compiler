@@ -555,7 +555,36 @@ public class Asem {
 		return sem;
 	}
 	
+	public Semantic FACTOR1_buscaFuncio(Semantic sem, TaulaSimbols ts) {
+		
+		if (!ts.obtenirBloc(0).existeixProcediment((String)sem.getValue("TOKEN"))) {
+			//TODO error: no es una funcio
+			sem.setValue("FUNCIO", new TipusIndefinit("indefinit", 0));
+			sem.setValue("INDEX", 0);
+			return sem;
+		}
+		
+		sem.setValue("FUNCIO", ts.obtenirBloc(0).obtenirProcediment((String)sem.getValue("TOKEN")));
+		sem.setValue("INDEX", 0);
+		return sem;
+	}
 	
+	public Semantic LL_EXPRESIO_comprovaParametre(Semantic sem, Semantic sem2) {
+		
+		Funcio f = (Funcio)sem.getValue("FUNCIO");
+		
+		if ((int)sem.getValue("INDEX") >= f.getNumeroParametres()) {
+			//TODO error
+			return sem;
+		}
+		
+		if (!f.obtenirParametre((int)sem.getValue("INDEX")).getTipus().equals((ITipus)sem2.getValue("TIPUS"))) {
+			//TODO error: parametres no coincideixen
+		}
+		
+		sem.setValue("INDEX", (int)sem.getValue("INDEX")+1);
+		return sem;
+	}
 	
 
 	/*public boolean EXP_tipusExpressio (Semantic sem) {

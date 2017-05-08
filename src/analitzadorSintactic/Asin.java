@@ -537,7 +537,7 @@ public class Asin {
 			return sem;
 
 		case "identificador":
-			//TODO buscar si id existeix i agafar tipus i valor i estatic
+			//buscar si id existeix i agafar tipus i valor i estatic
 			sem.setValue("TOKEN", lookAhead.getLexema());
 			sem = asem.FACTOR_getIdentificador(sem, taulaSimbols);
 			Acceptar("identificador");
@@ -564,10 +564,12 @@ public class Asin {
 
 		case "parentesi_obert":
 			Acceptar("parentesi_obert"); 
-			//TODO es funcio
+			//es funcio
 			//basicament per passar-li el descriptor de la funcio i index param = 0
+			sem2 = asem.FACTOR1_buscaFuncio(sem, taulaSimbols);
 			LL_EXPRESIO(sem2); 
 			Acceptar("parentesi_tancat");
+			//TODO comprovar que num parametres ok
 			//retornar tipus de retorn de funcio
 			return sem;
 
@@ -588,9 +590,9 @@ public class Asin {
 	}
 
 
-	private Semantic LL_EXPRESIO(Semantic sem) {
+	private void LL_EXPRESIO(Semantic sem) {
 
-		//TODO s'ha de comprovar que la expresio numero x correspongui
+		//s'ha de comprovar que la expresio numero x correspongui
 		//amb el parametre numero x de la funcio
 		Semantic sem2 = new Semantic();
 
@@ -605,11 +607,12 @@ public class Asin {
 		case "identificador":
 		case "parentesi_obert":
 			sem2 = EXPRESIO(sem2);
-			//TODO index param ++
+			//index param ++
+			sem = asem.LL_EXPRESIO_comprovaParametre(sem, sem2);
 			LL_EXPRESIO1(sem);
-			return sem;
+			return;
 
-		default: return sem;
+		default: return;
 
 		}
 
