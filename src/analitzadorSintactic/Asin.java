@@ -624,10 +624,10 @@ public class Asin {
 			LL_EXPRESIO(sem2); 
 			Acceptar("parentesi_tancat");
 			//comprovar que num parametres ok
-			if (!(sem.getValue("TIPUS") instanceof Funcio) || (int)sem2.getValue("INDEX") != ((Funcio)sem2.getValue("FUNCIO")).getNumeroParametres()) {
+			if (!(sem2.getValue("TIPUS") instanceof Funcio) || (int)sem2.getValue("INDEX") != ((Funcio)sem2.getValue("FUNCIO")).getNumeroParametres()) {
 				//error: num de parametres incorrecte
 				int nparam = 0;
-				if (sem.getValue("TIPUS") instanceof Funcio) nparam = ((Funcio)sem2.getValue("FUNCIO")).getNumeroParametres();
+				if (sem2.getValue("TIPUS") instanceof Funcio) nparam = ((Funcio)sem2.getValue("FUNCIO")).getNumeroParametres();
 				else nparam = 0;
 				Error.escriuError(315, (int)sem2.getValue("INDEX") + "", alex.getLiniaActual(), nparam + "");
 				System.out.println("[ERR_SEM_15] " + alex.getLiniaActual() + ", La funció en declaració té " + nparam + " paràmetres mentre que en ús té " + (int)sem2.getValue("INDEX"));
@@ -804,7 +804,7 @@ public class Asin {
 			Acceptar("igual");
 			sem2 = EXPRESIO(sem2);
 			//comprovar que tipus sem1 == tipus sem2
-			if (sem.getValue("TIPUS") != sem2.getValue("TIPUS")) {
+			if (!sem.getValue("TIPUS").equals(sem2.getValue("TIPUS"))) {
 				//error
 				Error.escriuError(312, ((ITipus)sem2.getValue("TIPUS")).getNom(), alex.getLiniaActual(), ((ITipus)sem.getValue("TIPUS")).getNom());
 				System.out.println("[ERR_SEM_12] " + alex.getLiniaActual() +
@@ -953,7 +953,7 @@ public class Asin {
 		case "parentesi_obert":
 			sem = EXPRESIO(sem);
 			//comprovar que tipus == tipus simple o cadena
-			if (asem.LL_EXP_ESCRIURE_esValid(sem)) {
+			if (!asem.LL_EXP_ESCRIURE_esValid(sem)) {
 				//error
 				Error.escriuError(314, "", alex.getLiniaActual(), "");
 				System.out.println("[ERR_SEM_14] " + alex.getLiniaActual() + ", El tipus de la expressió en ESCRIURE no és simple o no és una constant cadena");

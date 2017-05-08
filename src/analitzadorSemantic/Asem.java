@@ -286,7 +286,7 @@ public class Asem {
 				&& !((TipusSimple)sem.getValue("TIPUS")).getNom().equals("sencer")) {
 			//salta error "tipus invalid"
 			Error.escriuError(322, ((ITipus)sem.getValue("TIPUS")).getNom(), l, "");
-			System.out.println("[ERR_SEM_22] " + l + ", Tipus [" + ((ITipus)sem.getValue("TIPUS")).getNom() + "] invàlid per aquest tipus d'operació");
+			System.out.println("exp_sim_operar [ERR_SEM_22] " + l + ", Tipus [" + ((ITipus)sem.getValue("TIPUS")).getNom() + "] invàlid per aquest tipus d'operació");
 			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
 			sem.setValue("VALOR", "indefinit");
 			sem.setValue("ESTATIC", false);
@@ -346,7 +346,7 @@ public class Asem {
 						&& !((TipusSimple)sem.getValue("TIPUS")).getNom().equals("sencer"))) {
 			//salta error "tipus no valid per aquesta operacio"
 			Error.escriuError(322, ((ITipus)sem.getValue("TIPUS")).getNom(), l, "");
-			System.out.println("[ERR_SEM_22] " + l + ", Tipus [" + ((ITipus)sem.getValue("TIPUS")).getNom() + "] invàlid per aquest tipus d'operació");
+			System.out.println("exp_sim1_operar [ERR_SEM_22] " + l + ", Tipus [" + ((ITipus)sem.getValue("TIPUS")).getNom() + "] invàlid per aquest tipus d'operació");
 			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
 			sem.setValue("VALOR", "indefinit");
 			sem.setValue("ESTATIC", false);
@@ -414,7 +414,7 @@ public class Asem {
 						&& !((TipusSimple)sem.getValue("TIPUS")).getNom().equals("sencer"))) {
 			//salta error "tipus no valid per aquesta operacio"
 			Error.escriuError(322, ((ITipus)sem.getValue("TIPUS")).getNom(), l, "");
-			System.out.println("[ERR_SEM_22] " + l + ", Tipus [" + ((ITipus)sem.getValue("TIPUS")).getNom() + "] invàlid per aquest tipus d'operació");
+			System.out.println("Terme_operar [ERR_SEM_22] " + l + ", Tipus [" + ((ITipus)sem.getValue("TIPUS")).getNom() + "] invàlid per aquest tipus d'operació");
 			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
 			sem.setValue("VALOR", "indefinit");
 			sem.setValue("ESTATIC", false);
@@ -529,7 +529,7 @@ public class Asem {
 		if (!(sem.getValue("TIPUS") instanceof TipusArray)) {
 			//error: variable no declarada com array
 			Error.escriuError(322, ((ITipus)sem.getValue("TIPUS")).getNom(), l, "");
-			System.out.println("[ERR_SEM_22] " + l + ", Tipus [" + ((ITipus)sem.getValue("TIPUS")).getNom() + "] invalid per aquest tipus d'operació");
+			System.out.println("comprovaArray [ERR_SEM_22] " + l + ", Tipus [" + ((ITipus)sem.getValue("TIPUS")).getNom() + "] invalid per aquest tipus d'operació");
 			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
 			return sem;
 		}
@@ -640,7 +640,7 @@ public class Asem {
 		if (!ts.obtenirBloc(0).existeixProcediment((String)sem.getValue("TOKEN"))) {
 			//error: no es una funcio
 			Error.escriuError(322, ((ITipus)sem.getValue("TIPUS")).getNom(), l, "");
-			System.out.println("[ERR_SEM_22] " + l + ", Tipus [" + ((ITipus)sem.getValue("TIPUS")).getNom() + "] invalid per aquest tipus d'operació");
+			System.out.println("buscaFuncio [ERR_SEM_22] " + l + ", Tipus [" + ((ITipus)sem.getValue("TIPUS")).getNom() + "] invalid per aquest tipus d'operació");
 			sem.setValue("FUNCIO", new TipusIndefinit("indefinit", 0));
 			sem.setValue("INDEX", 0);
 			return sem;
@@ -656,7 +656,7 @@ public class Asem {
 		if (!(sem.getValue("TIPUS") instanceof Funcio)) {
 			//error id no es una funcio
 			Error.escriuError(322, ((ITipus)sem.getValue("TIPUS")).getNom(), l, "");
-			System.out.println("[ERR_SEM_22] " + l + ", Tipus [" + ((ITipus)sem.getValue("TIPUS")).getNom() + "] invalid per aquest tipus d'operació");
+			System.out.println("comprovaParametre [ERR_SEM_22] " + l + ", Tipus [" + ((ITipus)sem.getValue("TIPUS")).getNom() + "] invalid per aquest tipus d'operació");
 			return sem;
 		}
 		
