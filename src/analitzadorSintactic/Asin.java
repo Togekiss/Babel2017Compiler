@@ -569,7 +569,10 @@ public class Asin {
 			sem2 = asem.FACTOR1_buscaFuncio(sem, taulaSimbols);
 			LL_EXPRESIO(sem2); 
 			Acceptar("parentesi_tancat");
-			//TODO comprovar que num parametres ok
+			//comprovar que num parametres ok
+			if ((int)sem2.getValue("INDEX") != ((Funcio)sem2.getValue("FUNCIO")).getNumeroParametres()) {
+				//TODO error: num de parametres incorrecte
+			}
 			//retornar tipus de retorn de funcio
 			return sem;
 
