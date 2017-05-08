@@ -191,6 +191,11 @@ public class Asem {
 					sem.setValue("VALOR", true);
 				else sem.setValue("VALOR", false);
 				break;
+			case "<>":
+				if (vsem1 != vsem2)
+					sem.setValue("VALOR", true);
+				else sem.setValue("VALOR", false);
+				break;
 			default: sem.setValue("VALOR", false);
 
 			}
@@ -224,6 +229,11 @@ public class Asem {
 				break;
 			case "<=":
 				if (vsem1 == false)
+					sem.setValue("VALOR", true);
+				else sem.setValue("VALOR", false);
+				break;
+			case "<>":
+				if (vsem1 != vsem2)
 					sem.setValue("VALOR", true);
 				else sem.setValue("VALOR", false);
 				break;

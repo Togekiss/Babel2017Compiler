@@ -160,6 +160,7 @@ public class Asin {
 		Acceptar("identificador");
 		Acceptar("dos_punts");
 		sem = TIPUS(sem);
+		sem.setValue("VALOR", "desconegut");
 		asem.afegirVariable(sem, taulaSimbols, alex.getLiniaActual());
 		Acceptar("punt_i_coma");
 		return;
