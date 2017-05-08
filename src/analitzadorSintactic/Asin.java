@@ -203,7 +203,9 @@ public class Asin {
 			
 			//hi ha algun return
 			if (!hiHaReturn) {
-				//TODO error: no hi ha cap return
+				//error: no hi ha cap return
+				Error.escriuError(321, funcio.getNom(), alex.getLiniaActual(), "");
+				System.out.println("[ERR_SEM_21] " + alex.getLiniaActual() + ", No hi ha cap retornar en la funció " + funcio.getNom());
 			}
 			
 			taulaSimbols.esborrarBloc(1);
@@ -607,7 +609,9 @@ public class Asin {
 			Acceptar("parentesi_tancat");
 			//comprovar que num parametres ok
 			if (!(sem.getValue("TIPUS") instanceof Funcio) || (int)sem2.getValue("INDEX") != ((Funcio)sem2.getValue("FUNCIO")).getNumeroParametres()) {
-				//TODO error: num de parametres incorrecte
+				//error: num de parametres incorrecte
+				Error.escriuError(315, (int)sem2.getValue("INDEX") + "", alex.getLiniaActual(), ((Funcio)sem2.getValue("FUNCIO")).getNumeroParametres() + "");
+				System.out.println("[ERR_SEM_15] " + alex.getLiniaActual() + ", La funció en declaració té " + ((Funcio)sem2.getValue("FUNCIO")).getNumeroParametres() + " paràmetres mentre que en ús té " + (int)sem2.getValue("INDEX"));
 			}
 			//retornar tipus de retorn de funcio
 			return sem;
@@ -679,7 +683,9 @@ public class Asin {
 		sem = VAR(sem);
 		//comprovar que sem tipus == tipus simple
 		if (!(sem.getValue("TIPUS") instanceof TipusSimple)) {
-			//TODO ERROR
+			//ERROR
+			Error.escriuError(36, "", alex.getLiniaActual(), "");
+			System.out.println("[ERR_SEM_6] " + alex.getLiniaActual() + ", El tipus ha de ser TIPUS SIMPLE");
 		}
 		LL_VAR1();
 		return;
@@ -779,7 +785,12 @@ public class Asin {
 			sem2 = EXPRESIO(sem2);
 			//comprovar que tipus sem1 == tipus sem2
 			if (sem.getValue("TIPUS") != sem2.getValue("TIPUS")) {
-				//TODO error
+				//error
+				Error.escriuError(312, ((ITipus)sem2.getValue("TIPUS")).getNom(), alex.getLiniaActual(), ((ITipus)sem.getValue("TIPUS")).getNom());
+				System.out.println("[ERR_SEM_12] " + alex.getLiniaActual() +
+						", La variable i l'expressió de assignació tenen tipus diferents. El tipus de la variable és ["
+						+ ((ITipus)sem.getValue("TIPUS")).getNom() + "] i el de l’expressió és [" + ((ITipus)sem2.getValue("TIPUS")).getNom() + "]");
+				
 			}
 			return;
 
@@ -805,7 +816,9 @@ public class Asin {
 			sem = EXPRESIO(sem);
 			//comprovar que sem tipus == logic
 			if (!asem.esLogic(sem)) {
-				//TODO error
+				//error
+				Error.escriuError(38, "", alex.getLiniaActual(), "");
+				System.out.println("[ERR_SEM_8] " + alex.getLiniaActual() + ", La condició no és de tipus LOGIC");
 			}
 			return;
 
@@ -814,7 +827,9 @@ public class Asin {
 			sem = EXPRESIO(sem);
 			//comprovar que sem tipus == logic
 			if (!asem.esLogic(sem)) {
-				//TODO error
+				//error
+				Error.escriuError(38, "", alex.getLiniaActual(), "");
+				System.out.println("[ERR_SEM_8] " + alex.getLiniaActual() + ", La condició no és de tipus LOGIC");
 			}
 			Acceptar("fer");
 			LL_INST();
@@ -827,7 +842,9 @@ public class Asin {
 			sem = EXPRESIO(sem);
 			//comprovar que sem tipus == logic
 			if (!asem.esLogic(sem)) {
-				//TODO error
+				//error
+				Error.escriuError(38, "", alex.getLiniaActual(), "");
+				System.out.println("[ERR_SEM_8] " + alex.getLiniaActual() + ", La condició no és de tipus LOGIC");
 			}
 			Acceptar("llavors");
 			LL_INST();
@@ -864,7 +881,7 @@ public class Asin {
 	}
 
 
-	private void INSTRUCCIO1 () {
+	/*private void INSTRUCCIO1 () {
 		//Crec que ja no el fem servir but still
 
 		Semantic semantic = new Semantic();
@@ -898,7 +915,7 @@ public class Asin {
 		default: return;
 
 		}
-	}
+	}*/
 
 	private void LL_EXP_ESCRIURE () {
 
@@ -917,7 +934,9 @@ public class Asin {
 			sem = EXPRESIO(sem);
 			//comprovar que tipus == tipus simple o cadena
 			if (asem.LL_EXP_ESCRIURE_esValid(sem)) {
-				//TODO error
+				//error
+				Error.escriuError(314, "", alex.getLiniaActual(), "");
+				System.out.println("[ERR_SEM_14] " + alex.getLiniaActual() + ", El tipus de la expressió en ESCRIURE no és simple o no és una constant cadena");
 			}
 			LL_EXP_ESCRIURE1();
 			return;

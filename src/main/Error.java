@@ -86,7 +86,7 @@ public class Error {
 		case 311: writer.println("[ERR_SEM_11] " + numLinia + ", L’identificador [" + variableError + "] en part esquerra d’assignació no és una variable ");
 		return true;
 		//Modificar
-		case 312: writer.println("[ERR_SEM_12] " + numLinia + ", La variable [" + variableError + "] i l'expressió de assignació tenen tipus diferents. El tipus de la variable és [" + variableEsperada + "] i el de l’expressió és [" + variableError + "]");
+		case 312: writer.println("[ERR_SEM_12] " + numLinia + ", La variable i l'expressió de assignació tenen tipus diferents. El tipus de la variable és [" + variableEsperada + "] i el de l’expressió és [" + variableError + "]");
 		return true;
 		
 		case 313: writer.println("[ERR_SEM_13] " + numLinia + ", El tipus de l’índex d’accés del vector no és SENCER");
@@ -95,7 +95,7 @@ public class Error {
 		case 314: writer.println("[ERR_SEM_14] " + numLinia + ", El tipus de la expressió en ESCRIURE no és simple o no és una constant cadena");
 		return true;
 		
-		case 315: writer.println("[ERR_SEM_15] " + numLinia + ", La funció en declaració té " + variableError + " paràmetres mentre que en ús té " + variableEsperada);
+		case 315: writer.println("[ERR_SEM_15] " + numLinia + ", La funció en declaració té " + variableEsperada + " paràmetres mentre que en ús té " + variableError);
 		return true;
 		
 		case 316: writer.println("[ERR_SEM_16] " + numLinia + ", El tipus del paràmetre número " + variableError + " de la funció no coincideix amb el tipus en la seva declaració [" + variableEsperada + "]");
@@ -111,6 +111,9 @@ public class Error {
 		return true;
 		
 		case 320: writer.println("[ERR_SEM_20] " + numLinia + ", L’expressió no és estàtica");
+		return true;
+		
+		case 321: writer.println("[ERR_SEM_21] " + numLinia + ", No hi ha cap retornar en la funció " + variableError);
 		return true;
 
 		default: return false;

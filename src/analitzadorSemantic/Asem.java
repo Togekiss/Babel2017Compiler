@@ -125,7 +125,7 @@ public class Asem {
 			a.inserirDimensio(new DimensioArray(new TipusSimple("sencer", 0), dim1, dim2));
 		} else {
 			a = new TipusArray("I_0_0", 0, new TipusIndefinit("indefinit", 0));
-			//TODO tira error
+			//tira error
 			Error.escriuError(5, "", l, "");
 			System.out.println("[ERR_SEM_5] " + l + ", Límits decreixents en vector");
 		}
