@@ -63,7 +63,6 @@ public class Bloc {
      * @param (Variable) variable 
      */
     public void inserirVariable(Variable variable) {
-    	System.out.println("INSERINT " + variable.toXml());
         llistaVariables.put(variable.getNom(), variable);
     } 
 

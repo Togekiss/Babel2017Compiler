@@ -361,7 +361,7 @@ public class Asin {
 
 
 	private Semantic EXPRESIO(Semantic sem) {
-
+		
 		sem = EXPRESIO_SIMPLE(sem);
 		sem = EXPRESIO1(sem);
 		return sem;
@@ -376,6 +376,7 @@ public class Asin {
 		switch (lookAhead.getTipus()) {
 
 		case "oper_rel": 
+			sem.setValue("REFERENCIA", false);
 			sem.setValue("OPERADOR", lookAhead.getLexema());
 			Acceptar("oper_rel");
 			sem2 = EXPRESIO_SIMPLE(sem2);
@@ -396,7 +397,7 @@ public class Asin {
 		sem = OP_INICI_EXP(sem); 
 		sem  = TERME(sem);
 		//operar op inici exp amb terme
-		asem.EXPRESIO_SIMPLE_operar(sem, alex.getLiniaActual());
+		sem = asem.EXPRESIO_SIMPLE_operar(sem, alex.getLiniaActual());
 		sem.removeAttribute("OPERADOR");
 		sem = EXPRESIO_SIMPLE1(sem);
 		return sem;
@@ -413,6 +414,7 @@ public class Asin {
 		case "suma":
 		case "resta":
 		case "or":
+			sem.setValue("REFERENCIA", false);
 			sem = OP_EXP(sem); 
 			sem2 = TERME(sem2);
 			//System.out.println("DINS EXP_SIMPLE1 ABANS DE OPERAR");
@@ -420,7 +422,7 @@ public class Asin {
 			//System.out.println("SEM2" + sem2.prettyPrint());
 
 			//operar sem amb sem2 segons operador i guardar a sem
-			sem = asem.EXPRESIO_SIMPLE1_operar(sem, sem2);
+			sem = asem.EXPRESIO_SIMPLE1_operar(sem, sem2, alex.getLiniaActual());
 			
 			//System.out.println("DESPRES D'OPERAR" + sem.prettyPrint());
 			sem.removeAttribute("OPERADOR");
@@ -451,10 +453,11 @@ public class Asin {
 		case "multiplicacio":
 		case "divisio":
 		case "and":
+			sem.setValue("REFERENCIA", false);
 			sem = OP_TERME(sem); 
 			sem2 = FACTOR(sem2);
 			//operar sem i sem2 segons OP_TERME
-			asem.TERME_operar(sem, sem2);
+			asem.TERME_operar(sem, sem2, alex.getLiniaActual());
 			sem.removeAttribute("OPERADOR");
 			sem = TERME1(sem);
 			return sem;
@@ -474,16 +477,19 @@ public class Asin {
 		case "suma":
 			sem.setValue("OPERADOR", "suma");
 			Acceptar("suma");
+			sem.setValue("REFERENCIA", false);
 			return sem;
 
 		case "resta":
 			sem.setValue("OPERADOR", "resta");
 			Acceptar("resta");
+			sem.setValue("REFERENCIA", false);
 			return sem;
 
 		case "not":
 			sem.setValue("OPERADOR", "not");
 			Acceptar("not");
+			sem.setValue("REFERENCIA", false);
 			return sem;
 
 		default:
@@ -503,16 +509,19 @@ public class Asin {
 		case "suma":
 			sem.setValue("OPERADOR", "suma");
 			Acceptar("suma");
+			sem.setValue("REFERENCIA", false);
 			return sem;
 
 		case "resta":
 			sem.setValue("OPERADOR", "resta");
 			Acceptar("resta");
+			sem.setValue("REFERENCIA", false);
 			return sem;
 
 		case "or":
 			sem.setValue("OPERADOR", "or");
 			Acceptar("or");
+			sem.setValue("REFERENCIA", false);
 			return sem;
 
 		default: return sem;
@@ -527,16 +536,19 @@ public class Asin {
 		case "multiplicacio":
 			sem.setValue("OPERADOR", "multiplicacio");
 			Acceptar("multiplicacio");
+			sem.setValue("REFERENCIA", false);
 			return sem;
 
 		case "divisio":
 			sem.setValue("OPERADOR", "divisio");
 			Acceptar("divisio");
+			sem.setValue("REFERENCIA", false);
 			return sem;
 
 		case "and":
 			sem.setValue("OPERADOR", "and");
 			Acceptar("and");
+			sem.setValue("REFERENCIA", false);
 			return sem;	
 
 		default: return sem;
@@ -554,6 +566,7 @@ public class Asin {
 			sem.setValue("TIPUS", new TipusSimple("sencer", 0, 0, 0));
 			sem.setValue("VALOR", Integer.parseInt(lookAhead.getLexema()));
 			sem.setValue("ESTATIC", true);
+			sem.setValue("REFERENCIA", false);
 			//System.out.println(sem.prettyPrint());
 			Acceptar("ct_enter"); 
 			return sem;
@@ -562,6 +575,7 @@ public class Asin {
 			sem.setValue("TIPUS", new TipusSimple("logic", 0, 0, 0));
 			sem.setValue("VALOR", lookAhead.getLexema().equals("cert")?true:false);
 			sem.setValue("ESTATIC", true);
+			sem.setValue("REFERENCIA", false);
 			//System.out.println(sem.prettyPrint());
 			Acceptar("ct_logica"); 
 			return sem;
@@ -570,6 +584,7 @@ public class Asin {
 			sem.setValue("TIPUS", new TipusCadena("cadena", 0, lookAhead.getLexema().length()));
 			sem.setValue("VALOR", lookAhead.getLexema());
 			sem.setValue("ESTATIC", true);
+			sem.setValue("REFERENCIA", false);
 			//System.out.println(sem.prettyPrint());
 			Acceptar("ct_cadena");
 			return sem;
@@ -577,7 +592,7 @@ public class Asin {
 		case "identificador":
 			//buscar si id existeix i agafar tipus i valor i estatic
 			sem.setValue("TOKEN", lookAhead.getLexema());
-			sem = asem.FACTOR_getIdentificador(sem, taulaSimbols);
+			sem = asem.FACTOR_getIdentificador(sem, taulaSimbols, alex.getLiniaActual());
 			Acceptar("identificador");
 			sem = FACTOR1(sem);
 			return sem;	
@@ -602,16 +617,20 @@ public class Asin {
 
 		case "parentesi_obert":
 			Acceptar("parentesi_obert"); 
+			sem.setValue("REFERENCIA", false);
 			//es funcio
 			//basicament per passar-li el descriptor de la funcio i index param = 0
-			sem2 = asem.FACTOR1_buscaFuncio(sem, taulaSimbols);
+			sem2 = asem.FACTOR1_buscaFuncio(sem, taulaSimbols, alex.getLiniaActual());
 			LL_EXPRESIO(sem2); 
 			Acceptar("parentesi_tancat");
 			//comprovar que num parametres ok
 			if (!(sem.getValue("TIPUS") instanceof Funcio) || (int)sem2.getValue("INDEX") != ((Funcio)sem2.getValue("FUNCIO")).getNumeroParametres()) {
 				//error: num de parametres incorrecte
-				Error.escriuError(315, (int)sem2.getValue("INDEX") + "", alex.getLiniaActual(), ((Funcio)sem2.getValue("FUNCIO")).getNumeroParametres() + "");
-				System.out.println("[ERR_SEM_15] " + alex.getLiniaActual() + ", La funció en declaració té " + ((Funcio)sem2.getValue("FUNCIO")).getNumeroParametres() + " paràmetres mentre que en ús té " + (int)sem2.getValue("INDEX"));
+				int nparam = 0;
+				if (sem.getValue("TIPUS") instanceof Funcio) nparam = ((Funcio)sem2.getValue("FUNCIO")).getNumeroParametres();
+				else nparam = 0;
+				Error.escriuError(315, (int)sem2.getValue("INDEX") + "", alex.getLiniaActual(), nparam + "");
+				System.out.println("[ERR_SEM_15] " + alex.getLiniaActual() + ", La funció en declaració té " + nparam + " paràmetres mentre que en ús té " + (int)sem2.getValue("INDEX"));
 			}
 			//retornar tipus de retorn de funcio
 			return sem;
@@ -621,7 +640,7 @@ public class Asin {
 			//es vector
 			sem2 = EXPRESIO(sem2);
 			//comprovar que expressio es int i esta dins el rang (si es estatica)
-			sem = asem.VAR1_comprovaArray(sem, sem2, taulaSimbols);
+			sem = asem.VAR1_comprovaArray(sem, sem2, taulaSimbols, alex.getLiniaActual());
 			Acceptar("claudator_tancat"); 
 			//retornar tipus d'element de vector
 			return sem;
@@ -638,6 +657,7 @@ public class Asin {
 		//s'ha de comprovar que la expresio numero x correspongui
 		//amb el parametre numero x de la funcio
 		Semantic sem2 = new Semantic();
+		sem2.setValue("REFERENCIA", true);
 
 		switch (lookAhead.getTipus()) {
 
@@ -651,7 +671,7 @@ public class Asin {
 		case "parentesi_obert":
 			sem2 = EXPRESIO(sem2);
 			//index param ++
-			sem = asem.LL_EXPRESIO_comprovaParametre(sem, sem2);
+			sem = asem.LL_EXPRESIO_comprovaParametre(sem, sem2, alex.getLiniaActual());
 			LL_EXPRESIO1(sem);
 			return;
 
@@ -712,7 +732,7 @@ public class Asin {
 		Acceptar("identificador");
 		//comprovar que id es variable
 		//retorna tipus variable o variable fantasma
-		sem = asem.VAR_esVariable(sem, taulaSimbols);
+		sem = asem.VAR_esVariable(sem, taulaSimbols, alex.getLiniaActual());
 		sem = VAR1(sem);
 		return sem;
 
@@ -730,7 +750,7 @@ public class Asin {
 			sem2 = EXPRESIO(sem2);
 			//comprovar que tipus sem2 == sencer
 			//i si es estatic, esta dins el rang de id
-			sem = asem.VAR1_comprovaArray(sem, sem2, taulaSimbols);
+			sem = asem.VAR1_comprovaArray(sem, sem2, taulaSimbols, alex.getLiniaActual());
 			Acceptar("claudator_tancat");
 			return sem;						
 
@@ -858,7 +878,7 @@ public class Asin {
 			sem = EXPRESIO(sem);
 			//comprovar que blocactual != 0
 			//comprovar que exp tipus == retorn funcio tipus
-			asem.INSTRUCCIO_comprovaRetornar(sem, tipusReturn, taulaSimbols.getBlocActual());
+			asem.INSTRUCCIO_comprovaRetornar(sem, tipusReturn, taulaSimbols.getBlocActual(), alex.getLiniaActual());
 			hiHaReturn = true;
 			return;
 

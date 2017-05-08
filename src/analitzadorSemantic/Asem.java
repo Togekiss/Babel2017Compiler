@@ -284,7 +284,7 @@ public class Asem {
 				|| (((String)sem.getValue("OPERADOR")).equals("suma")
 						|| ((String)sem.getValue("OPERADOR")).equals("resta"))
 				&& !((TipusSimple)sem.getValue("TIPUS")).getNom().equals("sencer")) {
-			//TODO salta error "tipus invalid"
+			//salta error "tipus invalid"
 			Error.escriuError(322, ((ITipus)sem.getValue("TIPUS")).getNom(), l, "");
 			System.out.println("[ERR_SEM_22] " + l + ", Tipus [" + ((ITipus)sem.getValue("TIPUS")).getNom() + "] invàlid per aquest tipus d'operació");
 			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
@@ -318,16 +318,17 @@ public class Asem {
 
 
 
-	public Semantic EXPRESIO_SIMPLE1_operar(Semantic sem, Semantic sem2) {
+	public Semantic EXPRESIO_SIMPLE1_operar(Semantic sem, Semantic sem2, int l) {
 		//suma, resta, or
 
 		//si no son del mateix tipus o un d'ells es indefinit
 		if (!sem.getValue("TIPUS").equals(sem2.getValue("TIPUS")) ||
 				sem.getValue("TIPUS").equals("indefinit") ||
 				sem2.getValue("TIPUS").equals("indefinit")) {
-			//TODO salta error "no son del mateix tipus"
-			
-			//System.out.println("ERROR!!!! no son del mateix tipus");
+			//salta error "no son del mateix tipus"
+			Error.escriuError(318, ((ITipus)sem.getValue("TIPUS")).getNom(), l, ((ITipus)sem2.getValue("TIPUS")).getNom());
+			System.out.println("[ERR_SEM_18] " + l + ", No es poden operar expressions de tipus diferents, en aquest cas ["
+			+ ((ITipus)sem.getValue("TIPUS")).getNom() + "] i [" + ((ITipus)sem2.getValue("TIPUS")).getNom() + "]");
 			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
 			sem.setValue("VALOR", "indefinit");
 			sem.setValue("ESTATIC", false);
@@ -343,8 +344,9 @@ public class Asem {
 						|| (((String)sem.getValue("OPERADOR")).equals("suma")
 								|| ((String)sem.getValue("OPERADOR")).equals("resta"))
 						&& !((TipusSimple)sem.getValue("TIPUS")).getNom().equals("sencer"))) {
-			//TODO salta error "tipus no valid per aquesta operacio"
-			//System.out.println("ERROR!!! tipus no valid");
+			//salta error "tipus no valid per aquesta operacio"
+			Error.escriuError(322, ((ITipus)sem.getValue("TIPUS")).getNom(), l, "");
+			System.out.println("[ERR_SEM_22] " + l + ", Tipus [" + ((ITipus)sem.getValue("TIPUS")).getNom() + "] invàlid per aquest tipus d'operació");
 			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
 			sem.setValue("VALOR", "indefinit");
 			sem.setValue("ESTATIC", false);
@@ -384,14 +386,17 @@ public class Asem {
 
 
 
-	public Semantic TERME_operar(Semantic sem, Semantic sem2) {
+	public Semantic TERME_operar(Semantic sem, Semantic sem2, int l) {
 		//multiplicacio, divisio, and
 
 		//si no son del mateix tipus o un d'ells es indefinit
 		if (!sem.getValue("TIPUS").equals(sem2.getValue("TIPUS")) ||
 				sem.getValue("TIPUS").equals("indefinit") ||
 				sem2.getValue("TIPUS").equals("indefinit")) {
-			//TODO salta error "no son del mateix tipus"
+			//salta error "no son del mateix tipus"
+			Error.escriuError(318, ((ITipus)sem.getValue("TIPUS")).getNom(), l, ((ITipus)sem2.getValue("TIPUS")).getNom());
+			System.out.println("[ERR_SEM_18] " + l + ", No es poden operar expressions de tipus diferents, en aquest cas ["
+			+ ((ITipus)sem.getValue("TIPUS")).getNom() + "] i [" + ((ITipus)sem2.getValue("TIPUS")).getNom() + "]");
 			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
 			sem.setValue("VALOR", "indefinit");
 			sem.setValue("ESTATIC", false);
@@ -407,7 +412,9 @@ public class Asem {
 						|| (((String)sem.getValue("OPERADOR")).equals("multiplicacio")
 								|| ((String)sem.getValue("OPERADOR")).equals("divisio"))
 						&& !((TipusSimple)sem.getValue("TIPUS")).getNom().equals("sencer"))) {
-			//TODO salta error "tipus no valid per aquesta operacio"
+			//salta error "tipus no valid per aquesta operacio"
+			Error.escriuError(322, ((ITipus)sem.getValue("TIPUS")).getNom(), l, "");
+			System.out.println("[ERR_SEM_22] " + l + ", Tipus [" + ((ITipus)sem.getValue("TIPUS")).getNom() + "] invàlid per aquest tipus d'operació");
 			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
 			sem.setValue("VALOR", "indefinit");
 			sem.setValue("ESTATIC", false);
@@ -435,7 +442,9 @@ public class Asem {
 			break;
 		case "divisio":
 			if (((int)sem2.getValue("VALOR")) == 0) {
-				//TODO error "no es pot dividir per 0"
+				//error "no es pot dividir per 0"
+				Error.escriuError(323, "", l, "");
+				System.out.println("[ERR_SEM_23] " + l + ", No es pot dividir per 0");
 				sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
 				sem.setValue("VALOR", "indefinit");
 				sem.setValue("ESTATIC", false);
@@ -472,7 +481,7 @@ public class Asem {
 	}
 
 
-	public Semantic VAR_esVariable(Semantic sem, TaulaSimbols ts) {
+	public Semantic VAR_esVariable(Semantic sem, TaulaSimbols ts, int l) {
 
 		//si existeix a aquest bloc
 		if (ts.obtenirBloc(ts.getBlocActual()).existeixVariable((String)sem.getValue("TOKEN"))) {
@@ -491,9 +500,13 @@ public class Asem {
 					ts.obtenirBloc(ts.getBlocActual()).existeixProcediment((String)sem.getValue("TOKEN")) ||
 					ts.getBlocActual() > 0 && ts.obtenirBloc(0).existeixConstant((String)sem.getValue("TOKEN")) ||
 					ts.getBlocActual() > 0 && ts.obtenirBloc(0).existeixProcediment((String)sem.getValue("TOKEN"))) {
-				//TODO error: nomes es poden fer servir variables
+				//error: nomes es poden fer servir variables
+				Error.escriuError(311, (String)sem.getValue("TOKEN"), l, "");
+				System.out.println("[ERR_SEM_11] " + l + ", L’identificador [" + (String)sem.getValue("TOKEN") + "] no és una variable ");
 			} else {
 				//error: variable no declarada
+				Error.escriuError(39, (String)sem.getValue("TOKEN"), l, "");
+				System.out.println("[ERR_SEM_9] " + l + ", L’identificador [" + (String)sem.getValue("TOKEN") + "] no ha estat declarat");
 				//creem variable fantasma
 				creaVariableFantasma(sem, ts);
 			}
@@ -510,18 +523,22 @@ public class Asem {
 				));
 	}
 
-	public Semantic VAR1_comprovaArray(Semantic sem, Semantic sem2, TaulaSimbols ts) {
+	public Semantic VAR1_comprovaArray(Semantic sem, Semantic sem2, TaulaSimbols ts, int l) {
 
 		//comprova si sem es array
 		if (!(sem.getValue("TIPUS") instanceof TipusArray)) {
-			//TODO error: variable no declarada com array
+			//error: variable no declarada com array
+			Error.escriuError(322, ((ITipus)sem.getValue("TIPUS")).getNom(), l, "");
+			System.out.println("[ERR_SEM_22] " + l + ", Tipus [" + ((ITipus)sem.getValue("TIPUS")).getNom() + "] invalid per aquest tipus d'operació");
 			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
 			return sem;
 		}
 		
 		//comprova si sem2 es sencer
 		if (!(sem2.getValue("TIPUS") instanceof TipusSimple) || !((TipusSimple)sem2.getValue("TIPUS")).getNom().equals("sencer")) {
-			//TODO error: rang invalid
+			//error: rang invalid
+			Error.escriuError(313, "", l, "");
+			System.out.println("[ERR_SEM_13] " + l + ", El tipus de l’índex d’accés del vector no és SENCER");
 			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
 			return sem;
 		}
@@ -531,19 +548,20 @@ public class Asem {
 			int v = (int)sem2.getValue("VALOR");
 			if ((int)((TipusArray)ts.obtenirBloc(ts.getBlocActual()).obtenirVariable((String)sem.getValue("TOKEN")).getTipus()).obtenirDimensio(0).getLimitInferior() > v ||
 					(int)((TipusArray)ts.obtenirBloc(ts.getBlocActual()).obtenirVariable((String)sem.getValue("TOKEN")).getTipus()).obtenirDimensio(0).getLimitSuperior() < v) {
-				//TODO error: index fora de rang
+				//error: index fora de rang
+				Error.escriuError(324, "", l, "");
+				System.out.println("[ERR_SEM_24] " + l + ", índex estàtic fora de rang");
 				sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
 				return sem;
 			}
 		}
 		
-		//sem.setValue("TIPUS",((TipusArray)ts.obtenirBloc(ts.getBlocActual()).obtenirVariable((String)sem.getValue("TOKEN")).getTipus()).getTipusElements());
-		sem.setValue("TIPUS", ((TipusArray)FACTOR_getIdentificador(sem, ts).getValue("TIPUS")).getTipusElements());		
+		sem.setValue("TIPUS", ((TipusArray)FACTOR_getIdentificador(sem, ts, l).getValue("TIPUS")).getTipusElements());		
 		return sem;
 
 	}
 	
-	public Semantic FACTOR_getIdentificador(Semantic sem, TaulaSimbols ts) {
+	public Semantic FACTOR_getIdentificador(Semantic sem, TaulaSimbols ts, int l) {
 		
 		
 		//System.out.println("=============\nID!!\n=========");
@@ -557,6 +575,7 @@ public class Asem {
 				sem.setValue("TIPUS", ts.obtenirBloc(ts.getBlocActual()).obtenirConstant((String)sem.getValue("TOKEN")).getTipus());
 				sem.setValue("VALOR", ts.obtenirBloc(ts.getBlocActual()).obtenirConstant((String)sem.getValue("TOKEN")).getValor());
 				sem.setValue("ESTATIC", true);
+				sem.setValue("REFERENCIA", false);
 				//System.out.println("CONSTANT!!\n" + sem.prettyPrint());
 				return sem;
 			}
@@ -572,6 +591,7 @@ public class Asem {
 				sem.setValue("TIPUS", ((Funcio)ts.obtenirBloc(ts.getBlocActual()).obtenirProcediment((String)sem.getValue("TOKEN"))).getTipus());
 				sem.setValue("VALOR", "desconegut");
 				sem.setValue("ESTATIC", false);
+				sem.setValue("REFERENCIA", false);
 				//System.out.println("FUNCIO!!\n" + sem.prettyPrint());
 				return sem;
 			}
@@ -584,6 +604,7 @@ public class Asem {
 			sem.setValue("TIPUS", ts.obtenirBloc(0).obtenirConstant((String)sem.getValue("TOKEN")).getTipus());
 			sem.setValue("VALOR", ts.obtenirBloc(0).obtenirConstant((String)sem.getValue("TOKEN")).getValor());
 			sem.setValue("ESTATIC", true);
+			sem.setValue("REFERENCIA", false);
 			//System.out.println("CONSTANT!!\n" + sem.prettyPrint());
 			return sem;
 		}
@@ -598,23 +619,28 @@ public class Asem {
 			sem.setValue("TIPUS", ((Funcio)ts.obtenirBloc(0).obtenirProcediment((String)sem.getValue("TOKEN"))).getTipus());
 			sem.setValue("VALOR", "desconegut");
 			sem.setValue("ESTATIC", false);
+			sem.setValue("REFERENCIA", false);
 			//System.out.println("FUNCIO!!\n" + sem.prettyPrint());
 			return sem;
 		}
 		
-		//TODO sino ERROR variable no definida
-		//System.out.println("ERROR!!! varaibel no definida");
+		//sino ERROR variable no definida
+		Error.escriuError(39, (String)sem.getValue("TOKEN"), l, "");
+		System.out.println("[ERR_SEM_9] " + l + ", L’identificador [" + (String)sem.getValue("TOKEN") + "] no ha estat declarat");
 		creaVariableFantasma(sem, ts);
 		sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
 		sem.setValue("VALOR", "indefinit");
 		sem.setValue("ESTATIC", false);
+		sem.setValue("REFERENCIA", false);
 		return sem;
 	}
 	
-	public Semantic FACTOR1_buscaFuncio(Semantic sem, TaulaSimbols ts) {
+	public Semantic FACTOR1_buscaFuncio(Semantic sem, TaulaSimbols ts, int l) {
 		
 		if (!ts.obtenirBloc(0).existeixProcediment((String)sem.getValue("TOKEN"))) {
-			//TODO error: no es una funcio
+			//error: no es una funcio
+			Error.escriuError(322, ((ITipus)sem.getValue("TIPUS")).getNom(), l, "");
+			System.out.println("[ERR_SEM_22] " + l + ", Tipus [" + ((ITipus)sem.getValue("TIPUS")).getNom() + "] invalid per aquest tipus d'operació");
 			sem.setValue("FUNCIO", new TipusIndefinit("indefinit", 0));
 			sem.setValue("INDEX", 0);
 			return sem;
@@ -625,40 +651,60 @@ public class Asem {
 		return sem;
 	}
 	
-	public Semantic LL_EXPRESIO_comprovaParametre(Semantic sem, Semantic sem2) {
+	public Semantic LL_EXPRESIO_comprovaParametre(Semantic sem, Semantic sem2, int l) {
 		
-		if (sem.getValue("TIPUS") instanceof TipusIndefinit) {
-			//TODO error?
+		if (!(sem.getValue("TIPUS") instanceof Funcio)) {
+			//error id no es una funcio
+			Error.escriuError(322, ((ITipus)sem.getValue("TIPUS")).getNom(), l, "");
+			System.out.println("[ERR_SEM_22] " + l + ", Tipus [" + ((ITipus)sem.getValue("TIPUS")).getNom() + "] invalid per aquest tipus d'operació");
 			return sem;
 		}
 		
 		Funcio f = (Funcio)sem.getValue("FUNCIO");
 		
 		if ((int)sem.getValue("INDEX") >= f.getNumeroParametres()) {
-			//TODO error
+			//error mes parametres dels que toca
+			Error.escriuError(316, (int)sem.getValue("INDEX") + "", l, "parametre inexistent");
+			System.out.println("[ERR_SEM_16] " + l + ", El tipus del parametre numero " + (int)sem.getValue("INDEX") + " de la funcio no coincideix amb el tipus en la seva declaracio [parametre inexistent]");
 			return sem;
 		}
 		
-		if (!f.obtenirParametre((int)sem.getValue("INDEX")).getTipus().equals((ITipus)sem2.getValue("TIPUS"))) {
-			//TODO error: parametres no coincideixen
+		
+		if (sem2.getValue("TIPUS") instanceof TipusIndefinit ||
+				!f.obtenirParametre((int)sem.getValue("INDEX")).getTipus().equals((ITipus)sem2.getValue("TIPUS"))) {
+			//error tipus no coincideicen
+			Error.escriuError(316, (int)sem.getValue("INDEX") + "", l, f.obtenirParametre((int)sem.getValue("INDEX")).getNom());
+			System.out.println("[ERR_SEM_16] " + l + ", El tipus del parametre numero " + (int)sem.getValue("INDEX") + " de la funcio no coincideix amb el tipus en la seva declaracio [" + f.obtenirParametre((int)sem.getValue("INDEX")).getNom() + "]");
+			return sem;
 		}
+		
+		if (!(boolean)sem.getValue("REFERENCIA")) {
+			//error no es pot passar per referencia
+			Error.escriuError(317, (int)sem.getValue("INDEX") + "", l, "");
+			System.out.println("[ERR_SEM_17] " + l + ", El parametre numero " + (int)sem.getValue("INDEX") + " de la funcio no es pot passar per referencia");
+		}
+		
 		
 		sem.setValue("INDEX", (int)sem.getValue("INDEX")+1);
 		return sem;
 	}
 	
 	
-	public void INSTRUCCIO_comprovaRetornar(Semantic sem, ITipus tipus, int bloc) {
+	public void INSTRUCCIO_comprovaRetornar(Semantic sem, ITipus tipus, int bloc, int l) {
 		//comprovar que blocactual != 0
 		//comprovar que exp tipus == retorn funcio tipus
 		
 		if (bloc == 0) {
-			//TODO error: no es pot retornar al main
+			//error: no es pot retornar al main
+			Error.escriuError(319, "", l, "");
+			System.out.println("[ERR_SEM_19] " + l + ", Retornar fora de funcio");
 			return;
 		}
 		
 		if (!((ITipus)sem.getValue("TIPUS")).equals(tipus)) {
 			//error: tipus de retorn incorrecte
+			Error.escriuError(318, ((ITipus)sem.getValue("TIPUS")).getNom(), l, tipus.getNom());
+			System.out.println("[ERR_SEM_18] " + l + ", No es poden operar expressions de tipus diferents, en aquest cas [" + ((ITipus)sem.getValue("TIPUS")).getNom() + "] i [" + tipus.getNom() + "]");
 			return;
 		}
 		
@@ -666,46 +712,5 @@ public class Asem {
 		
 	}
 	
-
-	/*public boolean EXP_tipusExpressio (Semantic sem) {
-		if (sem.getValue("TIPUS") == null) return false;
-		return false;
-	}
-
-	public boolean EXP_tipusIndex (Semantic sem, TaulaSimbols ts) {
-		DimensioArray dimensio = ((TipusArray)ts.obtenirBloc(ts.getBlocActual()).obtenirVariable((String)sem.getValue("TOKEN")).getTipus()).obtenirDimensio((int)sem.getValue("VALUE"));
-		if (sem.getValue("TIPUS") != dimensio.getTipusLimit() || sem.getValue("TIPUS") != "sencer") return false;
-		if ((boolean)sem.getValue("ESTATIC") == true && ((int)sem.getValue("VALUE") > (int)dimensio.getLimitSuperior() 
-				|| (int)sem.getValue("VALUE") < (int)dimensio.getLimitInferior())) return false;
-		return true; 
-	}
-
-	//PER FACTOR i TERME
-	public boolean EXP_tipusOperands (Semantic sem1, Semantic sem2) {
-		return sem1.getValue("TIPUS") == sem2.getValue("TIPUS");
-	}
-	//holaa
-	public boolean EXP_tipusOperadorRelacional (Semantic sem1, Semantic sem2) {
-		return EXP_tipusOperands(sem1, sem2) && sem1.getValue("TIPUS") instanceof TipusSimple && sem1.getValue("TIPUS") instanceof TipusSimple;
-	}
-
-	public boolean EXP_paramFuncio (Semantic sem, TaulaSimbols ts) {
-		Parametre param = ts.obtenirBloc(0).obtenirProcediment((String)sem.getValue("FUNCNAME")).obtenirParametre((int)sem.getValue("NPARAM"));
-		if (param.getTipusPasParametre().toString() == "REFERENCIA" && !ts.obtenirBloc(0).existeixVariable((String)sem.getValue("TOKEN"))) {
-			return false;
-		}
-		return sem.getValue("TIPUS") == param.getTipus().getNom();
-	}
-
-	public boolean EXP_midaFuncio (Semantic sem, TaulaSimbols ts) {
-		return (int)sem.getValue("NPARAM") == ts.obtenirBloc(0).obtenirProcediment((String)sem.getValue("FUNCNAME")).getNumeroParametres();
-	}
-
-	public boolean INST_tipusOperands (Semantic sem1, Semantic sem2, TaulaSimbols ts) {
-		return sem1.getValue("TIPUS") == sem2.getValue("TIPUS") && !ts.obtenirBloc(ts.getBlocActual()).existeixConstant((String)sem1.getValue("TOKEN"));
-	}*/
-
-
-
 
 }
