@@ -35,7 +35,8 @@ public class Bloc {
 	 * <p>Insereix la constant en la llista de constants</p>
 	 * @param (Constant) constant 
 	 */
-    public void inserirConstant(Constant constant) {        
+    public void inserirConstant(Constant constant) { 
+    	//System.out.println("INSERINT CONSTANT\n" + constant.toXml());
         llistaConstants.put(constant.getNom(), constant);
     } 
 
@@ -63,6 +64,7 @@ public class Bloc {
      * @param (Variable) variable 
      */
     public void inserirVariable(Variable variable) {
+    	//System.out.println("INSERINT VARIABLE\n" + variable.toXml());
         llistaVariables.put(variable.getNom(), variable);
     } 
 
@@ -88,7 +90,8 @@ public class Bloc {
      * <p>Insereix el procediment en la llista de procediments</p>
      * @param (Procediment) funcio 
      */
-    public void inserirProcediment(Procediment funcio) {        
+    public void inserirProcediment(Procediment funcio) {
+    	//System.out.println("INSERINT FUNCIO\n" + funcio.toXml());
         llistaProcediments.put(funcio.getNom(), funcio);
     } 
 

@@ -32,12 +32,12 @@ func
 fifunc;
 
 funcio S(perval a1: sencer, perval b:sencer ): sencer;
-	var X: logic;
+	var X: sencer;
 func
 	//Newb style
 	SI MAX == 0 llavors
 		escriure("Bad news!");
-		retornar cert or X;  //Really a bad thinking
+		retornar 3 * X;  //Really a bad thinking
 	fiSi; //ugly...
 	sI b == a1 LLAVORS escriure("Wow!, jackpod!"); fisi;
 	si (b > 0) AND (b <> a1) LLavors
@@ -79,4 +79,5 @@ fifunc;
 
 prog
 	v1 = F(5, -35, v4);
+	
 fiprog

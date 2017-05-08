@@ -74,15 +74,17 @@ public class Asin {
 		Acceptar("prog");
 
 		PROG();
-
+		
+		System.out.println("Taula de simbols:");
+		System.out.println(taulaSimbols.toXml());
+			
 		if (lookAhead.esEOF()) {
 			error.tancaFitxer();
 			alex.tancaFitxer();
-			System.out.println("Taula de simbols:");
-			System.out.println(taulaSimbols.toXml());
 			return true;
 		}
 		else {
+			System.out.println("A final hi ha " + lookAhead.getTipus());
 			Error.escriuError(26, "", alex.getLiniaActual(), "");
 			error.tancaFitxer();
 			alex.tancaFitxer();
@@ -617,7 +619,10 @@ public class Asin {
 				//error: num de parametres incorrecte
 				int nparam = 0;
 				if (sem2.getValue("FUNCIO") instanceof Funcio) nparam = ((Funcio)sem2.getValue("FUNCIO")).getNumeroParametres();
-				else nparam = 0;
+				else {
+					System.out.println("No es una funcio, es " + sem2.getValue("FUNCIO").toString());
+					nparam = 0;
+				}
 				Error.escriuError(315, (int)sem2.getValue("INDEX") + "", alex.getLiniaActual(), nparam + "");
 				System.out.println("[ERR_SEM_15] " + alex.getLiniaActual() + ", La funció en declaració té " + nparam + " paràmetres mentre que en ús té " + (int)sem2.getValue("INDEX"));
 			}
@@ -643,6 +648,7 @@ public class Asin {
 
 	private void LL_EXPRESIO(Semantic sem) {
 
+		
 		//s'ha de comprovar que la expresio numero x correspongui
 		//amb el parametre numero x de la funcio
 		Semantic sem2 = new Semantic();
@@ -653,7 +659,7 @@ public class Asin {
 		case "suma":
 		case "resta":
 		case "not":
-		case "ct_entera":
+		case "ct_enter":
 		case "ct_logica":
 		case "ct_cadena":
 		case "identificador":

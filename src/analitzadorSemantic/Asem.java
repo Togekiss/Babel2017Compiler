@@ -657,13 +657,15 @@ public class Asem {
 			System.out.println("linia " + l + ", funcio no trobada");
 			return sem;
 		}
-		System.out.println("linia " + l + ", funcio trobada");
+		System.out.println("linia " + l + ", funcio " + ts.obtenirBloc(0).obtenirProcediment((String)sem.getValue("TOKEN")).getNom() + " trobada");
 		sem.setValue("FUNCIO", ts.obtenirBloc(0).obtenirProcediment((String)sem.getValue("TOKEN")));
 		sem.setValue("INDEX", 0);
 		return sem;
 	}
 	
 	public Semantic LL_EXPRESIO_comprovaParametre(Semantic sem, Semantic sem2, int l) {
+		
+		System.out.println("Comprovant parametre numero " + (int)sem.getValue("INDEX"));
 		
 		if (!(sem.getValue("FUNCIO") instanceof Funcio)) {
 			//error id no es una funcio
@@ -687,6 +689,7 @@ public class Asem {
 			//error tipus no coincideicen
 			Error.escriuError(316, (int)sem.getValue("INDEX") + "", l, f.obtenirParametre((int)sem.getValue("INDEX")).getNom());
 			System.out.println("[ERR_SEM_16] " + l + ", El tipus del parametre numero " + (int)sem.getValue("INDEX") + " de la funcio no coincideix amb el tipus en la seva declaracio [" + f.obtenirParametre((int)sem.getValue("INDEX")).getNom() + "]");
+			sem.setValue("INDEX", (int)sem.getValue("INDEX")+1);
 			return sem;
 		}
 		
@@ -695,6 +698,8 @@ public class Asem {
 			//error no es pot passar per referencia
 			Error.escriuError(317, (int)sem.getValue("INDEX") + "", l, "");
 			System.out.println("[ERR_SEM_17] " + l + ", El parametre numero " + (int)sem.getValue("INDEX") + " de la funcio no es pot passar per referencia");
+			sem.setValue("INDEX", (int)sem.getValue("INDEX")+1);
+			return sem;
 		}
 		
 		
