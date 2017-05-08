@@ -135,14 +135,17 @@ public class Asem {
 	}
 
 
-	public Semantic EXPRESIO1_operar(Semantic sem, Semantic sem2) {
+	public Semantic EXPRESIO1_operar(Semantic sem, Semantic sem2, int l) {
 		//operadors relacionals
 
 		//si no son del mateix tipus o un d'ells es indefinit
-		if (sem.getValue("TIPUS") != sem2.getValue("TIPUS") ||
+		if (!sem.getValue("TIPUS").equals(sem2.getValue("TIPUS")) ||
 				sem.getValue("TIPUS").equals("indefinit") ||
 				sem2.getValue("TIPUS").equals("indefinit")) {
-			//TODO salta error "no son del mateix tipus"
+			//salta error "no son del mateix tipus"
+			Error.escriuError(318, ((ITipus)sem.getValue("TIPUS")).getNom(), l, ((ITipus)sem2.getValue("TIPUS")).getNom());
+			System.out.println("[ERR_SEM_18] " + l + ", No es poden operar expressions de tipus diferents, en aquest cas ["
+			+ ((ITipus)sem.getValue("TIPUS")).getNom() + "] i [" + ((ITipus)sem2.getValue("TIPUS")).getNom() + "]");
 			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
 			sem.setValue("VALOR", "indefinit");
 			sem.setValue("ESTATIC", false);
@@ -153,7 +156,9 @@ public class Asem {
 		//si no son de tipus simple
 		if (!(sem.getValue("TIPUS") instanceof TipusSimple) ||
 				!(sem2.getValue("TIPUS") instanceof TipusSimple)) {
-			//TODO salta error "tipus no valid per operacions relacionals"
+			//salta error "tipus no valid per operacions relacionals"
+			Error.escriuError(36, "", l, "");
+			System.out.println("[ERR_SEM_6] " + l + ", El tipus ha de ser TIPUS SIMPLE");
 			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
 			sem.setValue("VALOR", "indefinit");
 			sem.setValue("ESTATIC", false);
@@ -263,7 +268,7 @@ public class Asem {
 
 
 
-	public Semantic EXPRESIO_SIMPLE_operar(Semantic sem) {
+	public Semantic EXPRESIO_SIMPLE_operar(Semantic sem, int l) {
 		//suma, resta, not
 		
 		
@@ -280,6 +285,8 @@ public class Asem {
 						|| ((String)sem.getValue("OPERADOR")).equals("resta"))
 				&& !((TipusSimple)sem.getValue("TIPUS")).getNom().equals("sencer")) {
 			//TODO salta error "tipus invalid"
+			Error.escriuError(322, ((ITipus)sem.getValue("TIPUS")).getNom(), l, "");
+			System.out.println("[ERR_SEM_22] " + l + ", Tipus [" + ((ITipus)sem.getValue("TIPUS")).getNom() + "] invàlid per aquest tipus d'operació");
 			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
 			sem.setValue("VALOR", "indefinit");
 			sem.setValue("ESTATIC", false);

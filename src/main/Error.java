@@ -104,7 +104,7 @@ public class Error {
 		case 317: writer.println("[ERR_SEM_17] " + numLinia + ", El paràmetre número " + variableError + " de la funció no es pot passar per referència");
 		return true;
 		//Modificar
-		case 318: writer.println("[ERR_SEM_18] " + numLinia + ", La funció [" + variableError + "] ha de ser del tipus [" + variableEsperada + "] però en la expressió del seu valor el tipus és [" + variableError + "]");
+		case 318: writer.println("[ERR_SEM_18] " + numLinia + ", No es poden operar expressions de tipus diferents, en aquest cas [" + variableError + "] i [" + variableEsperada + "]");
 		return true;
 		
 		case 319: writer.println("[ERR_SEM_19] " + numLinia + ", Retornar fora de funció");
@@ -114,6 +114,9 @@ public class Error {
 		return true;
 		
 		case 321: writer.println("[ERR_SEM_21] " + numLinia + ", No hi ha cap retornar en la funció " + variableError);
+		return true;
+		
+		case 322: writer.println("[ERR_SEM_22] " + numLinia + ", Tipus [" + variableError + "] invàlid per aquest tipus d'operació");
 		return true;
 
 		default: return false;

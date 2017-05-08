@@ -380,7 +380,7 @@ public class Asin {
 			Acceptar("oper_rel");
 			sem2 = EXPRESIO_SIMPLE(sem2);
 			//operar sem i sem2 segons operador
-			sem = asem.EXPRESIO1_operar(sem, sem2);
+			sem = asem.EXPRESIO1_operar(sem, sem2, alex.getLiniaActual());
 			sem.removeAttribute("OPERADOR");
 			return sem;
 
@@ -396,7 +396,7 @@ public class Asin {
 		sem = OP_INICI_EXP(sem); 
 		sem  = TERME(sem);
 		//operar op inici exp amb terme
-		asem.EXPRESIO_SIMPLE_operar(sem);
+		asem.EXPRESIO_SIMPLE_operar(sem, alex.getLiniaActual());
 		sem.removeAttribute("OPERADOR");
 		sem = EXPRESIO_SIMPLE1(sem);
 		return sem;
