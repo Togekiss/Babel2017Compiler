@@ -19,8 +19,8 @@ import analitzadorSemantic.Semantic;
 public class Asin {
 
 	private Alex alex;
-	private Asem asem;
 	private Error error;
+	private Asem asem;
 	private Token lookAhead;
 	private TaulaSimbols taulaSimbols;
 	private boolean hiHaReturn;
@@ -30,8 +30,8 @@ public class Asin {
 	public Asin (String args, String name) {
 
 		alex = new Alex(args);
-		asem = new Asem();
 		error = new Error(name);
+		asem = new Asem();
 		taulaSimbols = new TaulaSimbols();
 		lookAhead = alex.getToken();
 		alex.writeToken(lookAhead);
@@ -143,7 +143,7 @@ public class Asin {
 		sem = EXPRESIO(sem);
 		//expresio ja porta token, tipus, valor, estatic
 		//Comprovar que tipus i valor tenen sentit, i que es estatic
-		System.out.println(sem.prettyPrint());
+		//System.out.println(sem.prettyPrint());
 		asem.afegirConstant(sem, taulaSimbols, alex.getLiniaActual());
 		Acceptar("punt_i_coma");
 		return;
@@ -309,7 +309,7 @@ public class Asin {
 			Acceptar("claudator_obert");
 			sem2 = EXPRESIO(sem2);
 			
-			System.out.println("DIMENSIO 1\n" + sem2.prettyPrint());
+			//System.out.println("DIMENSIO 1\n" + sem2.prettyPrint());
 			
 			int dim1;
 			//comprovem 1a dimensio del array
@@ -318,14 +318,16 @@ public class Asin {
 					((boolean)sem2.getValue("ESTATIC")) == true)
 				dim1 = (int)sem2.getValue("VALOR");
 			else {
-				//TODO ERROR
+				//ERROR
+				Error.escriuError(37, "", alex.getLiniaActual(), "");
+				System.out.println("[ERR_SEM_7] " + alex.getLiniaActual() + ", El rang del vector ha de ser SENCER i ESTATIC");
 				dim1 = Integer.MAX_VALUE;
 			}
 
 			Acceptar("rang");
 			sem2 = EXPRESIO(sem2);
 			
-			System.out.println("DIMENSIO 2\n" + sem2.prettyPrint());
+			//System.out.println("DIMENSIO 2\n" + sem2.prettyPrint());
 
 			int dim2;
 			//comprovem 2a dimensio del array
@@ -334,14 +336,16 @@ public class Asin {
 					((boolean)sem2.getValue("ESTATIC")) == true)
 				dim2 = (int)sem2.getValue("VALOR");
 			else {
-				//TODO ERROR
+				//ERROR
+				Error.escriuError(37, "", alex.getLiniaActual(), "");
+				System.out.println("[ERR_SEM_7] " + alex.getLiniaActual() + ", El rang del vector ha de ser SENCER i ESTATIC");
 				dim2 = Integer.MIN_VALUE;
 			}
 			
 			Acceptar("claudator_tancat");
 			Acceptar("de");
 			
-			sem.setValue("TIPUS", asem.TIPUS_comprovaArray(dim1, dim2, lookAhead.getLexema()));
+			sem.setValue("TIPUS", asem.TIPUS_comprovaArray(dim1, dim2, lookAhead.getLexema(), alex.getLiniaActual()));
 			Acceptar("tipus_simple");
 
 			sem.setValue("ESTATIC", false);
@@ -416,7 +420,7 @@ public class Asin {
 			//operar sem amb sem2 segons operador i guardar a sem
 			sem = asem.EXPRESIO_SIMPLE1_operar(sem, sem2);
 			
-			System.out.println("DESPRES D'OPERAR" + sem.prettyPrint());
+			//System.out.println("DESPRES D'OPERAR" + sem.prettyPrint());
 			sem.removeAttribute("OPERADOR");
 			sem = EXPRESIO_SIMPLE1(sem);
 			return sem;
@@ -490,7 +494,7 @@ public class Asin {
 
 	private Semantic OP_EXP (Semantic sem) {
 
-		System.out.println("DINS OP_EXP");
+		//System.out.println("DINS OP_EXP");
 		
 		switch (lookAhead.getTipus()) {
 
@@ -541,7 +545,7 @@ public class Asin {
 
 	private Semantic FACTOR (Semantic sem) {
 
-		System.out.println("DINS FACTOR");
+		//System.out.println("DINS FACTOR");
 		switch (lookAhead.getTipus()) {
 
 		case "ct_enter":

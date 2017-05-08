@@ -59,19 +59,19 @@ public class Error {
 		case 32: writer.println("[ERR_SEM_2] " + numLinia + ", Variable [" + variableError + "] doblement definida");
 		return true;
 		
-		case 33: writer.println("[ERR_SEM_3] " + numLinia + ", Funció doblement definida");
+		case 33: writer.println("[ERR_SEM_3] " + numLinia + ", Funció [" + variableError + "] doblement definida");
 		return true;
 		
-		case 34: writer.println("[ERR_SEM_4] " + numLinia + ", Paràmetre [" + variableError + "] doblement definida");
+		case 34: writer.println("[ERR_SEM_4] " + numLinia + ", Paràmetre [" + variableError + "] doblement definit");
 		return true;
 		
 		case 35: writer.println("[ERR_SEM_5] " + numLinia + ", Límits decreixents en vector");
 		return true;
 		
-		case 36: writer.println("[ERR_SEM_6] " + numLinia + ", El tipus de l’expressió no és SENCER");
+		case 36: writer.println("[ERR_SEM_6] " + numLinia + ", El tipus ha de ser TIPUS SIMPLE");
 		return true;
 		
-		case 37: writer.println("[ERR_SEM_7] " + numLinia + ", El tipus de l’expressió no és LOGIC");
+		case 37: writer.println("[ERR_SEM_7] " + numLinia + ", El rang del vector ha de ser SENCER i ESTATIC");
 		return true;
 		
 		case 38: writer.println("[ERR_SEM_8] " + numLinia + ", La condició no és de tipus LOGIC");
