@@ -53,8 +53,8 @@ public class Bloc {
 	 * @param (String) nom 
 	 * @return Boolean
 	 */
-    public Boolean existeixConstant(String nom) {        
-        return llistaConstants.contains(nom);
+    public Boolean existeixConstant(String nom) {   
+        return llistaConstants.get(nom) != null;
     } 
 
 
@@ -62,7 +62,8 @@ public class Bloc {
      * <p>Insereix la variable en la llista de variables</p>
      * @param (Variable) variable 
      */
-    public void inserirVariable(Variable variable) {        
+    public void inserirVariable(Variable variable) {
+    	System.out.println("INSERINT " + variable.toXml());
         llistaVariables.put(variable.getNom(), variable);
     } 
 
@@ -81,7 +82,7 @@ public class Bloc {
 	 * @return Boolean
 	 */
     public Boolean existeixVariable(String nom) {        
-        return llistaVariables.contains(nom);
+        return llistaVariables.get(nom) != null;
     } 
     
     /**
@@ -107,7 +108,7 @@ public class Bloc {
 	 * @return Boolean
 	 */
     public Boolean existeixProcediment(String nom) {        
-        return llistaProcediments.contains(nom);
+        return llistaProcediments.get(nom) != null;
     }
     
     

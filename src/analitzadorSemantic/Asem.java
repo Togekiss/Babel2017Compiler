@@ -46,6 +46,9 @@ public class Asem {
 
 	public void afegirVariable(Semantic sem, TaulaSimbols ts, int l) {
 
+		System.out.println("AFEGINT VARIABLE");
+		System.out.println(sem.prettyPrint());
+		
 		//mirar que no existeixi
 		if (ts.obtenirBloc(ts.getBlocActual()).existeixVariable((String)sem.getValue("TOKEN")) ||
 				ts.obtenirBloc(ts.getBlocActual()).existeixConstant((String)sem.getValue("TOKEN")) ||
@@ -240,6 +243,11 @@ public class Asem {
 
 	public Semantic EXPRESIO_SIMPLE_operar(Semantic sem) {
 		//suma, resta, not
+		
+		
+		//si no hi ha res que operar
+		if (sem.getValue("OPERADOR") == null) 
+			return sem;
 
 		//si es indefinit o no es tipus simple o operador no coincideix amb tipus
 		if (sem.getValue("TIPUS").equals("indefinit")
@@ -285,10 +293,12 @@ public class Asem {
 		//suma, resta, or
 
 		//si no son del mateix tipus o un d'ells es indefinit
-		if (sem.getValue("TIPUS") != sem2.getValue("TIPUS") ||
+		if (!sem.getValue("TIPUS").equals(sem2.getValue("TIPUS")) ||
 				sem.getValue("TIPUS").equals("indefinit") ||
 				sem2.getValue("TIPUS").equals("indefinit")) {
 			//TODO salta error "no son del mateix tipus"
+			
+			System.out.println("ERROR!!!! no son del mateix tipus");
 			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
 			sem.setValue("VALOR", "indefinit");
 			sem.setValue("ESTATIC", false);
@@ -305,6 +315,7 @@ public class Asem {
 								|| ((String)sem.getValue("OPERADOR")).equals("resta"))
 						&& !((TipusSimple)sem.getValue("TIPUS")).getNom().equals("sencer"))) {
 			//TODO salta error "tipus no valid per aquesta operacio"
+			System.out.println("ERROR!!! tipus no valid");
 			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
 			sem.setValue("VALOR", "indefinit");
 			sem.setValue("ESTATIC", false);
@@ -348,7 +359,7 @@ public class Asem {
 		//multiplicacio, divisio, and
 
 		//si no son del mateix tipus o un d'ells es indefinit
-		if (sem.getValue("TIPUS") != sem2.getValue("TIPUS") ||
+		if (!sem.getValue("TIPUS").equals(sem2.getValue("TIPUS")) ||
 				sem.getValue("TIPUS").equals("indefinit") ||
 				sem2.getValue("TIPUS").equals("indefinit")) {
 			//TODO salta error "no son del mateix tipus"
@@ -497,57 +508,73 @@ public class Asem {
 			}
 		}
 		
-		sem.setValue("TIPUS",((TipusArray)ts.obtenirBloc(ts.getBlocActual()).obtenirVariable((String)sem.getValue("TOKEN")).getTipus()).getTipusElements());
+		//sem.setValue("TIPUS",((TipusArray)ts.obtenirBloc(ts.getBlocActual()).obtenirVariable((String)sem.getValue("TOKEN")).getTipus()).getTipusElements());
+		sem.setValue("TIPUS", ((TipusArray)FACTOR_getIdentificador(sem, ts).getValue("TIPUS")).getTipusElements());		
 		return sem;
 
 	}
 	
 	public Semantic FACTOR_getIdentificador(Semantic sem, TaulaSimbols ts) {
 		
+		
+		System.out.println("=============\nID!!\n=========");
+		System.out.println("Buscant id " + (String)sem.getValue("TOKEN") + " al bloc " + ts.getBlocActual());
+		
 		//si esta al bloc 1, primer busca alla
 		if (ts.getBlocActual() > 0) {
+			
+			System.out.println("Estem a bloc 1");
 			if (ts.obtenirBloc(ts.getBlocActual()).existeixConstant((String)sem.getValue("TOKEN"))) {
 				sem.setValue("TIPUS", ts.obtenirBloc(ts.getBlocActual()).obtenirConstant((String)sem.getValue("TOKEN")).getTipus());
 				sem.setValue("VALOR", ts.obtenirBloc(ts.getBlocActual()).obtenirConstant((String)sem.getValue("TOKEN")).getValor());
 				sem.setValue("ESTATIC", true);
+				System.out.println("CONSTANT!!\n" + sem.prettyPrint());
 				return sem;
 			}
 			if (ts.obtenirBloc(ts.getBlocActual()).existeixVariable((String)sem.getValue("TOKEN"))) {
 				sem.setValue("TIPUS", ts.obtenirBloc(ts.getBlocActual()).obtenirVariable((String)sem.getValue("TOKEN")).getTipus());
 				sem.setValue("VALOR", "desconegut");
 				sem.setValue("ESTATIC", false);
+				System.out.println("VARIABLE!!\n" + sem.prettyPrint());
+
 				return sem;
 			}
 			if (ts.obtenirBloc(ts.getBlocActual()).existeixProcediment((String)sem.getValue("TOKEN"))) {
 				sem.setValue("TIPUS", ((Funcio)ts.obtenirBloc(ts.getBlocActual()).obtenirProcediment((String)sem.getValue("TOKEN"))).getTipus());
 				sem.setValue("VALOR", "desconegut");
 				sem.setValue("ESTATIC", false);
+				System.out.println("FUNCIO!!\n" + sem.prettyPrint());
 				return sem;
 			}
 			
 		}
 		
+		System.out.println("busquem al bloc 0");
 		//sino, busca al bloc 0
 		if (ts.obtenirBloc(0).existeixConstant((String)sem.getValue("TOKEN"))) {
 			sem.setValue("TIPUS", ts.obtenirBloc(0).obtenirConstant((String)sem.getValue("TOKEN")).getTipus());
 			sem.setValue("VALOR", ts.obtenirBloc(0).obtenirConstant((String)sem.getValue("TOKEN")).getValor());
 			sem.setValue("ESTATIC", true);
+			System.out.println("CONSTANT!!\n" + sem.prettyPrint());
 			return sem;
 		}
 		if (ts.obtenirBloc(0).existeixVariable((String)sem.getValue("TOKEN"))) {
 			sem.setValue("TIPUS", ts.obtenirBloc(0).obtenirVariable((String)sem.getValue("TOKEN")).getTipus());
 			sem.setValue("VALOR", "desconegut");
 			sem.setValue("ESTATIC", false);
+			System.out.println("VARIABLE!!\n" + sem.prettyPrint());
 			return sem;
 		}
 		if (ts.obtenirBloc(0).existeixProcediment((String)sem.getValue("TOKEN"))) {
 			sem.setValue("TIPUS", ((Funcio)ts.obtenirBloc(0).obtenirProcediment((String)sem.getValue("TOKEN"))).getTipus());
 			sem.setValue("VALOR", "desconegut");
 			sem.setValue("ESTATIC", false);
+			System.out.println("FUNCIO!!\n" + sem.prettyPrint());
 			return sem;
 		}
 		
 		//TODO sino ERROR variable no definida
+		System.out.println("ERROR!!! varaibel no definida");
 		creaVariableFantasma(sem, ts);
 		sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
 		sem.setValue("VALOR", "indefinit");
@@ -570,6 +597,11 @@ public class Asem {
 	}
 	
 	public Semantic LL_EXPRESIO_comprovaParametre(Semantic sem, Semantic sem2) {
+		
+		if (sem.getValue("TIPUS") instanceof TipusIndefinit) {
+			//TODO error?
+			return sem;
+		}
 		
 		Funcio f = (Funcio)sem.getValue("FUNCIO");
 		

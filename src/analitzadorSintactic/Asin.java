@@ -143,7 +143,7 @@ public class Asin {
 		sem = EXPRESIO(sem);
 		//expresio ja porta token, tipus, valor, estatic
 		//Comprovar que tipus i valor tenen sentit, i que es estatic
-		System.out.println(sem.toString());
+		System.out.println(sem.prettyPrint());
 		asem.afegirConstant(sem, taulaSimbols, alex.getLiniaActual());
 		Acceptar("punt_i_coma");
 		return;
@@ -307,9 +307,13 @@ public class Asin {
 			Acceptar("vector");
 			Acceptar("claudator_obert");
 			sem2 = EXPRESIO(sem2);
+			
+			System.out.println("DIMENSIO 1\n" + sem2.prettyPrint());
+			
 			int dim1;
 			//comprovem 1a dimensio del array
-			if (((TipusSimple)sem2.getValue("TIPUS")).getNom().equals("sencer") &&
+			if ( sem2.getValue("TIPUS") instanceof TipusSimple &&
+					((TipusSimple)sem2.getValue("TIPUS")).getNom().equals("sencer") &&
 					((boolean)sem2.getValue("ESTATIC")) == true)
 				dim1 = (int)sem2.getValue("VALOR");
 			else {
@@ -319,9 +323,13 @@ public class Asin {
 
 			Acceptar("rang");
 			sem2 = EXPRESIO(sem2);
+			
+			System.out.println("DIMENSIO 2\n" + sem2.prettyPrint());
+
 			int dim2;
 			//comprovem 2a dimensio del array
-			if (((TipusSimple)sem2.getValue("TIPUS")).getNom().equals("sencer") &&
+			if (sem2.getValue("TIPUS") instanceof TipusSimple &&
+					((TipusSimple)sem2.getValue("TIPUS")).getNom().equals("sencer") &&
 					((boolean)sem2.getValue("ESTATIC")) == true)
 				dim2 = (int)sem2.getValue("VALOR");
 			else {
@@ -400,8 +408,14 @@ public class Asin {
 		case "or":
 			sem = OP_EXP(sem); 
 			sem2 = TERME(sem2);
+			//System.out.println("DINS EXP_SIMPLE1 ABANS DE OPERAR");
+			//System.out.println("SEM" + sem.prettyPrint());
+			//System.out.println("SEM2" + sem2.prettyPrint());
+
 			//operar sem amb sem2 segons operador i guardar a sem
-			asem.EXPRESIO_SIMPLE1_operar(sem, sem2);
+			sem = asem.EXPRESIO_SIMPLE1_operar(sem, sem2);
+			
+			System.out.println("DESPRES D'OPERAR" + sem.prettyPrint());
 			sem.removeAttribute("OPERADOR");
 			sem = EXPRESIO_SIMPLE1(sem);
 			return sem;
@@ -475,6 +489,8 @@ public class Asin {
 
 	private Semantic OP_EXP (Semantic sem) {
 
+		System.out.println("DINS OP_EXP");
+		
 		switch (lookAhead.getTipus()) {
 
 		case "suma":
@@ -524,12 +540,14 @@ public class Asin {
 
 	private Semantic FACTOR (Semantic sem) {
 
+		System.out.println("DINS FACTOR");
 		switch (lookAhead.getTipus()) {
 
 		case "ct_enter":
 			sem.setValue("TIPUS", new TipusSimple("sencer", 0, 0, 0));
 			sem.setValue("VALOR", Integer.parseInt(lookAhead.getLexema()));
 			sem.setValue("ESTATIC", true);
+			//System.out.println(sem.prettyPrint());
 			Acceptar("ct_enter"); 
 			return sem;
 
@@ -537,6 +555,7 @@ public class Asin {
 			sem.setValue("TIPUS", new TipusSimple("logic", 0, 0, 0));
 			sem.setValue("VALOR", lookAhead.getLexema().equals("cert")?true:false);
 			sem.setValue("ESTATIC", true);
+			//System.out.println(sem.prettyPrint());
 			Acceptar("ct_logica"); 
 			return sem;
 
@@ -544,6 +563,7 @@ public class Asin {
 			sem.setValue("TIPUS", new TipusCadena("cadena", 0, lookAhead.getLexema().length()));
 			sem.setValue("VALOR", lookAhead.getLexema());
 			sem.setValue("ESTATIC", true);
+			//System.out.println(sem.prettyPrint());
 			Acceptar("ct_cadena");
 			return sem;
 
@@ -581,7 +601,7 @@ public class Asin {
 			LL_EXPRESIO(sem2); 
 			Acceptar("parentesi_tancat");
 			//comprovar que num parametres ok
-			if ((int)sem2.getValue("INDEX") != ((Funcio)sem2.getValue("FUNCIO")).getNumeroParametres()) {
+			if (!(sem.getValue("TIPUS") instanceof Funcio) || (int)sem2.getValue("INDEX") != ((Funcio)sem2.getValue("FUNCIO")).getNumeroParametres()) {
 				//TODO error: num de parametres incorrecte
 			}
 			//retornar tipus de retorn de funcio
