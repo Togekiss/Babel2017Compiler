@@ -84,7 +84,6 @@ public class Asin {
 			return true;
 		}
 		else {
-			System.out.println("A final hi ha " + lookAhead.getTipus());
 			Error.escriuError(26, "", alex.getLiniaActual(), "");
 			error.tancaFitxer();
 			alex.tancaFitxer();
@@ -136,16 +135,18 @@ public class Asin {
 
 	private void DECL_CONST(){
 		Semantic sem = new Semantic();
-
+		
 		Acceptar("const");
 		if (lookAhead.getTipus().equals("identificador"))
 			sem.setValue("TOKEN", lookAhead.getLexema());
+		String cte = lookAhead.getLexema();
 		Acceptar("identificador");
 		Acceptar("igual");
 		sem = EXPRESIO(sem);
 		//expresio ja porta token, tipus, valor, estatic
 		//Comprovar que tipus i valor tenen sentit, i que es estatic
-		//System.out.println(sem.prettyPrint());
+		//Tornem a posar token per si sha perdut evaluant lexprexio
+		sem.setValue("TOKEN", cte);
 		asem.afegirConstant(sem, taulaSimbols, alex.getLiniaActual());
 		Acceptar("punt_i_coma");
 		return;
@@ -620,7 +621,6 @@ public class Asin {
 				int nparam = 0;
 				if (sem2.getValue("FUNCIO") instanceof Funcio) nparam = ((Funcio)sem2.getValue("FUNCIO")).getNumeroParametres();
 				else {
-					System.out.println("No es una funcio, es " + sem2.getValue("FUNCIO").toString());
 					nparam = 0;
 				}
 				Error.escriuError(315, (int)sem2.getValue("INDEX") + "", alex.getLiniaActual(), nparam + "");
