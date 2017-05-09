@@ -1,0 +1,25 @@
+[ERR_SEM_9] 22, L’identificador [j] no ha estat declarat
+[ERR_SEM_9] 22, L’identificador [x] no ha estat declarat
+[ERR_SEM_18] 22, No es poden operar expressions de tipus diferents, en aquest cas [indefinit] i [sencer]
+[ERR_SEM_18] 22, No es poden operar expressions de tipus diferents, en aquest cas [indefinit] i [sencer]
+[ERR_SEM_12] 25, La variable i l'expressio tenen tipus diferents. El tipus de la variable es [indefinit] i el de l’expressió es [sencer]
+[ERR_SEM_21] 32, No hi ha cap retornar en la funcio s0
+[ERR_SEM_9] 37, L’identificador [true] no ha estat declarat
+[ERR_SEM_9] 37, L’identificador [x] no ha estat declarat
+[ERR_SEM_22] 37, Tipus [indefinit] invalid per aquest tipus d'operació
+[ERR_SEM_18] 37, No es poden operar expressions de tipus diferents, en aquest cas [indefinit] i [logic]
+[ERR_SEM_9] 53, L’identificador [v6] no ha estat declarat
+[ERR_SEM_14] 53, El tipus de la expressie en ESCRIURE no es simple o una constant cadena
+[ERR_SEM_18] 63, No es poden operar expressions de tipus diferents, en aquest cas [logic] i [sencer]
+[ERR_SEM_9] 69, L’identificador [esta] no ha estat declarat
+[ERR_SEM_22] 69, Tipus [indefinit] invalid per aquest tipus d'operació
+[ERR_SEM_22] 69, Tipus [indefinit] invalid per aquest tipus d'operació
+[ERR_SEM_22] 69, Tipus [indefinit] invalid per aquest tipus d'operació
+[ERR_SEM_15] 69, La funció en declaració te 0 parametres mentre que en us te 0
+[ERR_SEM_8] 69, La condicio no és de tipus LOGIC
+[ERR_SEM_11] 72, L’identificador [f] no es una variable 
+[ERR_SEM_12] 72, La variable i l'expressio tenen tipus diferents. El tipus de la variable es [indefinit] i el de l’expressió es [sencer]
+[ERR_SEM_9] 78, L’identificador [v2] no ha estat declarat
+[ERR_SEM_16] 78, El tipus del parametre numero 0 de la funcio no coincideix amb el tipus en la seva declaracio [val1]
+[ERR_SEM_9] 78, L’identificador [v3] no ha estat declarat
+[ERR_SEM_16] 78, El tipus del parametre numero 1 de la funcio no coincideix amb el tipus en la seva declaracio [val2]

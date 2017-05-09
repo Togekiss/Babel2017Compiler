@@ -677,6 +677,7 @@ public class Asem {
 			//error mes parametres dels que toca
 			Error.escriuError(316, (int)sem.getValue("INDEX") + "", l, "parametre inexistent");
 			System.out.println("[ERR_SEM_16] " + l + ", El tipus del parametre numero " + (int)sem.getValue("INDEX") + " de la funcio no coincideix amb el tipus en la seva declaracio [parametre inexistent]");
+			sem.setValue("INDEX", (int)sem.getValue("INDEX")+1);
 			return sem;
 		}
 		
