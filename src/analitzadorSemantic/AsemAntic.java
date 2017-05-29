@@ -15,7 +15,7 @@ import taulasimbols.TipusPasParametre;
 import taulasimbols.TipusSimple;
 import taulasimbols.Variable;
 
-public class Asem {
+public class AsemAntic {
 
 	/*private Error error;
 	
@@ -23,7 +23,6 @@ public class Asem {
 		this.error = error;
 	}*/
 
-	private int despl = 0;
 
 	public void afegirConstant(Semantic sem, TaulaSimbols ts, int l) {
 
@@ -45,7 +44,6 @@ public class Asem {
 			System.out.println("[ERR_SEM_20] " + l + ", L’expressió no és estàtica");	
 			return; 
 		}
-		
 
 		//AFEGIR
 		ts.obtenirBloc(ts.getBlocActual()).inserirConstant(new Constant(
@@ -82,9 +80,8 @@ public class Asem {
 		ts.obtenirBloc(ts.getBlocActual()).inserirVariable(new Variable(
 				(String)sem.getValue("TOKEN"),
 				(ITipus)sem.getValue("TIPUS"),
-				despl
+				0
 				));
-		despl = despl + ((ITipus)sem.getValue("TIPUS")).getTamany();
 	}
 
 	public void afegirFuncio (Funcio funcio, TaulaSimbols ts, int l) {
@@ -105,7 +102,6 @@ public class Asem {
 		//creem nou bloc
 		ts.setBlocActual(1);
 		ts.inserirBloc(new Bloc());
-		despl = 0;
 
 		//posem els parametres com a variables al nou bloc
 		for (int i = 0; i < funcio.getNumeroParametres(); i++) {			
@@ -126,10 +122,10 @@ public class Asem {
 			String nom;
 			if (tipus.equals("sencer")) nom = "S_" + dim1 + "_" + dim2;
 			else nom = "L_" + dim1 + "_" + dim2;
-			a =  new TipusArray(nom, (dim1 - dim2 + 1)*4, new TipusSimple(tipus, 4, -2147483648, 2147483647));
-			a.inserirDimensio(new DimensioArray(new TipusSimple("sencer", 4, -2147483648, 2147483647), dim1, dim2));
+			a =  new TipusArray(nom, dim1 - dim2, new TipusSimple(tipus, 0, 0, 0));
+			a.inserirDimensio(new DimensioArray(new TipusSimple("sencer", 0, 0, 0), dim1, dim2));
 		} else {
-			a = new TipusArray("I_0_0", 0, new TipusIndefinit("indefinit", 4));
+			a = new TipusArray("I_0_0", 0, new TipusIndefinit("indefinit", 0));
 			//tira error
 			Error.escriuError(5, "", l, "");
 			System.out.println("[ERR_SEM_5] " + l + ", Límits decreixents en vector");
@@ -153,7 +149,7 @@ public class Asem {
 			Error.escriuError(318, ((ITipus)sem.getValue("TIPUS")).getNom(), l, ((ITipus)sem2.getValue("TIPUS")).getNom());
 			System.out.println("[ERR_SEM_18] " + l + ", No es poden operar expressions de tipus diferents, en aquest cas ["
 			+ ((ITipus)sem.getValue("TIPUS")).getNom() + "] i [" + ((ITipus)sem2.getValue("TIPUS")).getNom() + "]");
-			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 4));
+			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
 			sem.setValue("VALOR", "indefinit");
 			sem.setValue("ESTATIC", false);
 
@@ -166,7 +162,7 @@ public class Asem {
 			//salta error "tipus no valid per operacions relacionals"
 			Error.escriuError(36, "", l, "");
 			System.out.println("[ERR_SEM_6] " + l + ", El tipus ha de ser TIPUS SIMPLE");
-			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 4));
+			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
 			sem.setValue("VALOR", "indefinit");
 			sem.setValue("ESTATIC", false);
 
@@ -175,7 +171,7 @@ public class Asem {
 
 		//si un d'ells no es estatic
 		if (!(boolean)sem.getValue("ESTATIC") || !(boolean)sem2.getValue("ESTATIC")) {
-			sem.setValue("TIPUS", new TipusSimple("logic", 4, -2147483648, 2147483647));
+			sem.setValue("TIPUS", new TipusSimple("logic", 0, 0, 0));
 			sem.setValue("VALOR", "desconegut");
 			sem.setValue("ESTATIC", false);
 
@@ -266,7 +262,7 @@ public class Asem {
 			}
 		}
 
-		sem.setValue("TIPUS", new TipusSimple("logic", 4, -2147483648, 2147483647));
+		sem.setValue("TIPUS", new TipusSimple("logic", 0, 0, 0));
 		sem.setValue("ESTATIC", true);
 
 		return sem;
@@ -296,7 +292,7 @@ public class Asem {
 			//salta error "tipus invalid"
 			Error.escriuError(322, ((ITipus)sem.getValue("TIPUS")).getNom(), l, "");
 			System.out.println("[ERR_SEM_22] " + l + ", Tipus [" + ((ITipus)sem.getValue("TIPUS")).getNom() + "] invàlid per aquest tipus d'operació");
-			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 4));
+			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
 			sem.setValue("VALOR", "indefinit");
 			sem.setValue("ESTATIC", false);
 
@@ -340,7 +336,7 @@ public class Asem {
 			Error.escriuError(318, ((ITipus)sem.getValue("TIPUS")).getNom(), l, ((ITipus)sem2.getValue("TIPUS")).getNom());
 			System.out.println("[ERR_SEM_18] " + l + ", No es poden operar expressions de tipus diferents, en aquest cas ["
 			+ ((ITipus)sem.getValue("TIPUS")).getNom() + "] i [" + ((ITipus)sem2.getValue("TIPUS")).getNom() + "]");
-			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 4));
+			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
 			sem.setValue("VALOR", "indefinit");
 			sem.setValue("ESTATIC", false);
 
@@ -358,7 +354,7 @@ public class Asem {
 			//salta error "tipus no valid per aquesta operacio"
 			Error.escriuError(322, ((ITipus)sem.getValue("TIPUS")).getNom(), l, "");
 			System.out.println("[ERR_SEM_22] " + l + ", Tipus [" + ((ITipus)sem.getValue("TIPUS")).getNom() + "] invàlid per aquest tipus d'operació");
-			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 4));
+			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
 			sem.setValue("VALOR", "indefinit");
 			sem.setValue("ESTATIC", false);
 
@@ -410,7 +406,7 @@ public class Asem {
 			Error.escriuError(318, ((ITipus)sem.getValue("TIPUS")).getNom(), l, ((ITipus)sem2.getValue("TIPUS")).getNom());
 			System.out.println("[ERR_SEM_18] " + l + ", No es poden operar expressions de tipus diferents, en aquest cas ["
 			+ ((ITipus)sem.getValue("TIPUS")).getNom() + "] i [" + ((ITipus)sem2.getValue("TIPUS")).getNom() + "]");
-			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 4));
+			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
 			sem.setValue("VALOR", "indefinit");
 			sem.setValue("ESTATIC", false);
 
@@ -428,7 +424,7 @@ public class Asem {
 			//salta error "tipus no valid per aquesta operacio"
 			Error.escriuError(322, ((ITipus)sem.getValue("TIPUS")).getNom(), l, "");
 			System.out.println("[ERR_SEM_22] " + l + ", Tipus [" + ((ITipus)sem.getValue("TIPUS")).getNom() + "] invàlid per aquest tipus d'operació");
-			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 4));
+			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
 			sem.setValue("VALOR", "indefinit");
 			sem.setValue("ESTATIC", false);
 
@@ -458,7 +454,7 @@ public class Asem {
 				//error "no es pot dividir per 0"
 				Error.escriuError(323, "", l, "");
 				System.out.println("[ERR_SEM_23] " + l + ", No es pot dividir per 0");
-				sem.setValue("TIPUS", new TipusIndefinit("indefinit", 4));
+				sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
 				sem.setValue("VALOR", "indefinit");
 				sem.setValue("ESTATIC", false);
 				break;
@@ -523,7 +519,7 @@ public class Asem {
 				//creem variable fantasma
 				creaVariableFantasma(sem, ts);
 			}
-			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 4));
+			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
 			return sem;
 		}
 	}
@@ -531,10 +527,9 @@ public class Asem {
 	private void creaVariableFantasma(Semantic sem, TaulaSimbols ts) {
 		ts.obtenirBloc(ts.getBlocActual()).inserirVariable(new Variable(
 				(String)sem.getValue("TOKEN"),
-				new TipusIndefinit("indefinit", 4),
-				despl
+				new TipusIndefinit("indefinit", 0),
+				0
 				));
-		despl = despl + 4;
 	}
 
 	public Semantic VAR1_comprovaArray(Semantic sem, Semantic sem2, TaulaSimbols ts, int l) {
@@ -544,7 +539,7 @@ public class Asem {
 			//error: variable no declarada com array
 			Error.escriuError(322, ((ITipus)sem.getValue("TIPUS")).getNom(), l, "");
 			System.out.println("[ERR_SEM_22] " + l + ", Tipus [" + ((ITipus)sem.getValue("TIPUS")).getNom() + "] invalid per aquest tipus d'operació");
-			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 4));
+			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
 			return sem;
 		}
 		
@@ -553,7 +548,7 @@ public class Asem {
 			//error: rang invalid
 			Error.escriuError(313, "", l, "");
 			System.out.println("[ERR_SEM_13] " + l + ", El tipus de l’índex d’accés del vector no és SENCER");
-			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 4));
+			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
 			return sem;
 		}
 		
@@ -565,7 +560,7 @@ public class Asem {
 				//error: index fora de rang
 				Error.escriuError(324, "", l, "");
 				System.out.println("[ERR_SEM_24] " + l + ", índex estàtic fora de rang");
-				sem.setValue("TIPUS", new TipusIndefinit("indefinit", 4));
+				sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
 				return sem;
 			}
 		}
@@ -642,7 +637,7 @@ public class Asem {
 		Error.escriuError(39, (String)sem.getValue("TOKEN"), l, "");
 		System.out.println("[ERR_SEM_9] " + l + ", L’identificador [" + (String)sem.getValue("TOKEN") + "] no ha estat declarat");
 		creaVariableFantasma(sem, ts);
-		sem.setValue("TIPUS", new TipusIndefinit("indefinit", 4));
+		sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
 		sem.setValue("VALOR", "indefinit");
 		sem.setValue("ESTATIC", false);
 		sem.setValue("REFERENCIA", false);
@@ -657,7 +652,7 @@ public class Asem {
 			//error: no es una funcio
 			Error.escriuError(322, ((ITipus)sem.getValue("TIPUS")).getNom(), l, "");
 			System.out.println("[ERR_SEM_22] " + l + ", Tipus [" + ((ITipus)sem.getValue("TIPUS")).getNom() + "] invalid per aquest tipus d'operació");
-			sem.setValue("FUNCIO", new TipusIndefinit("indefinit", 4));
+			sem.setValue("FUNCIO", new TipusIndefinit("indefinit", 0));
 			sem.setValue("INDEX", 0);
 			return sem;
 		}

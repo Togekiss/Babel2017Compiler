@@ -36,7 +36,7 @@ public class Asin {
 		lookAhead = alex.getToken();
 		alex.writeToken(lookAhead);
 		hiHaReturn = false;
-		tipusReturn = new TipusIndefinit("indefinit", 0);
+		tipusReturn = new TipusIndefinit("indefinit", 4);
 
 	}
 
@@ -187,8 +187,8 @@ public class Asin {
 			funcio = LL_PARAM(funcio);
 			Acceptar("parentesi_tancat");
 			Acceptar("dos_punts");
-			funcio.setTipus(new TipusSimple(lookAhead.getLexema(), 0, 0, 0));
-			tipusReturn = new TipusSimple(lookAhead.getLexema(), 0, 0, 0);
+			funcio.setTipus(new TipusSimple(lookAhead.getLexema(), 4, -2147483648, 2147483647));
+			tipusReturn = new TipusSimple(lookAhead.getLexema(), 4, -2147483648, 2147483647);
 			hiHaReturn = false;
 			Acceptar("tipus_simple");
 					
@@ -298,12 +298,12 @@ public class Asin {
 	private Semantic TIPUS(Semantic sem) {
 
 		Semantic sem2 = new Semantic();
-		sem.setValue("TIPUS", new TipusIndefinit("indefinit", 0));
+		sem.setValue("TIPUS", new TipusIndefinit("indefinit", 4));
 		
 		switch (lookAhead.getTipus()) {
 
 		case "tipus_simple": 
-			sem.setValue("TIPUS", new TipusSimple(lookAhead.getLexema(), 0, 0, 0));
+			sem.setValue("TIPUS", new TipusSimple(lookAhead.getLexema(), 4, -2147483648, 2147483647));
 			sem.setValue("ESTATIC", false);
 			sem.setValue("VALOR", "null");
 			Acceptar("tipus_simple");
@@ -554,7 +554,7 @@ public class Asin {
 		switch (lookAhead.getTipus()) {
 
 		case "ct_enter":
-			sem.setValue("TIPUS", new TipusSimple("sencer", 0, 0, 0));
+			sem.setValue("TIPUS", new TipusSimple("sencer", 4, -2147483648, 2147483647));
 			sem.setValue("VALOR", Integer.parseInt(lookAhead.getLexema()));
 			sem.setValue("ESTATIC", true);
 			sem.setValue("REFERENCIA", false);
@@ -563,7 +563,7 @@ public class Asin {
 			return sem;
 
 		case "ct_logica":
-			sem.setValue("TIPUS", new TipusSimple("logic", 0, 0, 0));
+			sem.setValue("TIPUS", new TipusSimple("logic", 4, -2147483648, 2147483647));
 			sem.setValue("VALOR", lookAhead.getLexema().equals("cert")?true:false);
 			sem.setValue("ESTATIC", true);
 			sem.setValue("REFERENCIA", false);
@@ -572,7 +572,7 @@ public class Asin {
 			return sem;
 
 		case "ct_cadena":
-			sem.setValue("TIPUS", new TipusCadena("cadena", 0, lookAhead.getLexema().length()));
+			sem.setValue("TIPUS", new TipusCadena("cadena", lookAhead.getLexema().length(), lookAhead.getLexema().length()));
 			sem.setValue("VALOR", lookAhead.getLexema());
 			sem.setValue("ESTATIC", true);
 			sem.setValue("REFERENCIA", false);
