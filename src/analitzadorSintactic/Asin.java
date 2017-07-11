@@ -640,6 +640,10 @@ public class Asin {
 			return sem;
 
 		default:
+			//TODO si id es variable
+			if ((boolean)sem.getValue("ESTATIC") == false) {
+				//CodeGenOut.gc(sem.getValue("DESPLACAMENT") + "($gp)");
+			}
 			return sem;
 
 		}

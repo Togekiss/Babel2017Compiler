@@ -626,6 +626,7 @@ public class Asem {
 			sem.setValue("TIPUS", ts.obtenirBloc(0).obtenirVariable((String)sem.getValue("TOKEN")).getTipus());
 			sem.setValue("VALOR", "desconegut");
 			sem.setValue("ESTATIC", false);
+			sem.setValue("DESPLACAMENT", ts.obtenirBloc(0).obtenirVariable((String)sem.getValue("TOKEN")).getDesplacament());
 			//System.out.println("VARIABLE!!\n" + sem.prettyPrint());
 			return sem;
 		}
