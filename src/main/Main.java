@@ -18,7 +18,6 @@ public class Main {
 			System.exit(2);
 		}
 		
-		System.out.println("holi");
 		Asin asin = new Asin(args[0], name);
 		asin.P();
 		System.out.println("Parseig finalitzat.");
