@@ -160,7 +160,7 @@ public class Asem {
 			System.out.println("[ERR_SEM_18] " + l + ", No es poden operar expressions de tipus diferents, en aquest cas ["
 			+ ((ITipus)sem.getValue("TIPUS")).getNom() + "] i [" + ((ITipus)sem2.getValue("TIPUS")).getNom() + "]");
 			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 4));
-			sem.setValue("VALOR", "indefinit");
+			//sem.setValue("VALOR", "indefinit");
 			sem.setValue("ESTATIC", false);
 
 			return sem;
@@ -173,7 +173,7 @@ public class Asem {
 			Error.escriuError(36, "", l, "");
 			System.out.println("[ERR_SEM_6] " + l + ", El tipus ha de ser TIPUS SIMPLE");
 			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 4));
-			sem.setValue("VALOR", "indefinit");
+			//sem.setValue("VALOR", "indefinit");
 			sem.setValue("ESTATIC", false);
 
 			return sem;
@@ -182,7 +182,7 @@ public class Asem {
 		//si un d'ells no es estatic
 		if (!(boolean)sem.getValue("ESTATIC") || !(boolean)sem2.getValue("ESTATIC")) {
 			sem.setValue("TIPUS", new TipusSimple("logic", 4, -2147483648, 2147483647));
-			sem.setValue("VALOR", "desconegut");
+			sem.setValue("VALOR", -1);
 			sem.setValue("ESTATIC", false);
 
 			//TODO codi operadors relacionals
@@ -329,7 +329,7 @@ public class Asem {
 			Error.escriuError(322, ((ITipus)sem.getValue("TIPUS")).getNom(), l, "");
 			System.out.println("[ERR_SEM_22] " + l + ", Tipus [" + ((ITipus)sem.getValue("TIPUS")).getNom() + "] invàlid per aquest tipus d'operació");
 			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 4));
-			sem.setValue("VALOR", "indefinit");
+			//sem.setValue("VALOR", "indefinit");
 			sem.setValue("ESTATIC", false);
 
 			return sem;
@@ -338,7 +338,7 @@ public class Asem {
 
 		//si no es estatic
 		if (!(boolean)sem.getValue("ESTATIC")) {
-			sem.setValue("VALOR", "desconegut");
+			sem.setValue("VALOR", -1);
 			//TODO codi not/negat
 			switch ((String)sem.getValue("OPERADOR")) {
 			case "not":
@@ -384,7 +384,7 @@ public class Asem {
 			System.out.println("[ERR_SEM_18] " + l + ", No es poden operar expressions de tipus diferents, en aquest cas ["
 			+ ((ITipus)sem.getValue("TIPUS")).getNom() + "] i [" + ((ITipus)sem2.getValue("TIPUS")).getNom() + "]");
 			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 4));
-			sem.setValue("VALOR", "indefinit");
+			//sem.setValue("VALOR", "indefinit");
 			sem.setValue("ESTATIC", false);
 
 			return sem;
@@ -402,7 +402,7 @@ public class Asem {
 			Error.escriuError(322, ((ITipus)sem.getValue("TIPUS")).getNom(), l, "");
 			System.out.println("[ERR_SEM_22] " + l + ", Tipus [" + ((ITipus)sem.getValue("TIPUS")).getNom() + "] invàlid per aquest tipus d'operació");
 			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 4));
-			sem.setValue("VALOR", "indefinit");
+			//sem.setValue("VALOR", "indefinit");
 			sem.setValue("ESTATIC", false);
 
 			return sem;
@@ -411,7 +411,7 @@ public class Asem {
 
 		//si un d'ells no es estatic
 		if (!(boolean)sem.getValue("ESTATIC") || !(boolean)sem2.getValue("ESTATIC")) {
-			sem.setValue("VALOR", "desconegut");
+			sem.setValue("VALOR", -1);
 			sem.setValue("ESTATIC", false);
 			//TODO codi operacio or/+/-
 			switch ((String)sem.getValue("OPERADOR")) {
@@ -464,7 +464,7 @@ public class Asem {
 			System.out.println("[ERR_SEM_18] " + l + ", No es poden operar expressions de tipus diferents, en aquest cas ["
 			+ ((ITipus)sem.getValue("TIPUS")).getNom() + "] i [" + ((ITipus)sem2.getValue("TIPUS")).getNom() + "]");
 			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 4));
-			sem.setValue("VALOR", "indefinit");
+			//sem.setValue("VALOR", "indefinit");
 			sem.setValue("ESTATIC", false);
 
 			return sem;
@@ -482,7 +482,7 @@ public class Asem {
 			Error.escriuError(322, ((ITipus)sem.getValue("TIPUS")).getNom(), l, "");
 			System.out.println("[ERR_SEM_22] " + l + ", Tipus [" + ((ITipus)sem.getValue("TIPUS")).getNom() + "] invàlid per aquest tipus d'operació");
 			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 4));
-			sem.setValue("VALOR", "indefinit");
+			//sem.setValue("VALOR", "indefinit");
 			sem.setValue("ESTATIC", false);
 
 			return sem;
@@ -491,7 +491,7 @@ public class Asem {
 
 		//si un d'ells no es estatic
 		if (!(boolean)sem.getValue("ESTATIC") || !(boolean)sem2.getValue("ESTATIC")) {
-			sem.setValue("VALOR", "desconegut");
+			sem.setValue("VALOR", -1);
 			sem.setValue("ESTATIC", false);
 			//TODO codi operacio and/*/%
 			switch ((String)sem.getValue("OPERADOR")) {
@@ -630,7 +630,6 @@ public class Asem {
 		}
 		int desplaçamentIndex = 0;
 		int registre = gc.getRegistre();
-		System.out.println("jeje");
 		//si sem2 es estatic, comprova que estigui dins el rang
 		if ((boolean)sem2.getValue("ESTATIC")) {
 			int v = (int)sem2.getValue("VALOR");

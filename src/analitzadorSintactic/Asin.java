@@ -32,8 +32,8 @@ public class Asin {
 
 		alex = new Alex(args);
 		error = new Error(name);
-		asem = new Asem(gc);
 		gc = new CodeGenOut(name);
+		asem = new Asem(gc);
 		taulaSimbols = new TaulaSimbols();
 		lookAhead = alex.getToken();
 		alex.writeToken(lookAhead);
@@ -154,7 +154,7 @@ public class Asin {
 		//Tornem a posar token per si sha perdut evaluant lexprexio
 		sem.setValue("TOKEN", cte);
 		asem.afegirConstant(sem, taulaSimbols, alex.getLiniaActual());
-		if (!(sem.getValue("TIPUS") instanceof TipusCadena))gc.freeRegistre((int) sem.getValue("REG"));
+		if (!(sem.getValue("TIPUS") instanceof TipusCadena))gc.freeRegistre((int)sem.getValue("REG"));
 		Acceptar("punt_i_coma");
 		return;
 
@@ -356,7 +356,7 @@ public class Asin {
 				System.out.println("[ERR_SEM_7] " + alex.getLiniaActual() + ", El rang del vector ha de ser SENCER i ESTATIC");
 				dim2 = Integer.MIN_VALUE;
 			}
-
+			if (!(sem2.getValue("TIPUS") instanceof TipusCadena))gc.freeRegistre((int)sem2.getValue("REG"));
 			Acceptar("claudator_tancat");
 			Acceptar("de");
 
@@ -617,6 +617,7 @@ public class Asin {
 		case "parentesi_obert":
 			Acceptar("parentesi_obert");
 			sem = EXPRESIO(sem);
+			if (!(sem.getValue("TIPUS") instanceof TipusCadena))gc.freeRegistre((int)sem.getValue("REG"));
 			Acceptar("parentesi_tancat");
 			return sem;
 
@@ -660,6 +661,7 @@ public class Asin {
 			sem2 = EXPRESIO(sem2);
 			//comprovar que expressio es int i esta dins el rang (si es estatica)
 			sem = asem.VAR1_comprovaArray(sem, sem2, taulaSimbols, alex.getLiniaActual());
+			if (!(sem2.getValue("TIPUS") instanceof TipusCadena))gc.freeRegistre((int)sem2.getValue("REG"));
 			Acceptar("claudator_tancat"); 
 			//retornar tipus d'element de vector
 			//TODO ID ES UN VECTOR
@@ -668,6 +670,7 @@ public class Asin {
 				gc.gc("lw   $" + gc.getNomRegistre(reg) + ", -" + sem.getValue("DESPL") + "($gp)");
 				sem.setValue("REG", reg);
 			} else { System.out.println("No queden registres!"); }
+			
 			return sem;
 
 		default:
@@ -709,6 +712,7 @@ public class Asin {
 			sem2 = EXPRESIO(sem2);
 			//index param ++
 			sem = asem.LL_EXPRESIO_comprovaParametre(sem, sem2, alex.getLiniaActual());
+			if (!(sem2.getValue("TIPUS") instanceof TipusCadena))gc.freeRegistre((int)sem2.getValue("REG"));
 			LL_EXPRESIO1(sem);
 			return;
 
@@ -727,7 +731,7 @@ public class Asin {
 			LL_EXPRESIO(sem);
 			return;
 
-		default: 
+		default: if (!(sem.getValue("TIPUS") instanceof TipusCadena))gc.freeRegistre((int)sem.getValue("REG"));
 			return;
 
 		}
@@ -788,6 +792,7 @@ public class Asin {
 			//comprovar que tipus sem2 == sencer
 			//i si es estatic, esta dins el rang de id
 			sem = asem.VAR1_comprovaArray(sem, sem2, taulaSimbols, alex.getLiniaActual());
+			if (!(sem2.getValue("TIPUS") instanceof TipusCadena))gc.freeRegistre((int)sem2.getValue("REG"));
 			Acceptar("claudator_tancat");
 			return sem;						
 
@@ -798,7 +803,6 @@ public class Asin {
 	}
 
 	private void LL_INST () {
-
 		INSTRUCCIO();
 		Acceptar("punt_i_coma");
 		LL_INST1();
@@ -911,7 +915,7 @@ public class Asin {
 				gc.gc("sw   $" + gc.getNomRegistre(registre) + ", -" + despl + "($gp)");
 				gc.freeRegistre(registre);
 			} else { System.out.println("No queden registres!"); }
-*/
+*/			if (!(sem2.getValue("TIPUS") instanceof TipusCadena))gc.freeRegistre((int)sem2.getValue("REG"));
 			return;
 
 		case "escriure":
@@ -942,12 +946,15 @@ public class Asin {
 				Error.escriuError(38, "", alex.getLiniaActual(), "");
 				System.out.println("[ERR_SEM_8] " + alex.getLiniaActual() + ", La condició no és de tipus LOGIC");
 			}
-			if (((String)sem.getValue("VALOR")).equals("desconegut")) 
-				gc.gc("beqz	$" + gc.getNomRegistre((int)sem.getValue("REG")) + ", " + etiqueta);
-			else if (sem.getValue("VALOR") != null && (int)sem.getValue("VALOR") == 0)
-				gc.gc("b	" + etiqueta);
-				
 			
+			if (sem.getValue("VALOR") != null) {
+				if ((int)sem.getValue("VALOR") == -1) 
+					gc.gc("beqz	$" + gc.getNomRegistre((int)sem.getValue("REG")) + ", " + etiqueta);
+				else if ((int)sem.getValue("VALOR") == 0)
+					gc.gc("b	" + etiqueta);
+			}	
+				
+			if (!(sem.getValue("TIPUS") instanceof TipusCadena))gc.freeRegistre((int)sem.getValue("REG"));
 			return;
 
 		case "mentre":
@@ -963,10 +970,14 @@ public class Asin {
 				System.out.println("[ERR_SEM_8] " + alex.getLiniaActual() + ", La condició no és de tipus LOGIC");
 			}
 			Acceptar("fer");
-			if (((String)sem.getValue("VALOR")).equals("desconegut")) 
-				gc.gc("beqz	$" + gc.getNomRegistre((int)sem.getValue("REG")) + ", " + etiqueta3);
-			else if (sem.getValue("VALOR") != null && (int)sem.getValue("VALOR") == 0)
-				gc.gc("b	" + etiqueta3);
+				
+			if (sem.getValue("VALOR") != null) {
+				if ((int)sem.getValue("VALOR") == -1) 
+					gc.gc("beqz	$" + gc.getNomRegistre((int)sem.getValue("REG")) + ", " + etiqueta3);
+				else if ((int)sem.getValue("VALOR") == 0)
+					gc.gc("b	" + etiqueta3);
+			}	
+			if (!(sem.getValue("TIPUS") instanceof TipusCadena))gc.freeRegistre((int)sem.getValue("REG"));
 			LL_INST();
 			gc.gc("b	" + etiqueta2);
 			gc.gcEtiqueta(etiqueta3 + ":");
@@ -977,6 +988,7 @@ public class Asin {
 		case "si":
 			Acceptar("si"); 
 			String etiqueta4 = gc.demanarEtiqueta();
+			String etiqueta5 = gc.demanarEtiqueta();
 			sem = EXPRESIO(sem);
 			//comprovar que sem tipus == logic
 			if (!asem.esLogic(sem)) {
@@ -985,13 +997,20 @@ public class Asin {
 				System.out.println("[ERR_SEM_8] " + alex.getLiniaActual() + ", La condició no és de tipus LOGIC");
 			}
 			Acceptar("llavors");
-			if (((String)sem.getValue("VALOR")).equals("desconegut")) 
-				gc.gc("beqz	$" + gc.getNomRegistre((int)sem.getValue("REG")) + ", " + etiqueta4);
-			else if (sem.getValue("VALOR") != null && (int)sem.getValue("VALOR") == 0)
-				gc.gc("b	" + etiqueta4);
+			
+			if (sem.getValue("VALOR") != null) {
+				if ((int)sem.getValue("VALOR") == -1) 
+					gc.gc("beqz	$" + gc.getNomRegistre((int)sem.getValue("REG")) + ", " + etiqueta4);
+				else if ((int)sem.getValue("VALOR") == 0)
+					gc.gc("b	" + etiqueta4);
+			}	
+			
+			if (!(sem.getValue("TIPUS") instanceof TipusCadena))gc.freeRegistre((int)sem.getValue("REG"));
 			LL_INST();
+			gc.gc("b	" + etiqueta5);
 			SINO(etiqueta4);
 			Acceptar("fisi"); 
+			gc.gcEtiqueta(etiqueta5 + ":");
 
 			return;
 
@@ -1001,6 +1020,7 @@ public class Asin {
 			//comprovar que blocactual != 0
 			//comprovar que exp tipus == retorn funcio tipus
 			asem.INSTRUCCIO_comprovaRetornar(sem, tipusReturn, taulaSimbols.getBlocActual(), alex.getLiniaActual());
+			if (!(sem.getValue("TIPUS") instanceof TipusCadena))gc.freeRegistre((int)sem.getValue("REG"));
 			hiHaReturn = true;
 			return;
 
@@ -1080,6 +1100,7 @@ public class Asin {
 				Error.escriuError(314, "", alex.getLiniaActual(), "");
 				System.out.println("[ERR_SEM_14] " + alex.getLiniaActual() + ", El tipus de la expressió en ESCRIURE no és simple o no és una constant cadena");
 			}
+			if (!(sem.getValue("TIPUS") instanceof TipusCadena))gc.freeRegistre((int)sem.getValue("REG"));
 			LL_EXP_ESCRIURE1();
 			return;
 
@@ -1113,7 +1134,7 @@ public class Asin {
 			LL_INST();
 			return;
 
-		default: gc.gcEtiqueta(etiqueta4 + ":");
+		default: 
 			return;
 
 		}
