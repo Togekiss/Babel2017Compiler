@@ -27,9 +27,7 @@ public class Asem {
 	private CodeGenOut gc;
 	private int despl = 0;
 	
-	public Asem(CodeGenOut gc) {
-		this.gc = gc;
-	}
+	public Asem (CodeGenOut gc) { this.gc = gc; }
 	
 	public int getDespl () { return despl; }
 
@@ -580,8 +578,8 @@ public class Asem {
 			return sem;
 		}
 		
-		int desplaçamentIndex;
-		
+		int desplaçamentIndex = 0;
+		int registre = gc.getRegistre();
 		//si sem2 es estatic, comprova que estigui dins el rang
 		if ((boolean)sem2.getValue("ESTATIC")) {
 			int v = (int)sem2.getValue("VALOR");
@@ -597,13 +595,26 @@ public class Asem {
 			
 		} else {
 			//TODO anar a variable a agafar valor
-			//(int)sem2.getValue("DESPL");
-			//TODO comprovacions en temps execucio
+			int registre2 = gc.getRegistre();
+			
+			if (registre != -1 && registre2 != -1) {
+				String etiqueta = gc.demanarEtiqueta();
+				gc.gc("lb   $" + gc.getNomRegistre(registre) + ", -" + (int)sem2.getValue("DESPL") + "($gp)");
+				gc.gc("li   $" + gc.getNomRegistre(registre2) + ", " + (int)((TipusArray)ts.obtenirBloc(ts.getBlocActual()).obtenirVariable((String)sem.getValue("TOKEN")).getTipus()).obtenirDimensio(0).getLimitInferior());
+				gc.gc("blt   $" + gc.getNomRegistre(registre) + ", $" + gc.getNomRegistre(registre2) + ", " + etiqueta);
+				gc.gc("li   $" + gc.getNomRegistre(registre2) + ", " + (int)((TipusArray)ts.obtenirBloc(ts.getBlocActual()).obtenirVariable((String)sem.getValue("TOKEN")).getTipus()).obtenirDimensio(0).getLimitSuperior());
+				gc.gc("bgt   $" + gc.getNomRegistre(registre) + ", $" + gc.getNomRegistre(registre2) + ", " + etiqueta);
+				//printar error
+				sem.setValue("LABEL", etiqueta);
+				gc.freeRegistre(registre2);
+			} else { System.out.println("No queden registres lliures!"); }
 		}
 		
 		sem.setValue("LIMIT", (int)((TipusArray)ts.obtenirBloc(ts.getBlocActual()).obtenirVariable((String)sem.getValue("TOKEN")).getTipus()).obtenirDimensio(0).getLimitInferior());
 		sem.setValue("TIPUS", ((TipusArray)FACTOR_getIdentificador(sem, ts, l).getValue("TIPUS")).getTipusElements());
-		//sem.setValue("VALOR", desplaçamentIndex);
+		if (desplaçamentIndex != 0) sem.setValue("VALOR", desplaçamentIndex);
+		else sem.setValue("REGISTRE", registre);
+		
 		return sem;
 
 	}
