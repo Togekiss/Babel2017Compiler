@@ -664,7 +664,7 @@ public class Asem {
 		sem.setValue("LIMIT", (int)((TipusArray)ts.obtenirBloc(ts.getBlocActual()).obtenirVariable((String)sem.getValue("TOKEN")).getTipus()).obtenirDimensio(0).getLimitInferior());
 		sem.setValue("TIPUS", ((TipusArray)FACTOR_getIdentificador(sem, ts, l).getValue("TIPUS")).getTipusElements());
 		if (desplaçamentIndex != 0) sem.setValue("VALOR", desplaçamentIndex);
-		else sem.setValue("REGISTRE", registre);
+		else sem.setValue("REG", registre);
 		
 		return sem;
 

@@ -154,7 +154,8 @@ public class Asin {
 		//Tornem a posar token per si sha perdut evaluant lexprexio
 		sem.setValue("TOKEN", cte);
 		asem.afegirConstant(sem, taulaSimbols, alex.getLiniaActual());
-		gc.freeRegistre((int) sem.getValue("REG"));
+		if (!(sem.getValue("TIPUS") instanceof TipusCadena))
+			gc.freeRegistre((int) sem.getValue("REG"));
 		Acceptar("punt_i_coma");
 		return;
 
@@ -574,8 +575,10 @@ public class Asin {
 			//System.out.println(sem.prettyPrint());
 			Acceptar("ct_enter"); 
 			int reg1 = gc.getRegistre();
-			gc.gc("li $" + gc.getNomRegistre(reg1) + ", " + sem.getValue("VALOR"));
+			if (reg1 != -1) {
+				gc.gc("li $" + gc.getNomRegistre(reg1) + ", " + sem.getValue("VALOR"));
 			sem.setValue("REG", reg1);
+			} else {System.out.println("No queden registres!!");}
 			return sem;
 
 		case "ct_logica":
@@ -586,8 +589,10 @@ public class Asin {
 			//System.out.println(sem.prettyPrint());
 			Acceptar("ct_logica"); 
 			int reg2 = gc.getRegistre();
-			gc.gc("li $" + gc.getNomRegistre(reg2) + ", " + sem.getValue("VALOR"));
+			if (reg2 != -1) {
+				gc.gc("li $" + gc.getNomRegistre(reg2) + ", " + sem.getValue("VALOR"));
 			sem.setValue("REG", reg2);
+			} else {System.out.println("No queden registres!!");}
 			return sem;
 
 		case "ct_cadena":
