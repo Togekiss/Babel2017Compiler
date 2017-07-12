@@ -185,6 +185,32 @@ public class Asem {
 			sem.setValue("VALOR", "desconegut");
 			sem.setValue("ESTATIC", false);
 
+			//TODO codi operadors relacionals
+			switch ((String)sem.getValue("OPERADOR")) {
+
+			case "==":
+				gc.gc("seq $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem2.getValue("REG")));
+				break;
+			case ">":
+				gc.gc("sgt $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem2.getValue("REG")));
+				break;
+			case ">=":
+				gc.gc("sge $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem2.getValue("REG")));
+				break;
+			case "<":
+				gc.gc("slt $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem2.getValue("REG")));
+				break;
+			case "<=":
+				gc.gc("sle $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem2.getValue("REG")));
+				break;
+			case "<>":
+				gc.gc("sne $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem2.getValue("REG")));
+				break;
+			default: gc.gc("li $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", 0");
+
+
+			}
+			
 			return sem;
 		}
 
@@ -198,83 +224,85 @@ public class Asem {
 
 			case "==":
 				if (vsem1 == vsem2)
-					sem.setValue("VALOR", true);
-				else sem.setValue("VALOR", false);
+					sem.setValue("VALOR", 0x00000001);
+				else sem.setValue("VALOR", 0);
 				break;
 			case ">":
 				if (vsem1 > vsem2)
-					sem.setValue("VALOR", true);
-				else sem.setValue("VALOR", false);
+					sem.setValue("VALOR", 0x00000001);
+				else sem.setValue("VALOR", 0);
 				break;
 			case ">=":
 				if (vsem1 >= vsem2)
-					sem.setValue("VALOR", true);
-				else sem.setValue("VALOR", false);
+					sem.setValue("VALOR", 0x00000001);
+				else sem.setValue("VALOR", 0);
 				break;
 			case "<":
 				if (vsem1 < vsem2)
-					sem.setValue("VALOR", true);
-				else sem.setValue("VALOR", false);
+					sem.setValue("VALOR", 0x00000001);
+				else sem.setValue("VALOR", 0);
 				break;
 			case "<=":
 				if (vsem1 <= vsem2)
-					sem.setValue("VALOR", true);
-				else sem.setValue("VALOR", false);
+					sem.setValue("VALOR", 0x00000001);
+				else sem.setValue("VALOR", 0);
 				break;
 			case "<>":
 				if (vsem1 != vsem2)
-					sem.setValue("VALOR", true);
-				else sem.setValue("VALOR", false);
+					sem.setValue("VALOR", 0x00000001);
+				else sem.setValue("VALOR", 0);
 				break;
-			default: sem.setValue("VALOR", false);
+			default: sem.setValue("VALOR", 0);
 
 			}
 
 		} else {
 
-			boolean vsem1 = (boolean)sem.getValue("VALOR");
-			boolean vsem2 = (boolean)sem2.getValue("VALOR");
+			int vsem1 = (int)sem.getValue("VALOR");
+			int vsem2 = (int)sem2.getValue("VALOR");
+			
+			
 
 			switch ((String)sem.getValue("OPERADOR")) {
 
 			case "==":
 				if (vsem1 == vsem2)
-					sem.setValue("VALOR", true);
-				else sem.setValue("VALOR", false);
+					sem.setValue("VALOR", 0x00000001);
+				else sem.setValue("VALOR", 0);
 				break;
 			case ">":
-				if (vsem1 == true && vsem2 == false)
-					sem.setValue("VALOR", true);
-				else sem.setValue("VALOR", false);
+				if (vsem1 == 0x00000001 && vsem2 == 0)
+					sem.setValue("VALOR", 0x00000001);
+				else sem.setValue("VALOR", 0);
 				break;
 			case ">=":
-				if (vsem1 == true)
-					sem.setValue("VALOR", true);
-				else sem.setValue("VALOR", false);
+				if (vsem1 == 0x00000001)
+					sem.setValue("VALOR", 0x00000001);
+				else sem.setValue("VALOR", 0);
 				break;
 			case "<":
-				if (vsem1 == false && vsem2 == true)
-					sem.setValue("VALOR", true);
-				else sem.setValue("VALOR", false);
+				if (vsem1 == 0 && vsem2 == 0x00000001)
+					sem.setValue("VALOR", 0x00000001);
+				else sem.setValue("VALOR", 0);
 				break;
 			case "<=":
-				if (vsem1 == false)
-					sem.setValue("VALOR", true);
-				else sem.setValue("VALOR", false);
+				if (vsem1 == 0)
+					sem.setValue("VALOR", 0x00000001);
+				else sem.setValue("VALOR", 0);
 				break;
 			case "<>":
 				if (vsem1 != vsem2)
-					sem.setValue("VALOR", true);
-				else sem.setValue("VALOR", false);
+					sem.setValue("VALOR", 0x00000001);
+				else sem.setValue("VALOR", 0);
 				break;
-			default: sem.setValue("VALOR", false);
+			default: sem.setValue("VALOR", 0);
 
 			}
 		}
 
 		sem.setValue("TIPUS", new TipusSimple("logic", 4, -2147483648, 2147483647));
 		sem.setValue("ESTATIC", true);
-
+		gc.gc("li $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", " + sem.getValue("VALOR"));
 		return sem;
 
 	}

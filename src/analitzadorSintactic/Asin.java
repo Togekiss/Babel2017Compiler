@@ -394,6 +394,7 @@ public class Asin {
 			sem2 = EXPRESIO_SIMPLE(sem2);
 			//operar sem i sem2 segons operador
 			sem = asem.EXPRESIO1_operar(sem, sem2, alex.getLiniaActual());
+			gc.freeRegistre((int) sem2.getValue("REG"));
 			sem.removeAttribute("OPERADOR");
 			return sem;
 
