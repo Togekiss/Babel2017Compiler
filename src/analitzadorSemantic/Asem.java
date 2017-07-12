@@ -24,6 +24,8 @@ public class Asem {
 	}*/
 
 	private int despl = 0;
+	
+	public int getDespl () { return despl; }
 
 	public void afegirConstant(Semantic sem, TaulaSimbols ts, int l) {
 
@@ -84,7 +86,7 @@ public class Asem {
 				(ITipus)sem.getValue("TIPUS"),
 				despl
 				));
-		despl = despl + ((ITipus)sem.getValue("TIPUS")).getTamany();
+		despl = despl + (int)sem.getValue("TAMANY");
 	}
 
 	public void afegirFuncio (Funcio funcio, TaulaSimbols ts, int l) {
@@ -557,9 +559,12 @@ public class Asem {
 			return sem;
 		}
 		
+		int desplaçamentIndex;
+		
 		//si sem2 es estatic, comprova que estigui dins el rang
 		if ((boolean)sem2.getValue("ESTATIC")) {
 			int v = (int)sem2.getValue("VALOR");
+			desplaçamentIndex = v;
 			if ((int)((TipusArray)ts.obtenirBloc(ts.getBlocActual()).obtenirVariable((String)sem.getValue("TOKEN")).getTipus()).obtenirDimensio(0).getLimitInferior() > v ||
 					(int)((TipusArray)ts.obtenirBloc(ts.getBlocActual()).obtenirVariable((String)sem.getValue("TOKEN")).getTipus()).obtenirDimensio(0).getLimitSuperior() < v) {
 				//error: index fora de rang
@@ -568,9 +573,16 @@ public class Asem {
 				sem.setValue("TIPUS", new TipusIndefinit("indefinit", 4));
 				return sem;
 			}
+			
+		} else {
+			//TODO anar a variable a agafar valor
+			//(int)sem2.getValue("DESPL");
+			//TODO comprovacions en temps execucio
 		}
 		
-		sem.setValue("TIPUS", ((TipusArray)FACTOR_getIdentificador(sem, ts, l).getValue("TIPUS")).getTipusElements());		
+		sem.setValue("LIMIT", (int)((TipusArray)ts.obtenirBloc(ts.getBlocActual()).obtenirVariable((String)sem.getValue("TOKEN")).getTipus()).obtenirDimensio(0).getLimitInferior());
+		sem.setValue("TIPUS", ((TipusArray)FACTOR_getIdentificador(sem, ts, l).getValue("TIPUS")).getTipusElements());
+		//sem.setValue("VALOR", desplaçamentIndex);
 		return sem;
 
 	}
@@ -597,6 +609,7 @@ public class Asem {
 				sem.setValue("TIPUS", ts.obtenirBloc(ts.getBlocActual()).obtenirVariable((String)sem.getValue("TOKEN")).getTipus());
 				sem.setValue("VALOR", "desconegut");
 				sem.setValue("ESTATIC", false);
+				sem.setValue("DESPL", ts.obtenirBloc(ts.getBlocActual()).obtenirVariable((String)sem.getValue("TOKEN")).getDesplacament());
 				//System.out.println("VARIABLE!!\n" + sem.prettyPrint());
 
 				return sem;
@@ -626,7 +639,7 @@ public class Asem {
 			sem.setValue("TIPUS", ts.obtenirBloc(0).obtenirVariable((String)sem.getValue("TOKEN")).getTipus());
 			sem.setValue("VALOR", "desconegut");
 			sem.setValue("ESTATIC", false);
-			sem.setValue("DESPLACAMENT", ts.obtenirBloc(0).obtenirVariable((String)sem.getValue("TOKEN")).getDesplacament());
+			sem.setValue("DESPL", ts.obtenirBloc(0).obtenirVariable((String)sem.getValue("TOKEN")).getDesplacament());
 			//System.out.println("VARIABLE!!\n" + sem.prettyPrint());
 			return sem;
 		}

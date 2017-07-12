@@ -38,6 +38,8 @@ public class CodeGenOut {
 		return -1;
 	}
 	
+	public String getNomRegistre (int i) { return registerNames[i]; }
+	
 	public void freeRegistre (int i) { registerList[i] = false; }
 	
 	public void tancaFitxer () { writer.close(); }

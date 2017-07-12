@@ -1,5 +1,6 @@
 package analitzadorSintactic;
 
+import codeGeneration.CodeGenOut;
 import main.Error;
 import main.Token;
 import taulasimbols.Bloc;
@@ -11,7 +12,6 @@ import taulasimbols.TipusCadena;
 import taulasimbols.TipusIndefinit;
 import taulasimbols.TipusPasParametre;
 import taulasimbols.TipusSimple;
-
 import analitzadorLexicografic.Alex;
 import analitzadorSemantic.Asem;
 import analitzadorSemantic.Semantic;
@@ -21,6 +21,7 @@ public class Asin {
 	private Alex alex;
 	private Error error;
 	private Asem asem;
+	private CodeGenOut gc;
 	private Token lookAhead;
 	private TaulaSimbols taulaSimbols;
 	private boolean hiHaReturn;
@@ -32,6 +33,7 @@ public class Asin {
 		alex = new Alex(args);
 		error = new Error(name);
 		asem = new Asem();
+		gc = new CodeGenOut(name);
 		taulaSimbols = new TaulaSimbols();
 		lookAhead = alex.getToken();
 		alex.writeToken(lookAhead);
@@ -81,12 +83,16 @@ public class Asin {
 		if (lookAhead.esEOF()) {
 			error.tancaFitxer();
 			alex.tancaFitxer();
+			gc.gc("jr $ra");         
+			gc.tancaFitxer();
 			return true;
 		}
 		else {
 			Error.escriuError(26, "", alex.getLiniaActual(), "");
 			error.tancaFitxer();
 			alex.tancaFitxer();
+			gc.gc("jr $ra");   
+			gc.tancaFitxer();
 			return false;
 		}
 
@@ -164,12 +170,14 @@ public class Asin {
 		Acceptar("dos_punts");
 		sem = TIPUS(sem);
 		sem.setValue("VALOR", "desconegut");
+		gc.gc("li   $t0, 1");
+		gc.gc("sw   $t0, -" + asem.getDespl() + "($gp)");
 		asem.afegirVariable(sem, taulaSimbols, alex.getLiniaActual());
 		Acceptar("punt_i_coma");
 		return;
 
 	}
-
+	
 
 	private void DECL_FUNC() {
 
@@ -306,6 +314,7 @@ public class Asin {
 			sem.setValue("TIPUS", new TipusSimple(lookAhead.getLexema(), 4, -2147483648, 2147483647));
 			sem.setValue("ESTATIC", false);
 			sem.setValue("VALOR", "null");
+			sem.setValue("TAMANY", 4);
 			Acceptar("tipus_simple");
 			return sem;
 
@@ -355,6 +364,7 @@ public class Asin {
 
 			sem.setValue("ESTATIC", false);
 			sem.setValue("VALOR", "null");
+			sem.setValue("TAMANY", 4 * (dim2 - dim1 + 1));
 			return sem;
 
 		default: return sem;
@@ -587,7 +597,7 @@ public class Asin {
 			Acceptar("identificador");
 			sem.setValue("REFERENCIA", true);
 			sem = FACTOR1(sem);
-			return sem;	
+		
 
 		case "parentesi_obert":
 			Acceptar("parentesi_obert");
@@ -637,14 +647,25 @@ public class Asin {
 			sem = asem.VAR1_comprovaArray(sem, sem2, taulaSimbols, alex.getLiniaActual());
 			Acceptar("claudator_tancat"); 
 			//retornar tipus d'element de vector
+			int reg = gc.getRegistre();
+			if (reg != -1) {
+				gc.gc("lw   $" + gc.getNomRegistre(reg) + ", -" + sem.getValue("DESPL") + "($gp)");
+				sem.setValue("REG", reg);
+			} else { System.out.println("No queden registres!"); }
 			return sem;
 
 		default:
-			//TODO si id es variable
+			//TODO
 			if ((boolean)sem.getValue("ESTATIC") == false) {
-				//CodeGenOut.gc(sem.getValue("DESPLACAMENT") + "($gp)");
+				gc.gc(sem.getValue("DESPLACAMENT") + "($gp)");
+			} else {
+				int registre = gc.getRegistre();
+				if (registre != -1) {
+					gc.gc("lw   $" + gc.getNomRegistre(registre) + ", -" + sem.getValue("DESPL") + "($gp)");
+					sem.setValue("REG", registre);
+				} else { System.out.println("No queden registres!"); }
 			}
-			return sem;
+			return sem;	
 
 		}
 	}
@@ -814,6 +835,21 @@ public class Asin {
 						+ ((ITipus)sem.getValue("TIPUS")).getNom() + "] i el de l’expressió és [" + ((ITipus)sem2.getValue("TIPUS")).getNom() + "]");
 				
 			}
+			
+			int despl = taulaSimbols.obtenirBloc(taulaSimbols.getBlocActual()).obtenirVariable((String)sem.getValue("TOKEN")).getDesplacament();
+			
+			if (sem.getValue("VALOR") != null) {
+				//Es vector
+				despl += ((int)sem.getValue("VALOR") - (int)sem.getValue("LIMIT")) * 4;
+			} 
+			
+			int registre = gc.getRegistre();
+			if (registre != -1) {
+				gc.gc("li   $" + gc.getNomRegistre(registre) + ", " + sem2.getValue("VALOR"));
+				gc.gc("sw   $" + gc.getNomRegistre(registre) + ", -" + despl + "($gp)");
+				gc.freeRegistre(registre);
+			} else { System.out.println("No queden registres!"); }
+			
 			return;
 
 		case "escriure":
