@@ -154,7 +154,7 @@ public class Asin {
 		//Tornem a posar token per si sha perdut evaluant lexprexio
 		sem.setValue("TOKEN", cte);
 		asem.afegirConstant(sem, taulaSimbols, alex.getLiniaActual());
-		gc.freeRegistre((int) sem.getValue("REG"));
+		if (!(sem.getValue("TIPUS") instanceof TipusCadena))gc.freeRegistre((int) sem.getValue("REG"));
 		Acceptar("punt_i_coma");
 		return;
 
@@ -931,6 +931,8 @@ public class Asin {
 
 		case "cicle":
 			Acceptar("cicle");
+			String etiqueta = gc.demanarEtiqueta();
+			gc.gcEtiqueta(etiqueta + ":");
 			LL_INST();
 			Acceptar("fins"); // fins 	 
 			sem = EXPRESIO(sem);
@@ -940,10 +942,19 @@ public class Asin {
 				Error.escriuError(38, "", alex.getLiniaActual(), "");
 				System.out.println("[ERR_SEM_8] " + alex.getLiniaActual() + ", La condició no és de tipus LOGIC");
 			}
+			if (((String)sem.getValue("VALOR")).equals("desconegut")) 
+				gc.gc("beqz	$" + gc.getNomRegistre((int)sem.getValue("REG")) + ", " + etiqueta);
+			else if (sem.getValue("VALOR") != null && (int)sem.getValue("VALOR") == 0)
+				gc.gc("b	" + etiqueta);
+				
+			
 			return;
 
 		case "mentre":
 			Acceptar("mentre");
+			String etiqueta2 = gc.demanarEtiqueta();
+			String etiqueta3 = gc.demanarEtiqueta();
+			gc.gcEtiqueta(etiqueta2 + ":");
 			sem = EXPRESIO(sem);
 			//comprovar que sem tipus == logic
 			if (!asem.esLogic(sem)) {
@@ -952,13 +963,20 @@ public class Asin {
 				System.out.println("[ERR_SEM_8] " + alex.getLiniaActual() + ", La condició no és de tipus LOGIC");
 			}
 			Acceptar("fer");
+			if (((String)sem.getValue("VALOR")).equals("desconegut")) 
+				gc.gc("beqz	$" + gc.getNomRegistre((int)sem.getValue("REG")) + ", " + etiqueta3);
+			else if (sem.getValue("VALOR") != null && (int)sem.getValue("VALOR") == 0)
+				gc.gc("b	" + etiqueta3);
 			LL_INST();
+			gc.gc("b	" + etiqueta2);
+			gc.gcEtiqueta(etiqueta3 + ":");
 			Acceptar("fimentre");	
 
 			return;
 
 		case "si":
 			Acceptar("si"); 
+			String etiqueta4 = gc.demanarEtiqueta();
 			sem = EXPRESIO(sem);
 			//comprovar que sem tipus == logic
 			if (!asem.esLogic(sem)) {
@@ -967,8 +985,12 @@ public class Asin {
 				System.out.println("[ERR_SEM_8] " + alex.getLiniaActual() + ", La condició no és de tipus LOGIC");
 			}
 			Acceptar("llavors");
+			if (((String)sem.getValue("VALOR")).equals("desconegut")) 
+				gc.gc("beqz	$" + gc.getNomRegistre((int)sem.getValue("REG")) + ", " + etiqueta4);
+			else if (sem.getValue("VALOR") != null && (int)sem.getValue("VALOR") == 0)
+				gc.gc("b	" + etiqueta4);
 			LL_INST();
-			SINO();
+			SINO(etiqueta4);
 			Acceptar("fisi"); 
 
 			return;
@@ -1081,16 +1103,17 @@ public class Asin {
 		}
 	}
 
-	private void SINO () {
-
+	private void SINO (String etiqueta4) {
+		
 		switch (lookAhead.getTipus()) {
-
+		
 		case "sino":
 			Acceptar("sino");
+			gc.gcEtiqueta(etiqueta4 + ":");
 			LL_INST();
 			return;
 
-		default:
+		default: gc.gcEtiqueta(etiqueta4 + ":");
 			return;
 
 		}

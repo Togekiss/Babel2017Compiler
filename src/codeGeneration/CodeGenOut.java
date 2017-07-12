@@ -50,7 +50,7 @@ public class CodeGenOut {
 	
 	public String getNomRegistre (int i) { return registerNames[i]; }
 	
-	public void freeRegistre (int i) { registerList[i] = false; }
+	public void freeRegistre (int i) { registerList[i] = false; System.out.println(i + " lliure");}
 	
 	public void tancaFitxer () { writer.close(); }
 }

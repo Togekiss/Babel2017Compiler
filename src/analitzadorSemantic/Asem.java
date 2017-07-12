@@ -628,9 +628,9 @@ public class Asem {
 			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 4));
 			return sem;
 		}
-		
 		int desplaçamentIndex = 0;
 		int registre = gc.getRegistre();
+		System.out.println("jeje");
 		//si sem2 es estatic, comprova que estigui dins el rang
 		if ((boolean)sem2.getValue("ESTATIC")) {
 			int v = (int)sem2.getValue("VALOR");
