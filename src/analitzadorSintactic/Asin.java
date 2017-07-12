@@ -394,6 +394,7 @@ public class Asin {
 			sem2 = EXPRESIO_SIMPLE(sem2);
 			//operar sem i sem2 segons operador
 			sem = asem.EXPRESIO1_operar(sem, sem2, alex.getLiniaActual());
+			gc.freeRegistre((int) sem2.getValue("REG"));
 			sem.removeAttribute("OPERADOR");
 			return sem;
 
@@ -434,7 +435,7 @@ public class Asin {
 
 			//operar sem amb sem2 segons operador i guardar a sem
 			sem = asem.EXPRESIO_SIMPLE1_operar(sem, sem2, alex.getLiniaActual());
-
+			gc.freeRegistre((int) sem2.getValue("REG"));
 			//System.out.println("DESPRES D'OPERAR" + sem.prettyPrint());
 			sem.removeAttribute("OPERADOR");
 			sem = EXPRESIO_SIMPLE1(sem);
@@ -468,6 +469,7 @@ public class Asin {
 			sem2 = FACTOR(sem2);
 			//operar sem i sem2 segons OP_TERME
 			asem.TERME_operar(sem, sem2, alex.getLiniaActual());
+			gc.freeRegistre((int) sem2.getValue("REG"));
 			sem.removeAttribute("OPERADOR");
 			sem = TERME1(sem);
 			return sem;
@@ -570,15 +572,21 @@ public class Asin {
 			sem.setValue("REFERENCIA", false);
 			//System.out.println(sem.prettyPrint());
 			Acceptar("ct_enter"); 
+			int reg1 = gc.getRegistre();
+			gc.gc("li $" + gc.getNomRegistre(reg1) + ", " + sem.getValue("VALOR"));
+			sem.setValue("REG", reg1);
 			return sem;
 
 		case "ct_logica":
 			sem.setValue("TIPUS", new TipusSimple("logic", 4, -2147483648, 2147483647));
-			sem.setValue("VALOR", lookAhead.getLexema().equals("cert")?0xFFFFFFFF:0);
+			sem.setValue("VALOR", lookAhead.getLexema().equals("cert")?0x00000001:0);
 			sem.setValue("ESTATIC", true);
 			sem.setValue("REFERENCIA", false);
 			//System.out.println(sem.prettyPrint());
 			Acceptar("ct_logica"); 
+			int reg2 = gc.getRegistre();
+			gc.gc("li $" + gc.getNomRegistre(reg2) + ", " + sem.getValue("VALOR"));
+			sem.setValue("REG", reg2);
 			return sem;
 
 		case "ct_cadena":
@@ -587,6 +595,7 @@ public class Asin {
 			sem.setValue("ESTATIC", true);
 			sem.setValue("REFERENCIA", false);
 			//System.out.println(sem.prettyPrint());
+			//TODO codi cadena
 			Acceptar("ct_cadena");
 			return sem;
 
