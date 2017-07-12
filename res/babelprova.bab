@@ -9,5 +9,11 @@ pepito = cert;
 marta = 3;
 array1[marta] = cert;
 
+si (4 > 3) llavors
+	pepito = fals;
+sino
+	marta = 9;
+fisi		
+	
 fiprog
 
