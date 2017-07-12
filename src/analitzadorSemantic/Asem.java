@@ -1,5 +1,6 @@
 package analitzadorSemantic;
 
+import codeGeneration.CodeGenOut;
 import main.Error;
 import taulasimbols.Bloc;
 import taulasimbols.Constant;
@@ -23,7 +24,12 @@ public class Asem {
 		this.error = error;
 	}*/
 
+	private CodeGenOut gc;
 	private int despl = 0;
+	
+	public Asem(CodeGenOut gc) {
+		this.gc = gc;
+	}
 	
 	public int getDespl () { return despl; }
 
@@ -442,7 +448,22 @@ public class Asem {
 		if (!(boolean)sem.getValue("ESTATIC") || !(boolean)sem2.getValue("ESTATIC")) {
 			sem.setValue("VALOR", "desconegut");
 			sem.setValue("ESTATIC", false);
+			//TODO GENERAR CODI
+			switch ((String)sem.getValue("OPERADOR")) {
 
+			case "and":
+				break;
+			case "multiplicacio":
+				break;
+			case "divisio":
+				if (((int)sem2.getValue("VALOR")) == 0) {
+					//error "no es pot dividir per 0"
+					break;
+				}
+				break;
+			default:
+			}
+			
 			return sem;
 		}
 

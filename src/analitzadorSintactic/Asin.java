@@ -32,7 +32,7 @@ public class Asin {
 
 		alex = new Alex(args);
 		error = new Error(name);
-		asem = new Asem();
+		asem = new Asem(gc);
 		gc = new CodeGenOut(name);
 		taulaSimbols = new TaulaSimbols();
 		lookAhead = alex.getToken();
@@ -647,6 +647,7 @@ public class Asin {
 			sem = asem.VAR1_comprovaArray(sem, sem2, taulaSimbols, alex.getLiniaActual());
 			Acceptar("claudator_tancat"); 
 			//retornar tipus d'element de vector
+			//TODO ID ES UN VECTOR
 			int reg = gc.getRegistre();
 			if (reg != -1) {
 				gc.gc("lw   $" + gc.getNomRegistre(reg) + ", -" + sem.getValue("DESPL") + "($gp)");
@@ -655,7 +656,7 @@ public class Asin {
 			return sem;
 
 		default:
-			//TODO
+			//TODO QUAN VA A ID SENSE RES MES
 			int registre = gc.getRegistre();
 			if (registre != -1) {
 				if ((boolean)sem.getValue("ESTATIC") == true) {
