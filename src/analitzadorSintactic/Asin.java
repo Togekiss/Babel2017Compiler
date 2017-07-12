@@ -76,10 +76,10 @@ public class Asin {
 		Acceptar("prog");
 
 		PROG();
-		
+
 		System.out.println("Taula de simbols:");
 		System.out.println(taulaSimbols.toXml());
-			
+
 		if (lookAhead.esEOF()) {
 			error.tancaFitxer();
 			alex.tancaFitxer();
@@ -141,7 +141,7 @@ public class Asin {
 
 	private void DECL_CONST(){
 		Semantic sem = new Semantic();
-		
+
 		Acceptar("const");
 		if (lookAhead.getTipus().equals("identificador"))
 			sem.setValue("TOKEN", lookAhead.getLexema());
@@ -177,14 +177,14 @@ public class Asin {
 		return;
 
 	}
-	
+
 
 	private void DECL_FUNC() {
 
 		//creem descriptor per omplir llistat de parametres
 		Funcio funcio = new Funcio();
-		
-		
+
+
 		switch (lookAhead.getTipus()) {
 
 		case "funcio":
@@ -199,26 +199,26 @@ public class Asin {
 			tipusReturn = new TipusSimple(lookAhead.getLexema(), 4, -2147483648, 2147483647);
 			hiHaReturn = false;
 			Acceptar("tipus_simple");
-					
+
 			asem.afegirFuncio(funcio, taulaSimbols, alex.getLiniaActual());
 			Acceptar("punt_i_coma");
-						
+
 			DECL_CONST_VAR();
 
 			Acceptar("func");
-			
+
 			LL_INST();
-			
+
 			Acceptar("fifunc");
 			Acceptar("punt_i_coma");
-			
+
 			//hi ha algun return
 			if (!hiHaReturn) {
 				//error: no hi ha cap return
 				Error.escriuError(321, funcio.getNom(), alex.getLiniaActual(), "");
 				System.out.println("[ERR_SEM_21] " + alex.getLiniaActual() + ", No hi ha cap retornar en la funció " + funcio.getNom());
 			}
-			
+
 			taulaSimbols.esborrarBloc(1);
 			taulaSimbols.setBlocActual(0);
 			DECL_FUNC();
@@ -307,7 +307,7 @@ public class Asin {
 
 		Semantic sem2 = new Semantic();
 		sem.setValue("TIPUS", new TipusIndefinit("indefinit", 4));
-		
+
 		switch (lookAhead.getTipus()) {
 
 		case "tipus_simple": 
@@ -322,9 +322,9 @@ public class Asin {
 			Acceptar("vector");
 			Acceptar("claudator_obert");
 			sem2 = EXPRESIO(sem2);
-			
+
 			//System.out.println("DIMENSIO 1\n" + sem2.prettyPrint());
-			
+
 			int dim1;
 			//comprovem 1a dimensio del array
 			if ( sem2.getValue("TIPUS") instanceof TipusSimple &&
@@ -340,7 +340,7 @@ public class Asin {
 
 			Acceptar("rang");
 			sem2 = EXPRESIO(sem2);
-			
+
 			//System.out.println("DIMENSIO 2\n" + sem2.prettyPrint());
 
 			int dim2;
@@ -355,10 +355,10 @@ public class Asin {
 				System.out.println("[ERR_SEM_7] " + alex.getLiniaActual() + ", El rang del vector ha de ser SENCER i ESTATIC");
 				dim2 = Integer.MIN_VALUE;
 			}
-			
+
 			Acceptar("claudator_tancat");
 			Acceptar("de");
-			
+
 			sem.setValue("TIPUS", asem.TIPUS_comprovaArray(dim1, dim2, lookAhead.getLexema(), alex.getLiniaActual()));
 			Acceptar("tipus_simple");
 
@@ -374,7 +374,7 @@ public class Asin {
 
 
 	private Semantic EXPRESIO(Semantic sem) {
-		
+
 		sem = EXPRESIO_SIMPLE(sem);
 		sem = EXPRESIO1(sem);
 		return sem;
@@ -434,7 +434,7 @@ public class Asin {
 
 			//operar sem amb sem2 segons operador i guardar a sem
 			sem = asem.EXPRESIO_SIMPLE1_operar(sem, sem2, alex.getLiniaActual());
-			
+
 			//System.out.println("DESPRES D'OPERAR" + sem.prettyPrint());
 			sem.removeAttribute("OPERADOR");
 			sem = EXPRESIO_SIMPLE1(sem);
@@ -510,7 +510,7 @@ public class Asin {
 	private Semantic OP_EXP (Semantic sem) {
 
 		//System.out.println("DINS OP_EXP");
-		
+
 		switch (lookAhead.getTipus()) {
 
 		case "suma":
@@ -597,7 +597,7 @@ public class Asin {
 			Acceptar("identificador");
 			sem.setValue("REFERENCIA", true);
 			sem = FACTOR1(sem);
-		
+			return sem;
 
 		case "parentesi_obert":
 			Acceptar("parentesi_obert");
@@ -656,15 +656,16 @@ public class Asin {
 
 		default:
 			//TODO
-			if ((boolean)sem.getValue("ESTATIC") == false) {
-				gc.gc(sem.getValue("DESPLACAMENT") + "($gp)");
-			} else {
-				int registre = gc.getRegistre();
-				if (registre != -1) {
+			int registre = gc.getRegistre();
+			if (registre != -1) {
+				if ((boolean)sem.getValue("ESTATIC") == true) {
+					gc.gc("li   $" + gc.getNomRegistre(registre) + ", " + sem.getValue("VALOR"));
+				} else {
 					gc.gc("lw   $" + gc.getNomRegistre(registre) + ", -" + sem.getValue("DESPL") + "($gp)");
-					sem.setValue("REG", registre);
-				} else { System.out.println("No queden registres!"); }
-			}
+				}
+				sem.setValue("REG", registre);
+			} else { System.out.println("No queden registres!"); }
+
 			return sem;	
 
 		}
@@ -673,7 +674,7 @@ public class Asin {
 
 	private void LL_EXPRESIO(Semantic sem) {
 
-		
+
 		//s'ha de comprovar que la expresio numero x correspongui
 		//amb el parametre numero x de la funcio
 		Semantic sem2 = new Semantic();
@@ -826,30 +827,30 @@ public class Asin {
 			//comprovar que tipus sem1 == tipus sem2
 			if (!sem.getValue("TIPUS").equals(sem2.getValue("TIPUS"))) {
 				//error
-				
+
 				//System.out.println("SEM " + ((ITipus)sem.getValue("TIPUS")).toXml());
 				//System.out.println("SEM2 " + ((ITipus)sem2.getValue("TIPUS")).toXml());
 				Error.escriuError(312, ((ITipus)sem2.getValue("TIPUS")).getNom(), alex.getLiniaActual(), ((ITipus)sem.getValue("TIPUS")).getNom());
 				System.out.println("igualacio [ERR_SEM_12] " + alex.getLiniaActual() +
 						", La variable i l'expressió de assignació tenen tipus diferents. El tipus de la variable és ["
 						+ ((ITipus)sem.getValue("TIPUS")).getNom() + "] i el de l’expressió és [" + ((ITipus)sem2.getValue("TIPUS")).getNom() + "]");
-				
+
 			}
-			
+
 			int despl = taulaSimbols.obtenirBloc(taulaSimbols.getBlocActual()).obtenirVariable((String)sem.getValue("TOKEN")).getDesplacament();
-			
+
 			if (sem.getValue("VALOR") != null) {
 				//Es vector
 				despl += ((int)sem.getValue("VALOR") - (int)sem.getValue("LIMIT")) * 4;
 			} 
-			
+
 			int registre = gc.getRegistre();
 			if (registre != -1) {
 				gc.gc("li   $" + gc.getNomRegistre(registre) + ", " + sem2.getValue("VALOR"));
 				gc.gc("sw   $" + gc.getNomRegistre(registre) + ", -" + despl + "($gp)");
 				gc.freeRegistre(registre);
 			} else { System.out.println("No queden registres!"); }
-			
+
 			return;
 
 		case "escriure":
