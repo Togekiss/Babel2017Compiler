@@ -22,7 +22,7 @@ public class CodeGenOut {
 			writer.println("	.globl	main");
 			writer.println("	.data");
 			writer.println("error:");
-			writer.println("	.asciiz \"Index fora de Rang\"");
+			writer.println("	.asciiz \"[ERR_GC_1] Index de vector fora de limits\"");
 			writer.println("	.text");
 			writer.println("main:");
 			writer.println("	move $fp, $sp");
