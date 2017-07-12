@@ -154,6 +154,7 @@ public class Asin {
 		//Tornem a posar token per si sha perdut evaluant lexprexio
 		sem.setValue("TOKEN", cte);
 		asem.afegirConstant(sem, taulaSimbols, alex.getLiniaActual());
+		gc.freeRegistre((int) sem.getValue("REG"));
 		Acceptar("punt_i_coma");
 		return;
 
@@ -596,6 +597,11 @@ public class Asin {
 			sem.setValue("REFERENCIA", false);
 			//System.out.println(sem.prettyPrint());
 			//TODO codi cadena
+			String eti = gc.demanarEtiqueta();
+			gc.gc(".data");
+			gc.gcEtiqueta(eti + ": .asciiz " + sem.getValue("VALOR"));
+			gc.gc(".text");
+			sem.setValue("REG", eti);
 			Acceptar("ct_cadena");
 			return sem;
 
