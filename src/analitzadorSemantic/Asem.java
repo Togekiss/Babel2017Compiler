@@ -313,6 +313,17 @@ public class Asem {
 		//si no es estatic
 		if (!(boolean)sem.getValue("ESTATIC")) {
 			sem.setValue("VALOR", "desconegut");
+			//TODO codi not/negat
+			switch ((String)sem.getValue("OPERADOR")) {
+			case "not":
+				gc.gc("not $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem.getValue("REG")));
+				gc.gc("andi $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", 0x00000001");
+				break;
+			case "resta":
+				gc.gc("neg $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem.getValue("REG")));
+				break;
+			default:
+			}
 			return sem;
 		}
 
@@ -327,7 +338,7 @@ public class Asem {
 			break;
 		default:
 		}
-
+		gc.gc("li $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", " + sem.getValue("VALOR"));
 		return sem;
 	}
 
@@ -376,7 +387,17 @@ public class Asem {
 		if (!(boolean)sem.getValue("ESTATIC") || !(boolean)sem2.getValue("ESTATIC")) {
 			sem.setValue("VALOR", "desconegut");
 			sem.setValue("ESTATIC", false);
+			//TODO codi operacio or/+/-
+			switch ((String)sem.getValue("OPERADOR")) {
 
+			case "or":
+				gc.gc("or $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem2.getValue("REG")));				break;
+			case "suma":
+				gc.gc("add $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem2.getValue("REG")));				break;
+			case "resta":
+				gc.gc("sub $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem2.getValue("REG")));				break;
+			default:
+			}
 			return sem;
 		}
 
@@ -394,7 +415,7 @@ public class Asem {
 			break;
 		default:
 		}
-
+		gc.gc("li $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", " + sem.getValue("VALOR"));
 		return sem;
 	}
 
@@ -446,18 +467,22 @@ public class Asem {
 		if (!(boolean)sem.getValue("ESTATIC") || !(boolean)sem2.getValue("ESTATIC")) {
 			sem.setValue("VALOR", "desconegut");
 			sem.setValue("ESTATIC", false);
-			//TODO GENERAR CODI
+			//TODO codi operacio and/*/%
 			switch ((String)sem.getValue("OPERADOR")) {
-
 			case "and":
+				gc.gc("and $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem2.getValue("REG")));
 				break;
 			case "multiplicacio":
+				gc.gc("mul $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem2.getValue("REG")));
 				break;
 			case "divisio":
 				if (((int)sem2.getValue("VALOR")) == 0) {
 					//error "no es pot dividir per 0"
+					//TODO comprovar divisio 0 amb assembler??
+					gc.gc("li $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", 0");
 					break;
 				}
+				gc.gc("div $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem2.getValue("REG")));
 				break;
 			default:
 			}
@@ -488,7 +513,7 @@ public class Asem {
 			break;
 		default:
 		}
-
+		gc.gc("li $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", " + sem.getValue("VALOR"));
 		return sem;
 	}
 
