@@ -260,8 +260,6 @@ public class Asem {
 
 			int vsem1 = (int)sem.getValue("VALOR");
 			int vsem2 = (int)sem2.getValue("VALOR");
-			
-			
 
 			switch ((String)sem.getValue("OPERADOR")) {
 
@@ -652,7 +650,7 @@ public class Asem {
 			
 			if (registre != -1 && registre2 != -1) {
 				String etiqueta = gc.demanarEtiqueta();
-				gc.gc("lb   $" + gc.getNomRegistre(registre) + ", -" + (int)sem2.getValue("DESPL") + "($gp)");
+				gc.gc("lw   $" + gc.getNomRegistre(registre) + ", -" + (int)sem2.getValue("DESPL") + "($gp)");
 				gc.gc("li   $" + gc.getNomRegistre(registre2) + ", " + (int)((TipusArray)ts.obtenirBloc(ts.getBlocActual()).obtenirVariable((String)sem.getValue("TOKEN")).getTipus()).obtenirDimensio(0).getLimitInferior());
 				gc.gc("blt   $" + gc.getNomRegistre(registre) + ", $" + gc.getNomRegistre(registre2) + ", " + etiqueta);
 				gc.gc("li   $" + gc.getNomRegistre(registre2) + ", " + (int)((TipusArray)ts.obtenirBloc(ts.getBlocActual()).obtenirVariable((String)sem.getValue("TOKEN")).getTipus()).obtenirDimensio(0).getLimitSuperior());
