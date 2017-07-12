@@ -39,18 +39,21 @@ public class CodeGenOut {
 	public void gcEtiqueta (String toWrite) { writer.println(toWrite); }
 	
 	public int getRegistre () {
+		System.out.println("Getting reg");
 		for (int i = 0; i < MAXREGISTERS; i++) { 
 			if (registerList[i] == false) {
+				System.out.println("reg " + i + " is free");
 				registerList[i] = true;
 				return i;
 			}
 		}
+		System.out.println("no free regs");
 		return -1;
 	}
 	
 	public String getNomRegistre (int i) { return registerNames[i]; }
 	
-	public void freeRegistre (int i) { registerList[i] = false; }
+	public void freeRegistre (int i) { registerList[i] = false; System.out.println("freeing " + i);}
 	
 	public void tancaFitxer () { writer.close(); }
 }

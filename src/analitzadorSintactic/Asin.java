@@ -32,8 +32,8 @@ public class Asin {
 
 		alex = new Alex(args);
 		error = new Error(name);
-		asem = new Asem(gc);
 		gc = new CodeGenOut(name);
+		asem = new Asem(gc);
 		taulaSimbols = new TaulaSimbols();
 		lookAhead = alex.getToken();
 		alex.writeToken(lookAhead);
@@ -331,9 +331,10 @@ public class Asin {
 			//comprovem 1a dimensio del array
 			if ( sem2.getValue("TIPUS") instanceof TipusSimple &&
 					((TipusSimple)sem2.getValue("TIPUS")).getNom().equals("sencer") &&
-					((boolean)sem2.getValue("ESTATIC")) == true)
+					((boolean)sem2.getValue("ESTATIC")) == true) {
 				dim1 = (int)sem2.getValue("VALOR");
-			else {
+				gc.freeRegistre((int)sem2.getValue("REG"));
+			} else {
 				//ERROR
 				Error.escriuError(37, "", alex.getLiniaActual(), "");
 				System.out.println("[ERR_SEM_7] " + alex.getLiniaActual() + ", El rang del vector ha de ser SENCER i ESTATIC");
@@ -349,9 +350,10 @@ public class Asin {
 			//comprovem 2a dimensio del array
 			if (sem2.getValue("TIPUS") instanceof TipusSimple &&
 					((TipusSimple)sem2.getValue("TIPUS")).getNom().equals("sencer") &&
-					((boolean)sem2.getValue("ESTATIC")) == true)
+					((boolean)sem2.getValue("ESTATIC")) == true) {
 				dim2 = (int)sem2.getValue("VALOR");
-			else {
+				gc.freeRegistre((int)sem2.getValue("REG"));
+			} else {
 				//ERROR
 				Error.escriuError(37, "", alex.getLiniaActual(), "");
 				System.out.println("[ERR_SEM_7] " + alex.getLiniaActual() + ", El rang del vector ha de ser SENCER i ESTATIC");
@@ -596,6 +598,7 @@ public class Asin {
 			return sem;
 
 		case "ct_cadena":
+System.out.println("cadenaaaa");
 			sem.setValue("TIPUS", new TipusCadena("cadena", lookAhead.getLexema().length(), lookAhead.getLexema().length()));
 			sem.setValue("VALOR", lookAhead.getLexema());
 			sem.setValue("ESTATIC", true);
@@ -936,6 +939,8 @@ public class Asin {
 
 		case "cicle":
 			Acceptar("cicle");
+			String etiqueta = gc.demanarEtiqueta();
+			gc.gcEtiqueta(etiqueta + ":");
 			LL_INST();
 			Acceptar("fins"); // fins 	 
 			sem = EXPRESIO(sem);
@@ -945,10 +950,19 @@ public class Asin {
 				Error.escriuError(38, "", alex.getLiniaActual(), "");
 				System.out.println("[ERR_SEM_8] " + alex.getLiniaActual() + ", La condició no és de tipus LOGIC");
 			}
+			if (((String)sem.getValue("VALOR")).equals("desconegut")) 
+				gc.gc("beqz	$" + gc.getNomRegistre((int)sem.getValue("REG")) + ", " + etiqueta);
+			else if (sem.getValue("VALOR") != null && (int)sem.getValue("VALOR") == 0)
+				gc.gc("b	" + etiqueta);
+				
+			
 			return;
 
 		case "mentre":
 			Acceptar("mentre");
+			String etiqueta2 = gc.demanarEtiqueta();
+			String etiqueta3 = gc.demanarEtiqueta();
+			gc.gcEtiqueta(etiqueta2 + ":");
 			sem = EXPRESIO(sem);
 			//comprovar que sem tipus == logic
 			if (!asem.esLogic(sem)) {
@@ -957,13 +971,20 @@ public class Asin {
 				System.out.println("[ERR_SEM_8] " + alex.getLiniaActual() + ", La condició no és de tipus LOGIC");
 			}
 			Acceptar("fer");
+			if (((String)sem.getValue("VALOR")).equals("desconegut")) 
+				gc.gc("beqz	$" + gc.getNomRegistre((int)sem.getValue("REG")) + ", " + etiqueta3);
+			else if (sem.getValue("VALOR") != null && (int)sem.getValue("VALOR") == 0)
+				gc.gc("b	" + etiqueta3);
 			LL_INST();
+			gc.gc("b	" + etiqueta2);
+			gc.gcEtiqueta(etiqueta3 + ":");
 			Acceptar("fimentre");	
 
 			return;
 
 		case "si":
 			Acceptar("si"); 
+			String etiqueta4 = gc.demanarEtiqueta();
 			sem = EXPRESIO(sem);
 			//comprovar que sem tipus == logic
 			if (!asem.esLogic(sem)) {
@@ -972,8 +993,12 @@ public class Asin {
 				System.out.println("[ERR_SEM_8] " + alex.getLiniaActual() + ", La condició no és de tipus LOGIC");
 			}
 			Acceptar("llavors");
+			if (((String)sem.getValue("VALOR")).equals("desconegut")) 
+				gc.gc("beqz	$" + gc.getNomRegistre((int)sem.getValue("REG")) + ", " + etiqueta4);
+			else if (sem.getValue("VALOR") != null && (int)sem.getValue("VALOR") == 0)
+				gc.gc("b	" + etiqueta4);
 			LL_INST();
-			SINO();
+			SINO(etiqueta4);
 			Acceptar("fisi"); 
 
 			return;
@@ -1086,16 +1111,17 @@ public class Asin {
 		}
 	}
 
-	private void SINO () {
-
+	private void SINO (String etiqueta4) {
+		
 		switch (lookAhead.getTipus()) {
-
+		
 		case "sino":
 			Acceptar("sino");
+			gc.gcEtiqueta(etiqueta4 + ":");
 			LL_INST();
 			return;
 
-		default:
+		default: gc.gcEtiqueta(etiqueta4 + ":");
 			return;
 
 		}
