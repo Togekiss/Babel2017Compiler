@@ -20,6 +20,10 @@ public class CodeGenOut {
 			writer.println("	.text");
 			writer.println("	.align	2");
 			writer.println("	.globl	main");
+			writer.println("	.data");
+			writer.println("error:");
+			writer.println("	.asciiz \"Index fora de Rang\"");
+			writer.println("	.text");
 			writer.println("main:");
 			writer.println("	move $fp, $sp");
 		} catch (IOException e) {

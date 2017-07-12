@@ -574,7 +574,7 @@ public class Asin {
 
 		case "ct_logica":
 			sem.setValue("TIPUS", new TipusSimple("logic", 4, -2147483648, 2147483647));
-			sem.setValue("VALOR", lookAhead.getLexema().equals("cert")?true:false);
+			sem.setValue("VALOR", lookAhead.getLexema().equals("cert")?0xFFFFFFFF:0);
 			sem.setValue("ESTATIC", true);
 			sem.setValue("REFERENCIA", false);
 			//System.out.println(sem.prettyPrint());
@@ -850,7 +850,15 @@ public class Asin {
 						gc.gc("subu   $" + gc.getNomRegistre(registre) + ", $" + gc.getNomRegistre(registre2) + ", $" + gc.getNomRegistre(registre)); //-Adreça($gp)
 						gc.gc("li   $" + gc.getNomRegistre(registre2) + ", " + sem2.getValue("VALOR"));
 						gc.gc("sw   $" + gc.getNomRegistre(registre2) + ", 0($" + gc.getNomRegistre(registre) + ")");
+						String etiqueta = gc.demanarEtiqueta();
+						gc.gc("b	" + etiqueta);
 						gc.gcEtiqueta((String)sem.getValue("LABEL") + ":");
+						gc.gc("li   $v0, 4");
+						gc.gc("la   $a0, error");
+						gc.gc("syscall");
+						gc.gc("li   $v0, 10");
+						gc.gc("syscall");
+						gc.gcEtiqueta(etiqueta + ":");
 						gc.freeRegistre((int)sem.getValue("REGISTRE"));
 						gc.freeRegistre(registre);
 						gc.freeRegistre(registre2);

@@ -1,12 +1,13 @@
 const prova_a = "ho%&/ajn l·l egfdsa";
 var marta : sencer;
 var pepito : logic;
-var array1: vector[3 .. 7] de sencer;
+var array1: vector[3 .. 7] de logic;
 var caca : sencer;
 
 prog
-marta = 8;
-array1[marta] = 6;
+pepito = cert;
+marta = 3;
+array1[marta] = cert;
 
 fiprog
 
