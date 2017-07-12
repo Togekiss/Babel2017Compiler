@@ -28,7 +28,7 @@ public class AsinErrors {
 	public AsinErrors (String args, String name) {
 		
 		alex = new Alex(args);
-		asem = new Asem();
+		//asem = new Asem();
 		error = new Error(name);
 		lookAhead = alex.getToken();
 		alex.writeToken(lookAhead);

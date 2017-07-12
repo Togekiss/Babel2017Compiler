@@ -32,8 +32,8 @@ public class Asin {
 
 		alex = new Alex(args);
 		error = new Error(name);
-		asem = new Asem();
 		gc = new CodeGenOut(name);
+		asem = new Asem(gc);
 		taulaSimbols = new TaulaSimbols();
 		lookAhead = alex.getToken();
 		alex.writeToken(lookAhead);
@@ -824,16 +824,47 @@ public class Asin {
 			int despl = taulaSimbols.obtenirBloc(taulaSimbols.getBlocActual()).obtenirVariable((String)sem.getValue("TOKEN")).getDesplacament();
 			
 			if (sem.getValue("VALOR") != null) {
-				//Es vector
-				despl += ((int)sem.getValue("VALOR") - (int)sem.getValue("LIMIT")) * 4;
-			} 
+				if (sem.getValue("REGISTRE") == null) {
+					//Es vector i valor estatic
+					despl += ((int)sem.getValue("VALOR") - (int)sem.getValue("LIMIT")) * 4;
+					int registre = gc.getRegistre();
+					if (registre != -1) {
+						gc.gc("li   $" + gc.getNomRegistre(registre) + ", " + sem2.getValue("VALOR"));
+						gc.gc("sw   $" + gc.getNomRegistre(registre) + ", -" + despl + "($gp)");
+						gc.freeRegistre(registre);
+					} else { System.out.println("No queden registres!"); }
+				} else {
+					//Es vector i valor no estatic
+					int registre = gc.getRegistre();
+					int registre2 = gc.getRegistre();
+					if (registre != -1 && registre2 != -1) {
+						gc.gc("li   $" + gc.getNomRegistre(registre) + ", " + (int)sem.getValue("LIMIT")); //li
+						gc.gc("li   $" + gc.getNomRegistre(registre2) + ", 4");
+						gc.gc("mul   $" + gc.getNomRegistre(registre) + ", $" + gc.getNomRegistre(registre) + ", $" + gc.getNomRegistre(registre2));
+						gc.gc("li   $" + gc.getNomRegistre(registre2) + ", " + despl); //Adreça vector respecte $gp
+						gc.gc("subu   $" + gc.getNomRegistre(registre) + ", $" + gc.getNomRegistre(registre2) + ", $" + gc.getNomRegistre(registre));
+						gc.gc("li   $" + gc.getNomRegistre(registre2) + ", 4");
+						gc.gc("mul   $" + gc.getNomRegistre(registre2) + ", $" + gc.getNomRegistre((int)sem.getValue("REGISTRE")) + ", $" + gc.getNomRegistre(registre2));
+						gc.gc("addu   $" + gc.getNomRegistre(registre) + ", $" + gc.getNomRegistre(registre2) + ", $" + gc.getNomRegistre(registre));
+						gc.gc("la   $" + gc.getNomRegistre(registre2) + ", 0($gp)"); //Adreça $gp
+						gc.gc("subu   $" + gc.getNomRegistre(registre) + ", $" + gc.getNomRegistre(registre2) + ", $" + gc.getNomRegistre(registre)); //-Adreça($gp)
+						gc.gc("li   $" + gc.getNomRegistre(registre2) + ", " + sem2.getValue("VALOR"));
+						gc.gc("sw   $" + gc.getNomRegistre(registre2) + ", 0($" + gc.getNomRegistre(registre) + ")");
+						gc.gcEtiqueta((String)sem.getValue("LABEL") + ":");
+						gc.freeRegistre((int)sem.getValue("REGISTRE"));
+						gc.freeRegistre(registre);
+						gc.freeRegistre(registre2);
+					} else { System.out.println("No queden registres!"); }
+				}
+			} else if (!(sem.getValue("VALOR") instanceof TipusIndefinit)) {
+				int registre = gc.getRegistre();
+				if (registre != -1) {
+					gc.gc("li   $" + gc.getNomRegistre(registre) + ", " + sem2.getValue("VALOR"));
+					gc.gc("sw   $" + gc.getNomRegistre(registre) + ", -" + despl + "($gp)");
+					gc.freeRegistre(registre);
+				} else { System.out.println("No queden registres!"); }
+			}
 			
-			int registre = gc.getRegistre();
-			if (registre != -1) {
-				gc.gc("li   $" + gc.getNomRegistre(registre) + ", " + sem2.getValue("VALOR"));
-				gc.gc("sw   $" + gc.getNomRegistre(registre) + ", -" + despl + "($gp)");
-				gc.freeRegistre(registre);
-			} else { System.out.println("No queden registres!"); }
 			
 			return;
 

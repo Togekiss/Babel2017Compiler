@@ -6,12 +6,14 @@ import java.io.PrintWriter;
 public class CodeGenOut {
 	private PrintWriter writer;
 	private final int MAXREGISTERS = 18;
+	private int nLabel;
 	private boolean[] registerList;
 	private String[] registerNames = {"t0", "t1", "t2", "t3", "t4", "t5", 
 	"t6", "t7", "s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7", "t8", "t9"};
 	
 	public CodeGenOut (String nomFitxer) {
 		try {
+			nLabel = 0;
 			registerList = new boolean[MAXREGISTERS];	
 			nomFitxer += ".asm";
 			writer = new PrintWriter(nomFitxer, "UTF-8");
@@ -27,6 +29,10 @@ public class CodeGenOut {
 	}
 	
 	public void gc (String toWrite) { writer.println("	" + toWrite); }
+	
+	public String demanarEtiqueta () { return "E" + (++nLabel); }
+	
+	public void gcEtiqueta (String toWrite) { writer.println(toWrite); }
 	
 	public int getRegistre () {
 		for (int i = 0; i < MAXREGISTERS; i++) { 
