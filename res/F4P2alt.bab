@@ -1,0 +1,38 @@
+CONST s_opcio = "opcion? (1-fib , 2-fac)\n";
+
+VAR nombre:sencer;
+var opcio:sencer;
+var vlogic:logic;
+var resultat:sencer;
+
+
+PROG
+	escriure(s_opcio);
+	llegir(opcio);
+	escriure("numero a calcular: ");
+ 	llegir(nombre);
+ 	
+	si (opcio <> 1) and (opcio <> 2) llavors		//ERROR
+		escriure("No ha escogido ninguna de las opciones disponibles");
+		resultat = 0;
+	sino  
+		si opcio == 1 llavors
+			si (nombre == 0) or (nombre == 1) llavors
+				resultat = nombre;
+			sino
+				resultat = 0;
+			    mentre (nombre <> 1) fer
+			    	resultat = nombre + nombre-1;
+			    	nombre = nombre - 1;
+			    fimentre;
+			fisi;
+	    sino 
+			resultat = 1;
+			mentre nombre <> 0 fer
+				resultat = resultat * nombre;
+				nombre = nombre - 1;
+			fimentre
+		fisi;
+	fisi;
+	escriure("El resultado es: ", resultat);
+FIPROG 
