@@ -23,6 +23,12 @@ public class CodeGenOut {
 			writer.println("	.data");
 			writer.println("error:");
 			writer.println("	.asciiz \"[ERR_GC_1] Index de vector fora de limits\"");
+			writer.println("error2:");
+			writer.println("	.asciiz \"[ERR_GC_2] Variable logica esperada, valor llegit no correspon a 0 o 1\"");
+			writer.println("cert:");
+			writer.println("	.asciiz \"cert\"");
+			writer.println("fals:");
+			writer.println("	.asciiz \"fals\"");
 			writer.println("	.text");
 			writer.println("main:");
 			writer.println("	move $fp, $sp");
