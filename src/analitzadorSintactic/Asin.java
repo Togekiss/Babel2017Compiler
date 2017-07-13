@@ -861,7 +861,7 @@ public class Asin {
 			int despl = taulaSimbols.obtenirBloc(taulaSimbols.getBlocActual()).obtenirVariable((String)sem.getValue("TOKEN")).getDesplacament();
 
 			if (sem.getValue("VALOR") != null) {
-				if (sem.getValue("REGISTRE") == null) {
+				if (sem.getValue("REG") == null) {
 					//Es vector i valor estatic
 					despl += ((int)sem.getValue("VALOR") - (int)sem.getValue("LIMIT")) * 4;
 					int registre = gc.getRegistre();
@@ -881,7 +881,7 @@ public class Asin {
 						gc.gc("li   $" + gc.getNomRegistre(registre2) + ", " + despl); //Adreça vector respecte $gp
 						gc.gc("subu   $" + gc.getNomRegistre(registre) + ", $" + gc.getNomRegistre(registre2) + ", $" + gc.getNomRegistre(registre));
 						gc.gc("li   $" + gc.getNomRegistre(registre2) + ", 4");
-						gc.gc("mul   $" + gc.getNomRegistre(registre2) + ", $" + gc.getNomRegistre((int)sem.getValue("REGISTRE")) + ", $" + gc.getNomRegistre(registre2));
+						gc.gc("mul   $" + gc.getNomRegistre(registre2) + ", $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre(registre2));
 						gc.gc("addu   $" + gc.getNomRegistre(registre) + ", $" + gc.getNomRegistre(registre2) + ", $" + gc.getNomRegistre(registre));
 						gc.gc("la   $" + gc.getNomRegistre(registre2) + ", 0($gp)"); //Adreça $gp
 						gc.gc("subu   $" + gc.getNomRegistre(registre) + ", $" + gc.getNomRegistre(registre2) + ", $" + gc.getNomRegistre(registre)); //-Adreça($gp)
@@ -896,7 +896,7 @@ public class Asin {
 						gc.gc("li   $v0, 10");
 						gc.gc("syscall");
 						gc.gcEtiqueta(etiqueta + ":");
-						gc.freeRegistre((int)sem.getValue("REGISTRE"));
+						gc.freeRegistre((int)sem.getValue("REG"));
 						gc.freeRegistre(registre);
 						gc.freeRegistre(registre2);
 					} else { System.out.println("No queden registres!"); }

@@ -502,12 +502,8 @@ public class Asem {
 				gc.gc("mul $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem2.getValue("REG")));
 				break;
 			case "divisio":
-				if (((int)sem2.getValue("VALOR")) == 0) {
-					//error "no es pot dividir per 0"
-					//TODO comprovar divisio 0 amb assembler??
-					gc.gc("li $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", 0");
-					break;
-				}
+				//TODO comprovar divisio 0 amb assembler??
+				gc.gc("beqz $" + gc.getNomRegistre((int)sem2.getValue("REG")) + "exit");		
 				gc.gc("div $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem2.getValue("REG")));
 				break;
 			default:
