@@ -599,11 +599,11 @@ public class Asin {
 			sem.setValue("REFERENCIA", false);
 			//System.out.println(sem.prettyPrint());
 			//TODO codi cadena
-			String eti = gc.demanarEtiqueta();
+			/*String eti = gc.demanarEtiqueta();
 			gc.gc(".data");
 			gc.gcEtiqueta(eti + ": .asciiz " + sem.getValue("VALOR"));
 			gc.gc(".text");
-			sem.setValue("REG", eti);
+			sem.setValue("REG", eti);*/
 			Acceptar("ct_cadena");
 			return sem;
 
@@ -619,7 +619,7 @@ public class Asin {
 		case "parentesi_obert":
 			Acceptar("parentesi_obert");
 			sem = EXPRESIO(sem);
-			if (!(sem.getValue("TIPUS") instanceof TipusCadena))gc.freeRegistre((int)sem.getValue("REG"));
+			//if (!(sem.getValue("TIPUS") instanceof TipusCadena))gc.freeRegistre((int)sem.getValue("REG"));
 			Acceptar("parentesi_tancat");
 			return sem;
 
@@ -680,11 +680,14 @@ public class Asin {
 			//TODO QUAN VA A ID SENSE RES MES
 			int registre = gc.getRegistre();
 			if (registre != -1) {
-				if ((boolean)sem.getValue("ESTATIC") == true) {
+				
+				if ((boolean)sem.getValue("ESTATIC") == true && sem.getValue("ESCRIURE") == null) {
+					//TODO asdsad
 					gc.gc("li   $" + gc.getNomRegistre(registre) + ", " + sem.getValue("VALOR"));
-				} else {
+				} else  if ((boolean)sem.getValue("ESTATIC") == false) {
 					gc.gc("lw   $" + gc.getNomRegistre(registre) + ", -" + sem.getValue("DESPL") + "($gp)");
 				}
+				
 				sem.setValue("REG", registre);
 			} else { System.out.println("No queden registres!"); }
 
@@ -750,7 +753,28 @@ public class Asin {
 			//ERROR
 			Error.escriuError(36, "", alex.getLiniaActual(), "");
 			System.out.println("[ERR_SEM_6] " + alex.getLiniaActual() + ", El tipus ha de ser TIPUS SIMPLE");
+		} else if (sem.getValue("TIPUS") instanceof TipusSimple && ((TipusSimple)sem.getValue("TIPUS")).getNom().equals("sencer")){
+			gc.gc("li   $v0, 5");
+			gc.gc("syscall");
+			gc.gc("sw $v0, -" + taulaSimbols.obtenirBloc(0).obtenirVariable((String)sem.getValue("TOKEN")).getDesplacament() + "($gp)");
+		} else if (sem.getValue("TIPUS") instanceof TipusSimple && ((TipusSimple)sem.getValue("TIPUS")).getNom().equals("logic")){
+			gc.gc("li   $v0, 5");
+			gc.gc("syscall");
+			int registre = gc.getRegistre();
+			if (registre != -1) {
+				String eti = gc.demanarEtiqueta();
+				gc.gc("li   $" + gc.getNomRegistre(registre) + ", 2");
+				gc.gc("blt	$v0, $" + gc.getNomRegistre(registre) + ", " + eti);
+				gc.gc("li   $v0, 4");
+				gc.gc("la   $a0, error2");
+				gc.gc("syscall");
+				gc.gc("li   $v0, 10");
+				gc.gc("syscall");
+				gc.gcEtiqueta(eti + ":");
+				gc.gc("sw $v0, -" + taulaSimbols.obtenirBloc(0).obtenirVariable((String)sem.getValue("TOKEN")).getDesplacament() + "($gp)");
+			} else { System.out.println("No queden registres disponibles"); }	
 		}
+
 		LL_VAR1();
 		return;
 	}
@@ -904,13 +928,15 @@ public class Asin {
 						gc.freeRegistre(registre2);
 					} else { System.out.println("No queden registres!"); }
 				}
-			} else if (!(sem.getValue("VALOR") instanceof TipusIndefinit)) {
-				int registre = gc.getRegistre();
-				if (registre != -1) {
-					gc.gc("li   $" + gc.getNomRegistre(registre) + ", " + sem2.getValue("VALOR"));
-					gc.gc("sw   $" + gc.getNomRegistre(registre) + ", -" + despl + "($gp)");
-					gc.freeRegistre(registre);
-				} else { System.out.println("No queden registres!"); }
+			} else if (!(sem.getValue("TIPUS") instanceof TipusIndefinit)) {
+				//int registre = gc.getRegistre();
+				//if (registre != -1) {
+					//gc.gc("li   $" + gc.getNomRegistre(registre) + ", " + sem2.getValue("VALOR"));
+					//gc.gc("sw   $" + gc.getNomRegistre(registre) + ", -" + despl + "($gp)");
+					//gc.freeRegistre(registre);
+				//} else { System.out.println("No queden registres!"); }
+				gc.gc("sw   $" + gc.getNomRegistre((int)sem2.getValue("REG")) + ", -" + despl + "($gp)");
+				gc.freeRegistre((int)sem2.getValue("REG"));
 			}
 
 			/*int registre = gc.getRegistre();
@@ -1099,6 +1125,7 @@ public class Asin {
 		case "ct_cadena":		
 		case "identificador":		
 		case "parentesi_obert":
+			sem.setValue("ESCRIURE", 1);
 			sem = EXPRESIO(sem);
 			//comprovar que tipus == tipus simple o cadena
 			if (!asem.LL_EXP_ESCRIURE_esValid(sem)) {
@@ -1106,6 +1133,37 @@ public class Asin {
 				Error.escriuError(314, "", alex.getLiniaActual(), "");
 				System.out.println("[ERR_SEM_14] " + alex.getLiniaActual() + ", El tipus de la expressió en ESCRIURE no és simple o no és una constant cadena");
 			}
+			//System.out.println(sem);
+			//if (sem.getValue("TIPUS") instanceof TipusSimple) System.out.println(((TipusSimple)sem.getValue("TIPUS")).getNom());
+			if ((sem.getValue("TIPUS") instanceof TipusCadena) || taulaSimbols.obtenirBloc(0).existeixConstant((String)sem.getValue("TOKEN"))
+				&& taulaSimbols.obtenirBloc(0).obtenirConstant((String)sem.getValue("TOKEN")).getTipus() 
+				instanceof TipusCadena) {
+				
+				String eti = gc.demanarEtiqueta();
+				gc.gc(".data");
+				gc.gcEtiqueta(eti + ": .asciiz " + sem.getValue("VALOR"));
+				gc.gc(".text");
+				
+				gc.gc("li   $v0, 4");
+				gc.gc("la   $a0, " + eti);
+				gc.gc("syscall");
+			} else if (sem.getValue("TIPUS") instanceof TipusSimple && ((TipusSimple)sem.getValue("TIPUS")).getNom().equals("sencer")){
+				gc.gc("li   $v0, 1");
+				gc.gc("move   $a0, $" + gc.getNomRegistre((int)(sem.getValue("REG"))));
+				gc.gc("syscall");
+			} else if (sem.getValue("TIPUS") instanceof TipusSimple && ((TipusSimple)sem.getValue("TIPUS")).getNom().equals("logic")){
+				gc.gc("li   $v0, 4");
+				String eti = gc.demanarEtiqueta();
+				String eti2 = gc.demanarEtiqueta();
+				gc.gc("beqz   $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", " + eti);
+				gc.gc("la   $a0, cert");
+				gc.gc("b	" + eti2);
+				gc.gcEtiqueta(eti + ":");
+				gc.gc("la   $a0, fals");
+				gc.gcEtiqueta(eti2 + ":");
+				gc.gc("syscall");
+			}
+				
 			if (!(sem.getValue("TIPUS") instanceof TipusCadena))gc.freeRegistre((int)sem.getValue("REG"));
 			LL_EXP_ESCRIURE1();
 			return;

@@ -49,6 +49,10 @@ public class TipusSimple extends ITipus {
 		this.maxim = maxim;
 	}
 	
+	public String getNom() {
+		return nom;
+	}
+	
 	/**
 	 * <p>Obté el valor mínim que pot assolir el tipus simple</p>
 	 * @return Object
