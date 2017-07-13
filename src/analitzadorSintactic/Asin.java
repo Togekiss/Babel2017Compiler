@@ -1039,7 +1039,8 @@ public class Asin {
 			if (!(sem.getValue("TIPUS") instanceof TipusCadena))gc.freeRegistre((int)sem.getValue("REG"));
 			LL_INST();
 			gc.gc("b	" + etiqueta5);
-			SINO(etiqueta4);
+			gc.gcEtiqueta(etiqueta4 + ":");
+			SINO();
 			Acceptar("fisi"); 
 			gc.gcEtiqueta(etiqueta5 + ":");
 
@@ -1187,13 +1188,12 @@ public class Asin {
 		}
 	}
 
-	private void SINO (String etiqueta4) {
+	private void SINO () {
 		
 		switch (lookAhead.getTipus()) {
 		
 		case "sino":
 			Acceptar("sino");
-			gc.gcEtiqueta(etiqueta4 + ":");
 			LL_INST();
 			return;
 

@@ -25,11 +25,16 @@ public class CodeGenOut {
 			writer.println("	.asciiz \"[ERR_GC_1] Index de vector fora de limits\"");
 			writer.println("error2:");
 			writer.println("	.asciiz \"[ERR_GC_2] Variable logica esperada, valor llegit no correspon a 0 o 1\"");
+			writer.println("error3:");
+			writer.println("	.asciiz \"[ERR_GC_3] No es pot dividir per 0\"");
 			writer.println("cert:");
 			writer.println("	.asciiz \"cert\"");
 			writer.println("fals:");
 			writer.println("	.asciiz \"fals\"");
 			writer.println("	.text");
+			writer.println("exit:");
+			writer.println("	li   $v0, 10");
+			writer.println("	syscall");
 			writer.println("main:");
 			writer.println("	move $fp, $sp");
 		} catch (IOException e) {

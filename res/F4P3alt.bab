@@ -1,0 +1,103 @@
+const MAX = 11;
+var aux:vector [0 .. MAX] de sencer;
+var vec:vector [0 .. MAX-1] de sencer;
+var  x:sencer; 
+var  i:sencer;
+var  j:sencer;
+var  top:sencer;
+var s: sencer;
+var t: sencer;
+var  mig:sencer;
+var  pivot:sencer;
+var  temp:sencer;
+
+PROG
+	vec[0]=10;
+	vec[1]=9;
+	vec[2]=8;
+	vec[3]=7;
+	vec[4]=6;
+	vec[5]=5;
+	vec[6]=4;
+	i= 7;
+	mentre i <= max - 1 fer
+		escriure("Entra un valor del vector: ");
+		llegir(vec[i]);
+		escriure("ok");
+		i = i + 1;
+	fimentre; 
+	escriure("Vector original: "); 
+	i=0;
+	cicle
+		escriure(vec[i], "-");
+		i = i+1;
+	fins i >10;
+	
+	escriure("\n");
+	
+//quicksort
+
+top = 0;
+		aux[top] = i;
+		top = top + 1;
+		aux[top] = j;
+		top = top + 1;
+		
+		mentre top >= 0 fer
+			j = aux[top];
+			top = top - 1;
+			i = aux[top];
+			top = top - 1;
+		
+		//particio
+			s = i;
+			t = j;
+			mig = (i + j) / 2;
+			pivot = vec[mig];
+			mentre s <= t fer
+				mentre  vec[s] < pivot fer
+					s = s + 1;
+				fimentre;
+				mentre  vec[t] > pivot fer
+					t = t - 1; 
+				fimentre;
+				si s < t llavors
+					temp = vec[s];
+					vec[s] = vec[t];
+					vec[t] = temp;
+					s = s + 1;
+					t = t - 1;
+				sino
+					si s == t llavors
+						s = s + 1;
+						t = t - 1;
+					fisi;
+				fisi;
+			fimentre;
+		//fiparticio
+		
+		si (t-1 > i) llavors
+			top = top + 1;
+			aux[top] = i;
+			top = top + 1;
+			aux[top] = t - 1;
+		fisi;
+		
+		si (t+1 < j) llavors
+			top = top + 1;
+			aux[top] = t+1;
+			top = top + 1;
+			aux[top] = j;
+		fisi;
+
+//fiquicksort
+
+	escriure("Vector final:");
+	i=0;	
+	mentre i<=10 fer
+		escriure(vec[i], "-");
+		i=i+1;
+	fimentre;
+
+
+FIPROG 
