@@ -22,7 +22,7 @@ PROG
 			sino
 				resultat = 0;
 			    mentre (nombre <> 1) fer
-			    	resultat = nombre + nombre-1;
+			    	resultat = resultat + nombre-1;
 			    	nombre = nombre - 1;
 			    fimentre;
 			fisi;

@@ -512,8 +512,8 @@ public class Asem {
 				gc.gc("mul $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem2.getValue("REG")));
 				break;
 			case "divisio":
-				//TODO comprovar divisio 0 amb assembler??
-				gc.gc("beqz $" + gc.getNomRegistre((int)sem2.getValue("REG")) + "exit");		
+				//TODO comprovar divisio 0 amb assembler?? NO VA
+				//gc.gc("beqz $" + gc.getNomRegistre((int)sem2.getValue("REG")) + ", div0");		
 				gc.gc("div $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem2.getValue("REG")));
 				break;
 			default:
