@@ -819,7 +819,8 @@ public class Asin {
 		}
 		
 		if (sem.getValue("VALOR") == null && sem.getValue("REG") == null 
-				&& sem.getValue("TIPUS") instanceof TipusSimple && ((TipusSimple)sem.getValue("TIPUS")).getNom().equals("sencer")) {
+				&& (sem.getValue("TIPUS") instanceof TipusSimple && ((TipusSimple)sem.getValue("TIPUS")).getNom().equals("sencer") ||
+						sem.getValue("TIPUS") instanceof TipusSimple && ((TipusSimple)sem.getValue("TIPUS")).getNom().equals("logic"))) {
 			gc.gc("sw $v0, -" + taulaSimbols.obtenirBloc(0).obtenirVariable((String)sem.getValue("TOKEN")).getDesplacament() + "($gp)");
 		}
 		
