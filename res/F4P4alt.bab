@@ -1,0 +1,65 @@
+const 	 N = 10;
+CONST GRUP_1_NOTA = 10;
+CONST MSG = "S'HO MEREIXEN";
+var	 v0: vector[0..N-1] de sencer;
+var      e: sencer;
+var      i: sencer ;
+var      l: logic;
+var	y: sencer ;
+var	j: sencer ;
+var	aux: sencer ;
+var aa: vector[0..N-1] de sencer
+
+
+PROG
+	escriure ("Entra ", N, " valors enteros:\n");
+	i = 0;
+	cicle
+		llegir(v0[i]);
+		i = i + 1;
+	fins i == N ;
+	
+	escriure(" leido");
+
+	aa = v0;
+	y = 0;
+	cicle
+		escriure(aa[y],"-");
+		y = y + 1;
+	fins y==N;
+	escriure("\n");
+	y = 0;
+	mentre y < N-1 fer
+		escriure("\ny:", y);
+		j = 0;
+		mentre j < N-1 fer
+			si aa[j] > aa[j + 1] llavors
+				aux = aa[j];
+				aa[j] = aa[j + 1];
+				aa[j + 1] = aux;
+			fisi;
+			j = j + 1;
+		fimentre;
+		y = y + 1;
+	fimentre;
+	escriure("\n");
+
+	escriure("\nDentro de bombollaValor, Vector Ordenado:\n");
+
+	y = 0;
+	cicle
+		escriure(aa[y],"-");
+		y = y + 1;
+	fins y == N;
+	escriure ("\n\nDespues de ordenar el vector por valor(bombollaValor) esta desordenado:\n");
+
+	i = 0;
+		cicle
+		escriure(v0[i],"-");
+		i = i + 1;
+	fins i == N ;
+	escriure("\n");
+
+	
+FIPROG
+

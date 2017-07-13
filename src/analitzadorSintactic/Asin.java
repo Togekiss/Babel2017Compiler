@@ -331,9 +331,10 @@ public class Asin {
 			//comprovem 1a dimensio del array
 			if ( sem2.getValue("TIPUS") instanceof TipusSimple &&
 					((TipusSimple)sem2.getValue("TIPUS")).getNom().equals("sencer") &&
-					((boolean)sem2.getValue("ESTATIC")) == true)
+					((boolean)sem2.getValue("ESTATIC")) == true) {
 				dim1 = (int)sem2.getValue("VALOR");
-			else {
+				gc.freeRegistre((int)sem2.getValue("REG"));
+			} else {
 				//ERROR
 				Error.escriuError(37, "", alex.getLiniaActual(), "");
 				System.out.println("[ERR_SEM_7] " + alex.getLiniaActual() + ", El rang del vector ha de ser SENCER i ESTATIC");
@@ -662,6 +663,7 @@ public class Asin {
 			sem2 = EXPRESIO(sem2);
 			//comprovar que expressio es int i esta dins el rang (si es estatica)
 			sem = asem.VAR1_comprovaArray(sem, sem2, taulaSimbols, alex.getLiniaActual());
+			gc.freeRegistre((int) sem.getValue("REG"));
 			if (!(sem2.getValue("TIPUS") instanceof TipusCadena))gc.freeRegistre((int)sem2.getValue("REG"));
 			Acceptar("claudator_tancat"); 
 			//retornar tipus d'element de vector

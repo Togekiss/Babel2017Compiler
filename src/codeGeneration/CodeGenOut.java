@@ -39,9 +39,11 @@ public class CodeGenOut {
 	public void gcEtiqueta (String toWrite) { writer.println(toWrite); }
 	
 	public int getRegistre () {
+//System.out.println("asking for a reg");
 		for (int i = 0; i < MAXREGISTERS; i++) { 
 			if (registerList[i] == false) {
 				registerList[i] = true;
+//System.out.println("got reg number " + i);
 				return i;
 			}
 		}
