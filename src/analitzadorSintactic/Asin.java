@@ -380,6 +380,7 @@ public class Asin {
 
 		sem = EXPRESIO_SIMPLE(sem);
 		sem = EXPRESIO1(sem);
+		
 		return sem;
 
 	}
@@ -432,6 +433,7 @@ public class Asin {
 		case "or":
 			sem = OP_EXP(sem); 
 			sem2 = TERME(sem2);
+
 			//System.out.println("DINS EXP_SIMPLE1 ABANS DE OPERAR");
 			//System.out.println("SEM" + sem.prettyPrint());
 			//System.out.println("SEM2" + sem2.prettyPrint());
@@ -661,18 +663,54 @@ public class Asin {
 			Acceptar("claudator_obert"); 
 			//es vector
 			sem2 = EXPRESIO(sem2);
+			
 			//comprovar que expressio es int i esta dins el rang (si es estatica)
 			sem = asem.VAR1_comprovaArray(sem, sem2, taulaSimbols, alex.getLiniaActual());
-			gc.freeRegistre((int) sem.getValue("REG"));
-			if (!(sem2.getValue("TIPUS") instanceof TipusCadena))gc.freeRegistre((int)sem2.getValue("REG"));
+			//gc.freeRegistre((int) sem.getValue("REG"));
+			//if (!(sem2.getValue("TIPUS") instanceof TipusCadena))gc.freeRegistre((int)sem2.getValue("REG"));
 			Acceptar("claudator_tancat"); 
 			//retornar tipus d'element de vector
 			//TODO ID ES UN VECTOR
-			int reg = gc.getRegistre();
-			if (reg != -1) {
-				gc.gc("lw   $" + gc.getNomRegistre(reg) + ", -" + sem.getValue("DESPL") + "($gp)");
-				sem.setValue("REG", reg);
-			} else { System.out.println("No queden registres!"); }
+			
+			if (sem.getValue("REG") != null) {
+				String etiqueta = gc.demanarEtiqueta();
+				gc.gc("b	" + etiqueta);
+				gc.gcEtiqueta((String)sem.getValue("LABEL") + ":");
+				gc.gc("li   $v0, 4");
+				gc.gc("la   $a0, error");
+				gc.gc("syscall");
+				gc.gc("li   $v0, 10");
+				gc.gc("syscall");
+				gc.gcEtiqueta(etiqueta + ":");
+				
+				int registre = gc.getRegistre();
+				int registre2 = gc.getRegistre();
+				if (registre != -1 && registre2 != -1) {
+					gc.gc("li   $" + gc.getNomRegistre(registre) + ", " + (int)sem.getValue("LIMIT")); //li
+					gc.gc("li   $" + gc.getNomRegistre(registre2) + ", 4");
+					gc.gc("mul   $" + gc.getNomRegistre(registre) + ", $" + gc.getNomRegistre(registre) + ", $" + gc.getNomRegistre(registre2));
+					gc.gc("li   $" + gc.getNomRegistre(registre2) + ", " + (int)sem.getValue("DESPL")); //Adreça vector respecte $gp
+					gc.gc("subu   $" + gc.getNomRegistre(registre) + ", $" + gc.getNomRegistre(registre2) + ", $" + gc.getNomRegistre(registre));
+					gc.gc("li   $" + gc.getNomRegistre(registre2) + ", 4");
+					gc.gc("mul   $" + gc.getNomRegistre(registre2) + ", $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre(registre2));
+					gc.gc("addu   $" + gc.getNomRegistre(registre) + ", $" + gc.getNomRegistre(registre2) + ", $" + gc.getNomRegistre(registre));
+					gc.gc("la   $" + gc.getNomRegistre(registre2) + ", 0($gp)"); //Adreça $gp
+					gc.gc("subu   $" + gc.getNomRegistre(registre) + ", $" + gc.getNomRegistre(registre2) + ", $" + gc.getNomRegistre(registre)); //-Adreça($gp)
+					gc.gc("lw	$" + gc.getNomRegistre(registre2) + ", 0($" + gc.getNomRegistre(registre) + ")");
+					gc.freeRegistre(registre);
+					gc.freeRegistre((int)sem.getValue("REG"));
+					gc.freeRegistre((int)sem2.getValue("REG"));
+					sem.setValue("REG", registre2);
+				} else { System.out.println("No queden registres!"); }
+		
+			}else {
+				sem.setValue("VALOR", (int)sem.getValue("DESPL") + ((int)sem.getValue("VALOR") -  (int)sem.getValue("LIMIT")) * 4);
+				int reg = gc.getRegistre();
+				if (reg != -1) {
+					gc.gc("lw   $" + gc.getNomRegistre(reg) + ", -" + sem.getValue("VALOR") + "($gp)");
+					sem.setValue("REG", reg);
+				} else { System.out.println("No queden registres!"); }
+			}
 			
 			return sem;
 
@@ -815,7 +853,6 @@ public class Asin {
 		case "claudator_obert":
 			//comprovar que identificador es array
 			Acceptar("claudator_obert");
-			sem2 = EXPRESIO(sem2);
 			//comprovar que tipus sem2 == sencer
 			//i si es estatic, esta dins el rang de id
 			sem = asem.VAR1_comprovaArray(sem, sem2, taulaSimbols, alex.getLiniaActual());
@@ -885,7 +922,7 @@ public class Asin {
 			}
 
 			int despl = taulaSimbols.obtenirBloc(taulaSimbols.getBlocActual()).obtenirVariable((String)sem.getValue("TOKEN")).getDesplacament();
-
+			System.out.println(sem);
 			if (sem.getValue("VALOR") != null) {
 				if (sem.getValue("REG") == null) {
 					//Es vector i valor estatic

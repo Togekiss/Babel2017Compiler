@@ -635,7 +635,6 @@ public class Asem {
 			return sem;
 		}
 		int desplaçamentIndex = 0;
-		int registre = gc.getRegistre();
 		//si sem2 es estatic, comprova que estigui dins el rang
 		if ((boolean)sem2.getValue("ESTATIC")) {
 			int v = (int)sem2.getValue("VALOR");
@@ -653,26 +652,29 @@ public class Asem {
 			//TODO anar a variable a agafar valor
 			int registre2 = gc.getRegistre();
 			
-			if (registre != -1 && registre2 != -1) {
+			if (registre2 != -1) {
 				String etiqueta = gc.demanarEtiqueta();
-				gc.gc("lw   $" + gc.getNomRegistre(registre) + ", -" + (int)sem2.getValue("DESPL") + "($gp)");
+				//gc.gc("lw   $" + gc.getNomRegistre(registre) + ", -" + (int)sem2.getValue("DESPL") + "($gp)");
 				gc.gc("li   $" + gc.getNomRegistre(registre2) + ", " + (int)((TipusArray)ts.obtenirBloc(ts.getBlocActual()).obtenirVariable((String)sem.getValue("TOKEN")).getTipus()).obtenirDimensio(0).getLimitInferior());
-				gc.gc("blt   $" + gc.getNomRegistre(registre) + ", $" + gc.getNomRegistre(registre2) + ", " + etiqueta);
+				//gc.gc("blt   $" + gc.getNomRegistre(registre) + ", $" + gc.getNomRegistre(registre2) + ", " + etiqueta);
+				gc.gc("blt   $" + gc.getNomRegistre((int)sem2.getValue("REG")) + ", $" + gc.getNomRegistre(registre2) + ", " + etiqueta);
 				gc.gc("li   $" + gc.getNomRegistre(registre2) + ", " + (int)((TipusArray)ts.obtenirBloc(ts.getBlocActual()).obtenirVariable((String)sem.getValue("TOKEN")).getTipus()).obtenirDimensio(0).getLimitSuperior());
-				gc.gc("bgt   $" + gc.getNomRegistre(registre) + ", $" + gc.getNomRegistre(registre2) + ", " + etiqueta);
+				//gc.gc("bgt   $" + gc.getNomRegistre(registre) + ", $" + gc.getNomRegistre(registre2) + ", " + etiqueta);
+				gc.gc("bgt   $" + gc.getNomRegistre((int)sem2.getValue("REG")) + ", $" + gc.getNomRegistre(registre2) + ", " + etiqueta);
 				//printar error
 				sem.setValue("LABEL", etiqueta);
 				gc.freeRegistre(registre2);
+				//gc.freeRegistre((int)sem2.getValue("REG"));
 			} else { System.out.println("No queden registres lliures!"); }
 		}
 		
 		sem.setValue("LIMIT", (int)((TipusArray)ts.obtenirBloc(ts.getBlocActual()).obtenirVariable((String)sem.getValue("TOKEN")).getTipus()).obtenirDimensio(0).getLimitInferior());
 		sem.setValue("TIPUS", ((TipusArray)FACTOR_getIdentificador(sem, ts, l).getValue("TIPUS")).getTipusElements());
 		if (desplaçamentIndex != 0){
-			gc.freeRegistre(registre);
+			//gc.freeRegistre(registre);
 			sem.setValue("VALOR", desplaçamentIndex);
 		}
-		else sem.setValue("REG", registre);
+		else sem.setValue("REG", (int)sem2.getValue("REG"));
 		
 		return sem;
 
