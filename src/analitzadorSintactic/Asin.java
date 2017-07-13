@@ -172,8 +172,8 @@ public class Asin {
 		Acceptar("identificador");
 		Acceptar("dos_punts");
 		sem = TIPUS(sem);
-		sem.setValue("VALOR", 0);
-		gc.gc("li   $t0, 1");
+		sem.setValue("VALOR", -1);
+		gc.gc("li   $t0, 0");
 		gc.gc("sw   $t0, -" + asem.getDespl() + "($gp)");
 		asem.afegirVariable(sem, taulaSimbols, alex.getLiniaActual());
 		Acceptar("punt_i_coma");
@@ -681,7 +681,7 @@ public class Asin {
 				gc.gc("b	" + etiqueta);
 				gc.gcEtiqueta((String)sem.getValue("LABEL") + ":");
 				gc.gc("li   $v0, 4");
-				gc.gc("la   $a0, error4");
+				gc.gc("la   $a0, error");
 				gc.gc("sw   $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", 0($gp)");
 				gc.gc("syscall");
 				gc.gc("li   $v0, 10");
@@ -818,7 +818,12 @@ public class Asin {
 			} else { System.out.println("No queden registres disponibles"); }	
 		}
 		
-		if ((int)sem.getValue("VALOR") != -1) {
+		if (sem.getValue("VALOR") == null && sem.getValue("REG") == null 
+				&& sem.getValue("TIPUS") instanceof TipusSimple && ((TipusSimple)sem.getValue("TIPUS")).getNom().equals("sencer")) {
+			gc.gc("sw $v0, -" + taulaSimbols.obtenirBloc(0).obtenirVariable((String)sem.getValue("TOKEN")).getDesplacament() + "($gp)");
+		}
+		
+		if (sem.getValue("VALOR") != null && (int)sem.getValue("VALOR") != -1) {
 			int registre = gc.getRegistre();
 			if (registre != -1) {
 				sem.setValue("VALOR", (int)sem.getValue("DESP") + ((int)sem.getValue("VALOR") - (int)sem.getValue("LIMIT")) * 4);
