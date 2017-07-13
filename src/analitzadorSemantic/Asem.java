@@ -364,6 +364,7 @@ public class Asem {
 			break;
 		default:
 		}
+		//TODO CONVERTIR A 1 I 0
 		gc.gc("li $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", " + sem.getValue("VALOR"));
 		return sem;
 	}
@@ -625,7 +626,6 @@ public class Asem {
 			return sem;
 		}
 		int desplaçamentIndex = 0;
-
 		int registre = gc.getRegistre();
 		//si sem2 es estatic, comprova que estigui dins el rang
 		if ((boolean)sem2.getValue("ESTATIC")) {
@@ -659,7 +659,10 @@ public class Asem {
 		
 		sem.setValue("LIMIT", (int)((TipusArray)ts.obtenirBloc(ts.getBlocActual()).obtenirVariable((String)sem.getValue("TOKEN")).getTipus()).obtenirDimensio(0).getLimitInferior());
 		sem.setValue("TIPUS", ((TipusArray)FACTOR_getIdentificador(sem, ts, l).getValue("TIPUS")).getTipusElements());
-		if (desplaçamentIndex != 0) sem.setValue("VALOR", desplaçamentIndex);
+		if (desplaçamentIndex != 0){
+			gc.freeRegistre(registre);
+			sem.setValue("VALOR", desplaçamentIndex);
+		}
 		else sem.setValue("REG", registre);
 		
 		return sem;
