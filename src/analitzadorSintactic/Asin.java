@@ -748,7 +748,26 @@ public class Asin {
 			//ERROR
 			Error.escriuError(36, "", alex.getLiniaActual(), "");
 			System.out.println("[ERR_SEM_6] " + alex.getLiniaActual() + ", El tipus ha de ser TIPUS SIMPLE");
+		} else {
+			gc.gc("li   $v0, 5");
+			gc.gc("syscall");
+			gc.gc("sw $v0, -" + taulaSimbols.obtenirBloc(0).obtenirVariable((String)sem.getValue("TOKEN")).getDesplacament() + "($gp)");
 		}
+		
+			/*gc.gc("li   $v0, 4");
+			gc.gc("la   $a0, error2");
+			gc.gc("syscall");
+			gc.gc("li   $v0, 10");
+			gc.gc("syscall");
+		} else {
+			gc.gc("li   $v0, 8");
+			gc.gc("syscall");
+		}
+		gc.gc("li   $v0, 4");
+		gc.gc("la   $a0, error");
+		gc.gc("syscall");
+		gc.gc("li   $v0, 10");
+		gc.gc("syscall");*/
 		LL_VAR1();
 		return;
 	}
