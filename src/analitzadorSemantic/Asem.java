@@ -357,14 +357,16 @@ public class Asem {
 		switch ((String)sem.getValue("OPERADOR")) {
 
 		case "not":
-			sem.setValue("VALOR", !((boolean)sem.getValue("VALOR")));
+			if ((int)sem.getValue("VALOR") == 0) 
+				sem.setValue("VALOR", 0x00000001);
+			else
+				sem.setValue("VALOR", 0);
 			break;
 		case "resta":
 			sem.setValue("VALOR", 0 - ((int)sem.getValue("VALOR")));
 			break;
 		default:
 		}
-		//TODO CONVERTIR A 1 I 0
 		gc.gc("li $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", " + sem.getValue("VALOR"));
 		return sem;
 	}
@@ -418,11 +420,14 @@ public class Asem {
 			switch ((String)sem.getValue("OPERADOR")) {
 
 			case "or":
-				gc.gc("or $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem2.getValue("REG")));				break;
+				gc.gc("or $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem2.getValue("REG")));
+				break;
 			case "suma":
-				gc.gc("add $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem2.getValue("REG")));				break;
+				gc.gc("add $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem2.getValue("REG")));
+				break;
 			case "resta":
-				gc.gc("sub $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem2.getValue("REG")));				break;
+				gc.gc("sub $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre((int)sem2.getValue("REG")));
+				break;
 			default:
 			}
 			return sem;
@@ -433,6 +438,10 @@ public class Asem {
 
 		case "or":
 			sem.setValue("VALOR", (boolean)sem.getValue("VALOR") || (boolean)sem2.getValue("VALOR"));
+			if ((int)sem.getValue("VALOR") == 0) 
+				sem.setValue("VALOR", 0);
+			else
+				sem.setValue("VALOR", 0x00000001);
 			break;
 		case "suma":
 			sem.setValue("VALOR", ((int)sem.getValue("VALOR")) + ((int)sem2.getValue("VALOR")));
