@@ -154,7 +154,8 @@ public class Asin {
 		//Tornem a posar token per si sha perdut evaluant lexprexio
 		sem.setValue("TOKEN", cte);
 		asem.afegirConstant(sem, taulaSimbols, alex.getLiniaActual());
-		if (!(sem.getValue("TIPUS") instanceof TipusCadena))gc.freeRegistre((int)sem.getValue("REG"));
+		if (!(sem.getValue("TIPUS") instanceof TipusCadena))
+			gc.freeRegistre((int) sem.getValue("REG"));
 		Acceptar("punt_i_coma");
 		return;
 

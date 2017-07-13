@@ -88,6 +88,7 @@ public class Alex {
 				while (charActual == '\n' || charActual == '\r' || charActual == '\t' || charActual == ' ' ) {
 					if (charActual == '\n') {
 						liniaActual++;
+			System.out.println(liniaActual + ":");
 					}
 					charActual = (char) br.read();
 				}

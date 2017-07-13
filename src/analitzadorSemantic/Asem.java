@@ -629,6 +629,7 @@ public class Asem {
 			return sem;
 		}
 		int desplaçamentIndex = 0;
+System.out.println("anem a pillar reg per comprovar rang");
 		int registre = gc.getRegistre();
 		//si sem2 es estatic, comprova que estigui dins el rang
 		if ((boolean)sem2.getValue("ESTATIC")) {
@@ -663,7 +664,7 @@ public class Asem {
 		sem.setValue("LIMIT", (int)((TipusArray)ts.obtenirBloc(ts.getBlocActual()).obtenirVariable((String)sem.getValue("TOKEN")).getTipus()).obtenirDimensio(0).getLimitInferior());
 		sem.setValue("TIPUS", ((TipusArray)FACTOR_getIdentificador(sem, ts, l).getValue("TIPUS")).getTipusElements());
 		if (desplaçamentIndex != 0) sem.setValue("VALOR", desplaçamentIndex);
-		else sem.setValue("REGISTRE", registre);
+		else sem.setValue("REG", registre);
 		
 		return sem;
 
