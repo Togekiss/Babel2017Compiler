@@ -625,7 +625,7 @@ public class Asem {
 			return sem;
 		}
 		int desplaçamentIndex = 0;
-System.out.println("anem a pillar reg per comprovar rang");
+
 		int registre = gc.getRegistre();
 		//si sem2 es estatic, comprova que estigui dins el rang
 		if ((boolean)sem2.getValue("ESTATIC")) {
@@ -686,7 +686,7 @@ System.out.println("anem a pillar reg per comprovar rang");
 			}
 			if (ts.obtenirBloc(ts.getBlocActual()).existeixVariable((String)sem.getValue("TOKEN"))) {
 				sem.setValue("TIPUS", ts.obtenirBloc(ts.getBlocActual()).obtenirVariable((String)sem.getValue("TOKEN")).getTipus());
-				sem.setValue("VALOR", "desconegut");
+				sem.setValue("VALOR", -1);
 				sem.setValue("ESTATIC", false);
 				sem.setValue("DESPL", ts.obtenirBloc(ts.getBlocActual()).obtenirVariable((String)sem.getValue("TOKEN")).getDesplacament());
 				//System.out.println("VARIABLE!!\n" + sem.prettyPrint());
@@ -695,7 +695,7 @@ System.out.println("anem a pillar reg per comprovar rang");
 			}
 			if (ts.obtenirBloc(ts.getBlocActual()).existeixProcediment((String)sem.getValue("TOKEN"))) {
 				sem.setValue("TIPUS", ((Funcio)ts.obtenirBloc(ts.getBlocActual()).obtenirProcediment((String)sem.getValue("TOKEN"))).getTipus());
-				sem.setValue("VALOR", "desconegut");
+				sem.setValue("VALOR", -1);
 				sem.setValue("ESTATIC", false);
 				sem.setValue("REFERENCIA", false);
 				//System.out.println("FUNCIO!!\n" + sem.prettyPrint());
@@ -716,7 +716,7 @@ System.out.println("anem a pillar reg per comprovar rang");
 		}
 		if (ts.obtenirBloc(0).existeixVariable((String)sem.getValue("TOKEN"))) {
 			sem.setValue("TIPUS", ts.obtenirBloc(0).obtenirVariable((String)sem.getValue("TOKEN")).getTipus());
-			sem.setValue("VALOR", "desconegut");
+			sem.setValue("VALOR", -1);
 			sem.setValue("ESTATIC", false);
 			sem.setValue("DESPL", ts.obtenirBloc(0).obtenirVariable((String)sem.getValue("TOKEN")).getDesplacament());
 			//System.out.println("VARIABLE!!\n" + sem.prettyPrint());
@@ -724,7 +724,7 @@ System.out.println("anem a pillar reg per comprovar rang");
 		}
 		if (ts.obtenirBloc(0).existeixProcediment((String)sem.getValue("TOKEN"))) {
 			sem.setValue("TIPUS", ((Funcio)ts.obtenirBloc(0).obtenirProcediment((String)sem.getValue("TOKEN"))).getTipus());
-			sem.setValue("VALOR", "desconegut");
+			sem.setValue("VALOR", -1);
 			sem.setValue("ESTATIC", false);
 			sem.setValue("REFERENCIA", false);
 			//System.out.println("FUNCIO!!\n" + sem.prettyPrint());

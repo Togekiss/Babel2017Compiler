@@ -171,7 +171,7 @@ public class Asin {
 		Acceptar("identificador");
 		Acceptar("dos_punts");
 		sem = TIPUS(sem);
-		sem.setValue("VALOR", "desconegut");
+		sem.setValue("VALOR", -1);
 		gc.gc("li   $t0, 1");
 		gc.gc("sw   $t0, -" + asem.getDespl() + "($gp)");
 		asem.afegirVariable(sem, taulaSimbols, alex.getLiniaActual());
@@ -863,6 +863,7 @@ public class Asin {
 			if (sem.getValue("VALOR") != null) {
 				if (sem.getValue("REG") == null) {
 					//Es vector i valor estatic
+					System.out.println(sem.getValue("VALOR"));
 					despl += ((int)sem.getValue("VALOR") - (int)sem.getValue("LIMIT")) * 4;
 					int registre = gc.getRegistre();
 					if (registre != -1) {
@@ -1000,6 +1001,7 @@ public class Asin {
 			Acceptar("llavors");
 			
 			if (sem.getValue("VALOR") != null) {
+				System.out.println(sem.getValue("VALOR"));
 				if ((int)sem.getValue("VALOR") == -1) 
 					gc.gc("beqz	$" + gc.getNomRegistre((int)sem.getValue("REG")) + ", " + etiqueta4);
 				else if ((int)sem.getValue("VALOR") == 0)
