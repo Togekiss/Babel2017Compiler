@@ -27,6 +27,8 @@ public class CodeGenOut {
 			writer.println("	.asciiz \"[ERR_GC_2] Variable logica esperada, valor llegit no correspon a 0 o 1\"");
 			writer.println("error3:");
 			writer.println("	.asciiz \"[ERR_GC_3] No es pot dividir per 0\"");
+			writer.println("error4:");
+			writer.println("	.asciiz \"Pepe\"");
 			writer.println("cert:");
 			writer.println("	.asciiz \"cert\"");
 			writer.println("fals:");

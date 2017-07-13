@@ -616,7 +616,7 @@ public class Asem {
 	}
 
 	public Semantic VAR1_comprovaArray(Semantic sem, Semantic sem2, TaulaSimbols ts, int l) {
-
+	
 		//comprova si sem es array
 		if (!(sem.getValue("TIPUS") instanceof TipusArray)) {
 			//error: variable no declarada com array
@@ -625,7 +625,7 @@ public class Asem {
 			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 4));
 			return sem;
 		}
-		
+
 		//comprova si sem2 es sencer
 		if (!(sem2.getValue("TIPUS") instanceof TipusSimple) || !((TipusSimple)sem2.getValue("TIPUS")).getNom().equals("sencer")) {
 			//error: rang invalid
@@ -634,7 +634,7 @@ public class Asem {
 			sem.setValue("TIPUS", new TipusIndefinit("indefinit", 4));
 			return sem;
 		}
-		int desplaçamentIndex = 0;
+		int desplaçamentIndex = -1;
 		//si sem2 es estatic, comprova que estigui dins el rang
 		if ((boolean)sem2.getValue("ESTATIC")) {
 			int v = (int)sem2.getValue("VALOR");
@@ -662,6 +662,10 @@ public class Asem {
 				//gc.gc("bgt   $" + gc.getNomRegistre(registre) + ", $" + gc.getNomRegistre(registre2) + ", " + etiqueta);
 				gc.gc("bgt   $" + gc.getNomRegistre((int)sem2.getValue("REG")) + ", $" + gc.getNomRegistre(registre2) + ", " + etiqueta);
 				//printar error
+				
+				gc.gc("li   $t8, " + (int)((TipusArray)ts.obtenirBloc(ts.getBlocActual()).obtenirVariable((String)sem.getValue("TOKEN")).getTipus()).obtenirDimensio(0).getLimitInferior());
+				gc.gc("li   $t9, " + (int)((TipusArray)ts.obtenirBloc(ts.getBlocActual()).obtenirVariable((String)sem.getValue("TOKEN")).getTipus()).obtenirDimensio(0).getLimitSuperior());
+				
 				sem.setValue("LABEL", etiqueta);
 				gc.freeRegistre(registre2);
 				//gc.freeRegistre((int)sem2.getValue("REG"));
@@ -670,7 +674,7 @@ public class Asem {
 		
 		sem.setValue("LIMIT", (int)((TipusArray)ts.obtenirBloc(ts.getBlocActual()).obtenirVariable((String)sem.getValue("TOKEN")).getTipus()).obtenirDimensio(0).getLimitInferior());
 		sem.setValue("TIPUS", ((TipusArray)FACTOR_getIdentificador(sem, ts, l).getValue("TIPUS")).getTipusElements());
-		if (desplaçamentIndex != 0){
+		if (desplaçamentIndex != -1){
 			//gc.freeRegistre(registre);
 			sem.setValue("VALOR", desplaçamentIndex);
 		}

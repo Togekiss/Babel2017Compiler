@@ -8,6 +8,7 @@ import taulasimbols.Funcio;
 import taulasimbols.ITipus;
 import taulasimbols.Parametre;
 import taulasimbols.TaulaSimbols;
+import taulasimbols.TipusArray;
 import taulasimbols.TipusCadena;
 import taulasimbols.TipusIndefinit;
 import taulasimbols.TipusPasParametre;
@@ -171,7 +172,7 @@ public class Asin {
 		Acceptar("identificador");
 		Acceptar("dos_punts");
 		sem = TIPUS(sem);
-		sem.setValue("VALOR", -1);
+		sem.setValue("VALOR", 0);
 		gc.gc("li   $t0, 1");
 		gc.gc("sw   $t0, -" + asem.getDespl() + "($gp)");
 		asem.afegirVariable(sem, taulaSimbols, alex.getLiniaActual());
@@ -664,6 +665,9 @@ public class Asin {
 			//es vector
 			sem2 = EXPRESIO(sem2);
 			
+			//System.out.println(sem);
+			//System.out.println(sem2);
+			
 			//comprovar que expressio es int i esta dins el rang (si es estatica)
 			sem = asem.VAR1_comprovaArray(sem, sem2, taulaSimbols, alex.getLiniaActual());
 			//gc.freeRegistre((int) sem.getValue("REG"));
@@ -677,7 +681,8 @@ public class Asin {
 				gc.gc("b	" + etiqueta);
 				gc.gcEtiqueta((String)sem.getValue("LABEL") + ":");
 				gc.gc("li   $v0, 4");
-				gc.gc("la   $a0, error");
+				gc.gc("la   $a0, error4");
+				gc.gc("sw   $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", 0($gp)");
 				gc.gc("syscall");
 				gc.gc("li   $v0, 10");
 				gc.gc("syscall");
@@ -787,6 +792,7 @@ public class Asin {
 
 		sem = VAR(sem);
 		//comprovar que sem tipus == tipus simple
+		
 		if (!(sem.getValue("TIPUS") instanceof TipusSimple)) {
 			//ERROR
 			Error.escriuError(36, "", alex.getLiniaActual(), "");
@@ -794,7 +800,7 @@ public class Asin {
 		} else if (sem.getValue("TIPUS") instanceof TipusSimple && ((TipusSimple)sem.getValue("TIPUS")).getNom().equals("sencer")){
 			gc.gc("li   $v0, 5");
 			gc.gc("syscall");
-			gc.gc("sw $v0, -" + taulaSimbols.obtenirBloc(0).obtenirVariable((String)sem.getValue("TOKEN")).getDesplacament() + "($gp)");
+			//gc.gc("sw $v0, -" + taulaSimbols.obtenirBloc(0).obtenirVariable((String)sem.getValue("TOKEN")).getDesplacament() + "($gp)");
 		} else if (sem.getValue("TIPUS") instanceof TipusSimple && ((TipusSimple)sem.getValue("TIPUS")).getNom().equals("logic")){
 			gc.gc("li   $v0, 5");
 			gc.gc("syscall");
@@ -809,8 +815,50 @@ public class Asin {
 				gc.gc("li   $v0, 10");
 				gc.gc("syscall");
 				gc.gcEtiqueta(eti + ":");
-				gc.gc("sw $v0, -" + taulaSimbols.obtenirBloc(0).obtenirVariable((String)sem.getValue("TOKEN")).getDesplacament() + "($gp)");
 			} else { System.out.println("No queden registres disponibles"); }	
+		}
+		
+		if ((int)sem.getValue("VALOR") != -1) {
+			int registre = gc.getRegistre();
+			if (registre != -1) {
+				sem.setValue("VALOR", (int)sem.getValue("DESP") + ((int)sem.getValue("VALOR") - (int)sem.getValue("LIMIT")) * 4);
+				gc.gc("li   $" + gc.getNomRegistre(registre) + ", " + (int)sem.getValue("VALOR")); 
+				gc.gc("sw   $v0, -" + gc.getNomRegistre(registre) + "($gp)");
+			} else { System.out.println("No queden registres!"); }
+		}
+		
+		if (sem.getValue("LABEL") != null) {
+			int registre = gc.getRegistre();
+			int registre2 = gc.getRegistre();
+			
+			if (registre != -1 && registre2 != -1) {
+				
+				gc.gc("li   $" + gc.getNomRegistre(registre) + ", " + (int)sem.getValue("LIMIT")); //li
+				gc.gc("li   $" + gc.getNomRegistre(registre2) + ", 4");
+				gc.gc("mul   $" + gc.getNomRegistre(registre) + ", $" + gc.getNomRegistre(registre) + ", $" + gc.getNomRegistre(registre2));
+				gc.gc("li   $" + gc.getNomRegistre(registre2) + ", " + (int)sem.getValue("DESPL")); //Adreça vector respecte $gp
+				gc.gc("subu   $" + gc.getNomRegistre(registre) + ", $" + gc.getNomRegistre(registre2) + ", $" + gc.getNomRegistre(registre));
+				gc.gc("li   $" + gc.getNomRegistre(registre2) + ", 4");
+				gc.gc("mul   $" + gc.getNomRegistre(registre2) + ", $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", $" + gc.getNomRegistre(registre2));
+				gc.gc("addu   $" + gc.getNomRegistre(registre) + ", $" + gc.getNomRegistre(registre2) + ", $" + gc.getNomRegistre(registre));
+				gc.gc("la   $" + gc.getNomRegistre(registre2) + ", 0($gp)"); //Adreça $gp
+				gc.gc("subu   $" + gc.getNomRegistre(registre) + ", $" + gc.getNomRegistre(registre2) + ", $" + gc.getNomRegistre(registre)); //-Adreça($gp)
+				gc.gc("sw   $v0, 0($" + gc.getNomRegistre(registre) + ")");
+				
+				String etiqueta = gc.demanarEtiqueta();
+				gc.gc("b	" + etiqueta);
+				gc.gcEtiqueta((String)sem.getValue("LABEL") + ":");
+				gc.gc("li   $v0, 4");
+				gc.gc("la   $a0, error");
+				gc.gc("syscall");
+				gc.gc("li   $v0, 10");
+				gc.gc("syscall");
+				gc.gcEtiqueta(etiqueta + ":");
+				gc.freeRegistre((int)sem.getValue("REG"));
+				gc.freeRegistre(registre);
+				gc.freeRegistre(registre2);
+				
+			} else { System.out.println("No queden registres!"); }
 		}
 
 		LL_VAR1();
@@ -853,10 +901,12 @@ public class Asin {
 		case "claudator_obert":
 			//comprovar que identificador es array
 			Acceptar("claudator_obert");
+			sem2 = EXPRESIO(sem2);
+			
 			//comprovar que tipus sem2 == sencer
 			//i si es estatic, esta dins el rang de id
 			sem = asem.VAR1_comprovaArray(sem, sem2, taulaSimbols, alex.getLiniaActual());
-			if (!(sem2.getValue("TIPUS") instanceof TipusCadena))gc.freeRegistre((int)sem2.getValue("REG"));
+			//if (!(sem2.getValue("TIPUS") instanceof TipusCadena))gc.freeRegistre((int)sem2.getValue("REG"));
 			Acceptar("claudator_tancat");
 			return sem;						
 
@@ -908,6 +958,7 @@ public class Asin {
 			sem = VAR(sem);
 			Acceptar("igual");
 			sem2 = EXPRESIO(sem2);
+			
 			//comprovar que tipus sem1 == tipus sem2
 			if (!sem.getValue("TIPUS").equals(sem2.getValue("TIPUS"))) {
 				//error
@@ -922,7 +973,7 @@ public class Asin {
 			}
 
 			int despl = taulaSimbols.obtenirBloc(taulaSimbols.getBlocActual()).obtenirVariable((String)sem.getValue("TOKEN")).getDesplacament();
-			System.out.println(sem);
+			
 			if (sem.getValue("VALOR") != null) {
 				if (sem.getValue("REG") == null) {
 					//Es vector i valor estatic
@@ -949,8 +1000,8 @@ public class Asin {
 						gc.gc("addu   $" + gc.getNomRegistre(registre) + ", $" + gc.getNomRegistre(registre2) + ", $" + gc.getNomRegistre(registre));
 						gc.gc("la   $" + gc.getNomRegistre(registre2) + ", 0($gp)"); //Adreça $gp
 						gc.gc("subu   $" + gc.getNomRegistre(registre) + ", $" + gc.getNomRegistre(registre2) + ", $" + gc.getNomRegistre(registre)); //-Adreça($gp)
-						gc.gc("li   $" + gc.getNomRegistre(registre2) + ", " + sem2.getValue("VALOR"));
-						gc.gc("sw   $" + gc.getNomRegistre(registre2) + ", 0($" + gc.getNomRegistre(registre) + ")");
+						//gc.gc("li   $" + gc.getNomRegistre(registre2) + ", " + sem2.getValue("VALOR"));
+						gc.gc("sw   $" + gc.getNomRegistre((int)sem2.getValue("REG")) + ", 0($" + gc.getNomRegistre(registre) + ")");
 						String etiqueta = gc.demanarEtiqueta();
 						gc.gc("b	" + etiqueta);
 						gc.gcEtiqueta((String)sem.getValue("LABEL") + ":");
@@ -965,6 +1016,27 @@ public class Asin {
 						gc.freeRegistre(registre2);
 					} else { System.out.println("No queden registres!"); }
 				}
+			} else if ((sem.getValue("TIPUS") instanceof TipusArray)) {	
+				int despl1 = taulaSimbols.obtenirBloc(0).obtenirVariable((String)sem2.getValue("TOKEN")).getDesplacament();
+				int despl2 = taulaSimbols.obtenirBloc(0).obtenirVariable((String)sem.getValue("TOKEN")).getDesplacament();
+			
+				int li = (int)((TipusArray)taulaSimbols.obtenirBloc(taulaSimbols.getBlocActual()).obtenirVariable((String)sem.getValue("TOKEN")).getTipus()).obtenirDimensio(0).getLimitInferior();
+				int ls = (int)((TipusArray)taulaSimbols.obtenirBloc(taulaSimbols.getBlocActual()).obtenirVariable((String)sem.getValue("TOKEN")).getTipus()).obtenirDimensio(0).getLimitSuperior();
+
+				ls -= li;
+				ls++;
+				
+				int registre = gc.getRegistre();
+				if (registre != -1) {
+					for (int i = 0; i < ls * 4; i += 4) {
+						gc.gc("lw   $" + gc.getNomRegistre(registre) + ", -" + (i+despl1) + "($gp)" );
+						gc.gc("sw   $" + gc.getNomRegistre(registre) + ", -" + (i+despl2) + "($gp)" );
+					}
+					gc.freeRegistre(registre);
+				} else { System.out.println("No queden registres!"); }
+				
+			
+			
 			} else if (!(sem.getValue("TIPUS") instanceof TipusIndefinit)) {
 				//int registre = gc.getRegistre();
 				//if (registre != -1) {
@@ -972,7 +1044,9 @@ public class Asin {
 					//gc.gc("sw   $" + gc.getNomRegistre(registre) + ", -" + despl + "($gp)");
 					//gc.freeRegistre(registre);
 				//} else { System.out.println("No queden registres!"); }
+				
 				gc.gc("sw   $" + gc.getNomRegistre((int)sem2.getValue("REG")) + ", -" + despl + "($gp)");
+				if (sem.getValue("REG") != null) gc.freeRegistre((int)sem.getValue("REG"));
 				gc.freeRegistre((int)sem2.getValue("REG"));
 			}
 
@@ -1184,6 +1258,24 @@ public class Asin {
 				gc.gc("li   $v0, 4");
 				gc.gc("la   $a0, " + eti);
 				gc.gc("syscall");
+			}else if ((boolean)sem.getValue("ESTATIC") == true && ((TipusSimple)sem.getValue("TIPUS")).getNom().equals("sencer")) {
+				gc.gc("li   $v0, 1");
+				gc.gc("li   $a0, " + sem.getValue("VALOR"));
+				gc.gc("syscall");
+			}else if ((boolean)sem.getValue("ESTATIC") == true && ((TipusSimple)sem.getValue("TIPUS")).getNom().equals("logic")) {
+				gc.gc("li   $v0, 4");
+				String eti = gc.demanarEtiqueta();
+				String eti2 = gc.demanarEtiqueta();
+				int registre = gc.getRegistre();
+				gc.gc("li   $" + gc.getNomRegistre(registre) + ", $" + sem.getValue("VALOR"));
+				gc.gc("beqz   $" + gc.getNomRegistre((int)sem.getValue("REG")) + ", " + eti);
+				gc.gc("la   $a0, cert");
+				gc.gc("b	" + eti2);
+				gc.gcEtiqueta(eti + ":");
+				gc.gc("la   $a0, fals");
+				gc.gcEtiqueta(eti2 + ":");
+				gc.gc("syscall");
+				gc.freeRegistre(registre);
 			} else if (sem.getValue("TIPUS") instanceof TipusSimple && ((TipusSimple)sem.getValue("TIPUS")).getNom().equals("sencer")){
 				gc.gc("li   $v0, 1");
 				gc.gc("move   $a0, $" + gc.getNomRegistre((int)(sem.getValue("REG"))));

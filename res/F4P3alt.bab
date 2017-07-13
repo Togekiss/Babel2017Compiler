@@ -89,7 +89,8 @@ top = 0;
 			top = top + 1;
 			aux[top] = j;
 		fisi;
-
+		
+	fimentre;
 //fiquicksort
 
 	escriure("Vector final:");
