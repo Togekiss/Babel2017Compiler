@@ -1,0 +1,109 @@
+const MAX = 11;
+var aux:vector [0 .. MAX] de sencer;
+var vec:vector [0 .. MAX] de sencer;
+var  i:sencer;
+var  j:sencer;
+var  top:sencer;
+var  p1:sencer;
+var  p2:sencer;
+var  iAux:sencer;
+var  jAux:sencer;
+var  x:sencer;
+var  temp:sencer;
+var  p:sencer;
+
+PROG
+	vec[0]=10;
+	vec[1]=9;
+	vec[2]=8;
+	vec[3]=7;
+	vec[4]=6;
+	vec[5]=5;
+	vec[6]=4;
+	i= 7;
+	mentre i <= max - 1 fer
+		escriure("Entra un valor del vector: ");
+		llegir(vec[i]);
+		escriure("ok");
+		i = i + 1;
+	fimentre; 
+	escriure("Vector original: "); 
+	i=0;
+	cicle
+		escriure(vec[i], "-");
+		i = i+1;
+	fins i >10;
+	
+	escriure("\n");
+	
+//quicksort
+
+	i = 0;
+	j = MAX - 1;
+	top = 0;
+	temp = 0;
+	
+	aux[top] = i;
+	top = top + 1;
+	aux[top] = j;
+
+	mentre top >= 0 fer
+		
+		j = aux[top];
+		top = top - 1;
+		i = aux[top];
+		top = top - 1;
+
+		p1 = vec[j];	
+		p2 = i - 1;
+
+		x = i;
+
+		mentre x <= j - 1 fer
+		
+			si vec[x] <= p1 llavors
+				p2 = p2 + 1;
+				temp = vec[p2];
+				vec[p2] = vec[x];
+				vec[x] = temp;
+			fisi
+			x = x + 1
+		fimentre
+		
+		temp = vec[p2 + 1];
+		vec[p2 + 1] = vec[j];
+		vec[j] = temp;
+
+		p = p2 + 1;
+
+		si p - 1 > i llavors
+		
+			top = top + 1;
+			aux[top] = i;
+			top = top + 1;
+			aux[top] = p - 1;		
+
+		fisi
+
+		si p + 1 < j llavors
+		
+			top = top + 1;
+			aux[top] = p + 1;
+			top = top + 1;
+			aux[top] = j;		
+
+		fisi
+
+	fimentre
+
+//fiquicksort
+
+	escriure("Vector final:");
+	i=0;	
+	mentre i<=10 fer
+		escriure(vec[i], "-");
+		i=i+1;
+	fimentre;
+
+
+FIPROG 
